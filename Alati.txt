@@ -1,0 +1,28 @@
+DESIGN
+Figma
+
+FRONTEND
+HTML5
+CSS3
+JavaScript
+Django Templates
+Chart.js
+Lucide Icons
+
+BACKEND
+Python
+Django 5.2 LTS
+
+DATABASE
+PostgreSQL
+
+DEPLOYMENT / ENVIRONMENT
+Docker
+Docker Compose
+Gunicorn
+Nginx
+
+DEVELOPMENT
+Visual Studio Code
+Git
+GitHub

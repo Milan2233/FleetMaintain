@@ -1,0 +1,342 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="hr">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Registracija | FleetMaintain</title>
+
+    <!-- Favicon -->
+    <link
+        rel="icon"
+        type="image/svg+xml"
+        href="{% static 'images/favicon.svg' %}"
+    >
+
+    <!-- Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Globalni CSS -->
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}"
+    >
+</head>
+
+
+<body class="auth-page">
+
+    <main class="auth-layout">
+
+        <section class="auth-container auth-container-register">
+
+
+            <!-- ==================================================
+                 BRAND / LOGO
+                 ================================================== -->
+
+            <div class="auth-brand">
+
+                <img
+                    src="{% static 'images/logo.png' %}"
+                    alt="FleetMaintain"
+                    class="auth-logo"
+                >
+
+                <h1 class="auth-title">
+                    FleetMaintain
+                </h1>
+
+                <p class="auth-subtitle">
+                    Upravljanje i praćenje održavanja
+                    <br>
+                    vozila i radnih strojeva
+                </p>
+
+            </div>
+
+
+            <!-- ==================================================
+                 DJANGO PORUKE
+                 ================================================== -->
+
+            {% if messages %}
+
+                <div class="auth-messages">
+
+                    {% for message in messages %}
+
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- ==================================================
+                 GREŠKE FORME
+                 ================================================== -->
+
+            {% if form.non_field_errors %}
+
+                <div class="alert alert-error">
+
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- ==================================================
+                 REGISTRACIJSKA FORMA
+                 ================================================== -->
+
+            <form
+                method="post"
+                class="auth-form"
+                novalidate
+            >
+
+                {% csrf_token %}
+
+
+                <!-- ==================================================
+                     IME I PREZIME
+                     ================================================== -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.full_name.id_for_label }}">
+                        Ime i prezime
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span
+                            class="icon icon-user input-icon"
+                            aria-hidden="true"
+                        ></span>
+
+                        {{ form.full_name }}
+
+                    </div>
+
+
+                    {% if form.full_name.errors %}
+
+                        <div class="form-error">
+
+                            {% for error in form.full_name.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- ==================================================
+                     E-MAIL
+                     ================================================== -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.email.id_for_label }}">
+                        E-mail adresa
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span
+                            class="icon icon-mail input-icon"
+                            aria-hidden="true"
+                        ></span>
+
+                        {{ form.email }}
+
+                    </div>
+
+
+                    {% if form.email.errors %}
+
+                        <div class="form-error">
+
+                            {% for error in form.email.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- ==================================================
+                     LOZINKA
+                     ================================================== -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.password1.id_for_label }}">
+                        Lozinka
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span
+                            class="icon icon-lock input-icon"
+                            aria-hidden="true"
+                        ></span>
+
+                        {{ form.password1 }}
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            aria-label="Prikaži lozinku"
+                            data-password-toggle
+                        >
+
+                            <span
+                                class="icon icon-eye password-toggle-icon"
+                                aria-hidden="true"
+                            ></span>
+
+                        </button>
+
+                    </div>
+
+
+                    {% if form.password1.errors %}
+
+                        <div class="form-error">
+
+                            {% for error in form.password1.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- ==================================================
+                     POTVRDA LOZINKE
+                     ================================================== -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.password2.id_for_label }}">
+                        Potvrdite lozinku
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span
+                            class="icon icon-lock input-icon"
+                            aria-hidden="true"
+                        ></span>
+
+                        {{ form.password2 }}
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            aria-label="Prikaži lozinku"
+                            data-password-toggle
+                        >
+
+                            <span
+                                class="icon icon-eye password-toggle-icon"
+                                aria-hidden="true"
+                            ></span>
+
+                        </button>
+
+                    </div>
+
+
+                    {% if form.password2.errors %}
+
+                        <div class="form-error">
+
+                            {% for error in form.password2.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- ==================================================
+                     REGISTRACIJA
+                     ================================================== -->
+
+                <button
+                    type="submit"
+                    class="btn btn-primary auth-register-submit"
+                >
+                    Registriraj se
+                </button>
+
+
+                <!-- ==================================================
+                     LOGIN LINK
+                     ================================================== -->
+
+                <div class="auth-login-prompt">
+
+                    <span>
+                        Već imate račun?
+                    </span>
+
+                    <a
+                        href="{% url 'accounts:login' %}"
+                        class="auth-link"
+                    >
+                        Prijavite se
+                    </a>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+
+    <!-- Globalni JavaScript -->
+    <script src="{% static 'js/app.js' %}"></script>
+
+</body>
+
+</html>

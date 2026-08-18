@@ -1,0 +1,277 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="hr">
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >    
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Prijava | FleetMaintain</title>
+
+    <link
+        rel="icon"
+        type="image/svg+xml"
+        href="{% static 'images/favicon.svg' %}"
+    >    
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}"
+    >
+</head>
+
+
+<body class="auth-page">
+
+    <main class="auth-layout">
+
+        <section class="auth-container">
+
+            <!-- ========================================
+                 BRAND / LOGO
+                 ======================================== -->
+
+            <div class="auth-brand">
+
+                <img
+                    src="{% static 'images/logo.png' %}"
+                    alt="FleetMaintain"
+                    class="auth-logo"
+                >
+
+                <h1 class="auth-title">
+                    FleetMaintain
+                </h1>
+
+                <p class="auth-subtitle">
+                    Upravljanje i praćenje održavanja
+                    <br>
+                    vozila i radnih strojeva
+                </p>
+
+            </div>
+
+
+            <!-- ========================================
+                 DJANGO PORUKE
+                 ======================================== -->
+
+            {% if messages %}
+
+                <div class="auth-messages">
+
+                    {% for message in messages %}
+
+                        <div class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- ========================================
+                 GREŠKA PRIJAVE
+                 ======================================== -->
+
+            {% if form.non_field_errors %}
+
+                <div class="alert alert-error">
+
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- ========================================
+                 LOGIN FORMA
+                 ======================================== -->
+
+            <form
+                method="post"
+                class="auth-form"
+                novalidate
+            >
+
+                {% csrf_token %}
+
+
+                <!-- ====================================
+                     E-MAIL
+                     ==================================== -->
+
+                <div class="form-group">
+
+                    <label
+                        for="{{ form.username.id_for_label }}"
+                        class="sr-only"
+                    >
+                        E-mail adresa
+                    </label>
+
+
+                    <div class="input-wrapper">
+
+                        <span class="icon icon-user input-icon" aria-hidden="true"></span>
+
+                        {{ form.username }}
+
+                    </div>
+
+
+                    {% if form.username.errors %}
+
+                        <div class="form-error">
+
+                            {% for error in form.username.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- ====================================
+                     LOZINKA
+                     ==================================== -->
+
+                <div class="form-group">
+
+                    <label
+                        for="{{ form.password.id_for_label }}"
+                        class="sr-only"
+                    >
+                        Lozinka
+                    </label>
+
+
+                    <div class="input-wrapper">
+
+                        <span class="icon icon-lock input-icon" aria-hidden="true"></span>
+
+                        {{ form.password }}
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            aria-label="Prikaži lozinku"
+                            data-password-toggle
+                        >
+                            <span class="icon icon-eye password-toggle-icon" aria-hidden="true"></span>
+                        </button>
+
+                    </div>
+
+
+                    {% if form.password.errors %}
+
+                        <div class="form-error">
+
+                            {% for error in form.password.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- ====================================
+                     ZAPAMTI ME / ZABORAVLJENA LOZINKA
+                     ==================================== -->
+
+                <div class="auth-options">
+
+                    <label
+                        for="remember_me"
+                        class="checkbox-wrapper"
+                    >
+
+                        <input
+                            type="checkbox"
+                            name="remember_me"
+                            id="remember_me"
+                        >
+
+                        <span
+                            class="checkbox-custom"
+                            aria-hidden="true"
+                        ></span>
+
+                        <span>
+                            Zapamti me
+                        </span>
+
+                    </label>
+
+
+                    <a
+                        href="#"
+                        class="auth-link"
+                    >
+                        Zaboravili ste lozinku?
+                    </a>
+
+                </div>
+
+
+                <!-- ====================================
+                     AKCIJE
+                     ==================================== -->
+
+                <div class="auth-actions">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary auth-submit"
+                    >
+                        Prijavi se
+                    </button>
+
+
+                    <a
+                        href="{% url 'accounts:register' %}"
+                        class="btn btn-outline auth-register"
+                    >
+                        Registriraj se
+                    </a>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+
+    <script src="{% static 'js/app.js' %}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    Nadzorna ploča | FleetMaintain
+{% endblock %}
+
+
+{% block page_title %}
+    Nadzorna ploča
+{% endblock %}
+
+
+{% block content %}
+
+    <section class="dashboard">
+
+        <div class="dashboard-header">
+
+            <div>
+                <h2 class="dashboard-title">
+                    Dobrodošli,
+                    {% if request.user.first_name %}
+                        {{ request.user.first_name }}
+                    {% else %}
+                        korisniče
+                    {% endif %}
+                </h2>
+
+                <p class="dashboard-description">
+                    Pregledajte stanje vozila, održavanja i najvažnije aktivnosti.
+                </p>
+            </div>
+
+        </div>
+
+
+        <!-- Privremeni sadržaj dok ne složimo pravi dashboard -->
+
+        <div class="dashboard-placeholder">
+
+            <p>
+                Dashboard sadržaj uskoro dolazi ovdje.
+            </p>
+
+        </div>
+
+    </section>
+
+{% endblock %}

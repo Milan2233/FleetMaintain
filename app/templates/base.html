@@ -1,0 +1,412 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="hr">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}FleetMaintain{% endblock %}
+    </title>
+
+    <!-- Favicon -->
+    <link
+        rel="icon"
+        type="image/svg+xml"
+        href="{% static 'images/favicon.svg' %}"
+    >
+
+    <!-- Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Globalni CSS -->
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}"
+    >
+
+    {% block extra_head %}
+    {% endblock %}
+</head>
+
+
+<body class="app-page">
+
+    <div class="app-layout">
+
+
+        <!-- ==================================================
+             SIDEBAR
+             ================================================== -->
+
+        <aside
+            class="sidebar"
+            id="sidebar"
+        >
+
+            <!-- Sidebar header / logo -->
+
+            <div class="sidebar-header">
+
+                <a
+                    href="{% url 'core:dashboard' %}"
+                    class="sidebar-brand"
+                >
+
+                    <img
+                        src="{% static 'images/logo.svg' %}"
+                        alt="FleetMaintain"
+                        class="sidebar-logo"
+                    >
+
+                    <span class="sidebar-brand-name">
+                        FleetMaintain
+                    </span>
+
+                </a>
+
+            </div>
+
+
+            <!-- Sidebar navigation -->
+
+            <nav
+                class="sidebar-nav"
+                aria-label="Glavna navigacija"
+            >
+
+                <ul class="sidebar-menu">
+
+
+                    <!-- Dashboard -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="{% url 'core:dashboard' %}"
+                            class="sidebar-link
+                            {% if request.resolver_match.url_name == 'dashboard' %}
+                                is-active
+                            {% endif %}"
+                        >
+
+                            <span
+                                class="icon icon-dashboard sidebar-link-icon"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="sidebar-link-text">
+                                Nadzorna ploča
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- Vozila -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="#"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="icon icon-vehicle sidebar-link-icon"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="sidebar-link-text">
+                                Vozila
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- Održavanje -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="#"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="icon icon-maintenance sidebar-link-icon"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="sidebar-link-text">
+                                Održavanje
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- Troškovi -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="#"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="icon icon-costs sidebar-link-icon"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="sidebar-link-text">
+                                Troškovi
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- Izvještaji -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="#"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="icon icon-reports sidebar-link-icon"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="sidebar-link-text">
+                                Izvještaji
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- Aktivnosti -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="#"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="icon icon-activities sidebar-link-icon"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="sidebar-link-text">
+                                Aktivnosti
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <!-- Postavke -->
+
+                    <li class="sidebar-menu-item">
+
+                        <a
+                            href="#"
+                            class="sidebar-link"
+                        >
+
+                            <span
+                                class="icon icon-settings sidebar-link-icon"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span class="sidebar-link-text">
+                                Postavke
+                            </span>
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </nav>
+
+
+            <!-- Sidebar footer -->
+
+            <div class="sidebar-footer">
+
+                <form
+                    method="post"
+                    action="{% url 'accounts:logout' %}"
+                    class="sidebar-logout-form"
+                >
+
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="sidebar-link sidebar-logout"
+                    >
+
+                        <span
+                            class="icon icon-logout sidebar-link-icon"
+                            aria-hidden="true"
+                        ></span>
+
+                        <span class="sidebar-link-text">
+                            Odjava
+                        </span>
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </aside>
+
+
+        <!-- ==================================================
+             MOBILE SIDEBAR OVERLAY
+             ================================================== -->
+
+        <div
+            class="sidebar-overlay"
+            data-sidebar-overlay
+        ></div>
+
+
+        <!-- ==================================================
+             MAIN APP
+             ================================================== -->
+
+        <div class="app-main">
+
+
+            <!-- ==================================================
+                 HEADER
+                 ================================================== -->
+
+            <header class="app-header">
+
+                <div class="app-header-left">
+
+                    <!-- Mobile sidebar button -->
+
+                    <button
+                        type="button"
+                        class="sidebar-toggle"
+                        data-sidebar-toggle
+                        aria-label="Otvori navigaciju"
+                        aria-controls="sidebar"
+                        aria-expanded="false"
+                    >
+
+                        <span
+                            class="icon icon-menu"
+                            aria-hidden="true"
+                        ></span>
+
+                    </button>
+
+
+                    <!-- Naslov stranice -->
+
+                    <h1 class="page-title">
+                        {% block page_title %}
+                            Nadzorna ploča
+                        {% endblock %}
+                    </h1>
+
+                </div>
+
+
+                <!-- User -->
+
+                <div class="app-header-user">
+
+                    <div class="app-header-user-icon">
+
+                        <span
+                            class="icon icon-user"
+                            aria-hidden="true"
+                        ></span>
+
+                    </div>
+
+                    <div class="app-header-user-info">
+
+                        <span class="app-header-user-name">
+
+                            {% if request.user.first_name %}
+                                {{ request.user.first_name }}
+                                {{ request.user.last_name }}
+                            {% else %}
+                                Korisnik
+                            {% endif %}
+
+                        </span>
+
+                        <span class="app-header-user-email">
+                            {{ request.user.email }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- ==================================================
+                 PAGE CONTENT
+                 ================================================== -->
+
+            <main class="app-content">
+
+                {% block content %}
+                {% endblock %}
+
+            </main>
+
+        </div>
+
+    </div>
+
+
+    <!-- Globalni JavaScript -->
+    <script src="{% static 'js/app.js' %}"></script>
+
+    {% block extra_js %}
+    {% endblock %}
+
+</body>
+
+</html>

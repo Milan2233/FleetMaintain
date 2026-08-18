@@ -1,0 +1,998 @@
+/* ==================================================
+   1. DESIGN TOKENS
+   ================================================== */
+
+:root {
+
+    /* ==============================================
+       BLUE / BRAND PALETTE
+       ============================================== */
+
+    --blue-950: #00012D;
+    --blue-900: #000240;
+    --blue-800: #1A1B53;
+    --blue-700: #333566;
+    --blue-600: #4C4E79;
+    --blue-500: #6B6C90;
+    --blue-400: #8C8DA9;
+    --blue-300: #ADAEC2;
+    --blue-200: #CCCCD9;
+    --blue-100: #E6E6EC;
+    --blue-50:  #F5F5F7;
+
+
+    /* ==============================================
+       STATUS COLORS
+       ============================================== */
+
+    --color-success: #02A702;
+    --color-warning: #AFB800;
+    --color-danger: #AE3D00;
+
+
+    /* ==============================================
+       BASE COLORS
+       ============================================== */
+
+    --color-white: #FFFFFF;
+
+    --color-primary: var(--blue-900);
+    --color-primary-dark: var(--blue-950);
+
+    --color-background: var(--blue-50);
+    --color-surface: var(--color-white);
+
+    --color-text-primary: var(--blue-900);
+    --color-text-secondary: var(--blue-500);
+    --color-text-muted: var(--blue-400);
+
+    --color-border: var(--blue-200);
+    --color-border-light: var(--blue-100);
+
+
+    /* ==============================================
+       SIDEBAR
+       ============================================== */
+
+    --sidebar-bg: var(--blue-900);
+    --sidebar-text: var(--color-white);
+    --sidebar-hover: var(--blue-800);
+    --sidebar-active: var(--blue-500);
+
+
+    /* ==============================================
+       PRIMARY BUTTON
+       ============================================== */
+
+    --btn-primary-bg: var(--blue-900);
+    --btn-primary-text: var(--color-white);
+    --btn-primary-border: var(--blue-900);
+
+    --btn-primary-hover-bg: var(--blue-50);
+    --btn-primary-hover-text: var(--blue-900);
+    --btn-primary-hover-border: var(--blue-900);
+
+
+    /* ==============================================
+       SECONDARY BUTTON
+       ============================================== */
+
+    --btn-secondary-bg: var(--blue-950);
+    --btn-secondary-text: var(--color-white);
+    --btn-secondary-border: var(--blue-950);
+
+    --btn-secondary-hover-bg: var(--blue-300);
+    --btn-secondary-hover-text: var(--color-white);
+    --btn-secondary-hover-border: var(--blue-300);
+
+
+    /* ==============================================
+       LINKS
+       ============================================== */
+
+    --link-color: var(--blue-900);
+    --link-hover-color: var(--blue-500);
+
+
+    /* ==============================================
+       STATUS BACKGROUNDS
+       ============================================== */
+
+    --success-bg: rgba(2, 167, 2, 0.10);
+    --warning-bg: rgba(175, 184, 0, 0.12);
+    --danger-bg: rgba(174, 61, 0, 0.10);
+
+
+    /* ==============================================
+       BORDER RADIUS
+       ============================================== */
+
+    --radius-sm: 2px;
+    --radius-md: 4px;
+    --radius-lg: 6px;
+
+
+    /* ==============================================
+       SPACING
+       ============================================== */
+
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-8: 32px;
+    --space-10: 40px;
+
+
+    /* ==============================================
+       LAYOUT
+       ============================================== */
+
+    --sidebar-width: 240px;
+    --content-max-width: 1440px;
+
+
+    /* ==============================================
+       TRANSITIONS
+       ============================================== */
+
+    --transition-fast: 150ms ease;
+    --transition-normal: 250ms ease;
+}
+
+/* ==================================================
+   2. RESET / GLOBAL
+   ================================================== */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    margin: 0;
+    background: var(--color-background);
+    color: var(--color-text-primary);
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+}
+
+/* ==================================================
+   3. BUTTONS
+   ================================================== */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    border-radius: var(--radius-md);
+    cursor: pointer;
+
+    transition:
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        color var(--transition-fast);
+}
+
+.btn-primary {
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    border: 1px solid var(--btn-primary-border);
+}
+
+.btn-primary:hover,
+.btn-primary:active {
+    background: var(--btn-primary-hover-bg);
+    color: var(--btn-primary-hover-text);
+    border-color: var(--btn-primary-hover-border);
+}
+
+/* ==================================================
+   4. AUTH - LOGIN / REGISTER
+   ================================================== */
+
+.auth-page {
+    min-height: 100dvh;
+    margin: 0;
+
+    background-image: url("../images/auth-background.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--blue-800);
+}
+
+.auth-messages,
+.auth-container > .alert {
+    margin-bottom: 16px;
+}
+
+.auth-messages .alert,
+.auth-container > .alert {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+
+/* ==================================================
+   AUTH LAYOUT
+   ================================================== */
+
+.auth-layout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    min-height: 100dvh;
+
+    padding: 20px 20px;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 500px;
+    transform: translateY(-3vh);   
+}
+
+
+/* ==================================================
+   BRAND
+   ================================================== */
+
+.auth-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin-bottom: 44px;
+
+    text-align: center;
+}
+
+.auth-logo {
+    display: block;
+    width: 360px;
+    height: 360px;
+    object-fit: contain;
+}
+
+.auth-title {
+    margin: -60px 0 18px;
+
+    font-family: "Montserrat", sans-serif;
+    font-size: 40px;
+    font-weight: 600;
+    line-height: 1.2;
+
+    color: var(--blue-950);
+}
+
+.auth-subtitle {
+    margin: 0;
+
+    font-family: "Montserrat", sans-serif;
+    font-size: 29px;
+    font-weight: 600;
+    line-height: 1.2;
+
+    color: var(--blue-950);
+}
+
+
+/* ==================================================
+   FORM
+   ================================================== */
+
+.auth-form {
+    width: 100%;
+}
+
+.form-group {
+    width: 100%;
+    margin-bottom: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;    
+}
+
+.form-group label {
+    margin: 0;
+
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 0;
+
+    color: #1A1B53;
+}
+
+.input-wrapper {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+}
+
+
+/* Input */
+.auth-form .form-control {
+    width: 100%;
+    height: 48px;
+
+    padding: 0 48px;
+
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-sm);
+
+    background: transparent;
+
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+
+    color: var(--blue-950);
+
+    outline: none;
+
+    transition:
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+}
+
+.auth-form .form-control::placeholder {
+    color: var(--blue-500);
+}
+
+.auth-form .form-control:hover {
+    border-color: var(--blue-400);
+}
+
+.auth-form .form-control:focus {
+    border-color: var(--blue-900);
+
+    box-shadow: 0 0 0 2px rgba(0, 2, 64, 0.08);
+}
+
+
+/* ==================================================
+   INPUT ICONS
+   ================================================== */
+
+.input-icon {
+    position: absolute;
+    left: 14px;
+    z-index: 2;
+
+    width: 20px;
+    height: 20px;
+    color: #6B6C90;    
+
+    object-fit: contain;
+
+    pointer-events: none;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 28px;
+    height: 28px;
+    color: #6B6C90;      
+
+    padding: 0;
+
+    border: 0;
+    background: transparent;
+
+    cursor: pointer;
+}
+
+.password-toggle-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.icon {
+    display: inline-block;
+
+    width: 20px;
+    height: 20px;
+
+    flex-shrink: 0;
+
+    background-color: currentColor;
+
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    -webkit-mask-position: center;
+    mask-position: center;
+
+    -webkit-mask-size: contain;
+    mask-size: contain;
+}
+
+
+.icon-user {
+    -webkit-mask-image: url("../images/icons/user.svg");
+    mask-image: url("../images/icons/user.svg");
+}
+
+.icon-lock {
+    -webkit-mask-image: url("../images/icons/key-round.svg");
+    mask-image: url("../images/icons/key-round.svg");
+}
+
+.icon-eye {
+    -webkit-mask-image: url("../images/icons/eye.svg");
+    mask-image: url("../images/icons/eye.svg");
+}
+
+.icon-eye-off {
+    -webkit-mask-image: url("../images/icons/eye-off.svg");
+    mask-image: url("../images/icons/eye-off.svg");
+}
+
+.icon-mail {
+    -webkit-mask-image: url("../images/icons/mail.svg");
+    mask-image: url("../images/icons/mail.svg");
+}
+
+/* ==================================================
+   AUTH OPTIONS
+   ================================================== */
+
+.auth-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 24px;
+
+    margin: 0 0 24px;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    margin: 0;
+    padding: 0;
+
+    opacity: 0;
+    pointer-events: none;
+}
+
+.checkbox-wrapper {
+    position: relative;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    cursor: pointer;
+}
+
+.checkbox-custom {
+    position: relative;
+
+    width: 16px;
+    height: 16px;
+
+    flex: 0 0 16px;
+
+    border: 1px solid var(--blue-200);
+    border-radius: 2px;
+
+    background: transparent;
+}
+
+.checkbox-wrapper input[type="checkbox"]:checked + .checkbox-custom {
+    border-color: var(--blue-200);
+
+    box-shadow:
+        inset 0 0 0 3px #FFFFFF,
+        inset 0 0 0 8px var(--blue-800);
+}
+
+.auth-link {
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+
+    color: var(--blue-800);
+
+    text-decoration: underline;
+    text-underline-offset: 3px;
+
+    transition: color var(--transition-fast);
+}
+
+.auth-link:hover {
+    color: var(--blue-400);
+}
+
+/* ==================================================
+   AUTH BUTTONS
+   ================================================== */
+
+.auth-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 18px;
+
+    width: 100%;
+}
+
+.auth-actions .btn {
+    width: 100%;
+    height: 40px;
+
+    padding: 0 20px;
+
+    border-radius: 2px;
+
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        color var(--transition-fast);
+}
+
+
+/* PRIMARY - DEFAULT */
+
+.btn-primary {
+    border: 1px solid #1A1B53;
+
+    background-color: #1A1B53;
+
+    color: #F5F5F7;
+}
+
+
+/* PRIMARY - HOVER / ACTIVE
+   dobiva izgled secondary default buttona */
+
+.btn-primary:hover,
+.btn-primary:active {
+    border-color: #1A1B53;
+
+    background-color: #F5F5F7;
+
+    color: #1A1B53;
+}
+
+
+/* SECONDARY - DEFAULT */
+
+.btn-outline {
+    border: 1px solid #1A1B53;
+
+    background-color: #F5F5F7;
+
+    color: #1A1B53;
+}
+
+
+/* SECONDARY - HOVER / ACTIVE */
+
+.btn-outline:hover,
+.btn-outline:active {
+    border-color: #8C8DA9;
+
+    background-color: #8C8DA9;
+
+    color: #F5F5F7;
+}
+
+/* ==================================================
+   5. REGISTER
+   ================================================== */
+
+.auth-container-register {
+    max-width: 500px;
+}
+
+.auth-register-submit {
+    width: 100%;
+    height: 40px;
+    padding: 0 20px;
+    border-radius: 2px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.auth-login-prompt {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    margin-top: 14px;
+
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+
+    color: var(--blue-800);
+}
+
+/* ==================================================
+   6. APP LAYOUT
+   ================================================== */
+
+.app-page {
+    min-height: 100vh;
+    margin: 0;
+
+    background: var(--blue-50);
+
+    font-family: "Montserrat", sans-serif;
+    color: var(--blue-900);
+}
+
+.app-layout {
+    display: flex;
+
+    width: 100%;
+    min-height: 100vh;
+}
+
+
+/* ==================================================
+   SIDEBAR
+   ================================================== */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    width: var(--sidebar-width);
+    height: 100vh;
+
+    background: var(--blue-800);
+
+    color: var(--color-white);
+
+    z-index: 100;
+}
+
+
+/* ==================================================
+   SIDEBAR HEADER
+   ================================================== */
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+
+    min-height: 88px;
+
+    padding: 16px 20px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    width: 100%;
+
+    color: var(--color-white);
+    text-decoration: none;
+}
+
+.sidebar-logo {
+    width: 34px;
+    height: 34px;
+
+    flex-shrink: 0;
+
+    object-fit: contain;
+}
+
+.sidebar-brand-name {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1;
+
+    white-space: nowrap;
+}
+
+
+/* ==================================================
+   SIDEBAR NAVIGATION
+   ================================================== */
+
+.sidebar-nav {
+    flex: 1;
+
+    padding: 16px 0;
+
+    overflow-y: auto;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+.sidebar-menu-item {
+    width: 100%;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    width: 100%;
+    min-height: 48px;
+
+    padding: 0 20px;
+
+    border: 0;
+    border-radius: 0;
+
+    background: transparent;
+
+    color: var(--color-white);
+
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+
+    text-align: left;
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        background-color var(--transition-fast),
+        color var(--transition-fast);
+}
+
+.sidebar-link:hover {
+    background: var(--blue-700);
+
+    color: var(--color-white);
+}
+
+.sidebar-link.is-active {
+    background: var(--blue-500);
+
+    color: var(--color-white);
+}
+
+.sidebar-link-icon {
+    width: 20px;
+    height: 20px;
+
+    flex: 0 0 20px;
+
+    color: currentColor;
+}
+
+.sidebar-link-text {
+    line-height: 1.2;
+
+    white-space: nowrap;
+}
+
+
+/* ==================================================
+   SIDEBAR FOOTER
+   ================================================== */
+
+.sidebar-footer {
+    margin-top: auto;
+
+    padding: 16px 0 24px;
+}
+
+.sidebar-logout-form {
+    width: 100%;
+    margin: 0;
+}
+
+.sidebar-logout {
+    appearance: none;
+}
+
+.sidebar-logout:hover {
+    background: var(--blue-700);
+}
+
+
+/* ==================================================
+   MAIN APP AREA
+   ================================================== */
+
+.app-main {
+    display: flex;
+    flex-direction: column;
+
+    width: calc(100% - var(--sidebar-width));
+    min-height: 100vh;
+
+    margin-left: var(--sidebar-width);
+}
+
+
+/* ==================================================
+   APP HEADER
+   ================================================== */
+
+.app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 24px;
+
+    width: 100%;
+    min-height: 112px;
+
+    padding: 24px 40px;
+
+    background: transparent;
+}
+
+.app-header-left {
+    display: flex;
+    align-items: center;
+
+    gap: 16px;
+
+    min-width: 0;
+}
+
+.page-title {
+    margin: 0;
+
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.2;
+
+    color: var(--blue-900);
+}
+
+
+/* ==================================================
+   HEADER USER
+   ================================================== */
+
+.app-header-user {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    flex-shrink: 0;
+}
+
+.app-header-user-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 38px;
+    height: 38px;
+
+    border: 1px solid var(--blue-200);
+    border-radius: 50%;
+
+    color: var(--blue-900);
+}
+
+.app-header-user-icon .icon {
+    width: 20px;
+    height: 20px;
+}
+
+.app-header-user-info {
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+.app-header-user-name {
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.2;
+
+    color: var(--blue-900);
+}
+
+.app-header-user-email {
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.2;
+
+    color: var(--blue-500);
+}
+
+
+/* ==================================================
+   PAGE CONTENT
+   ================================================== */
+
+.app-content {
+    width: 100%;
+
+    padding: 8px 40px 40px;
+}
+
+
+/* ==================================================
+   MOBILE SIDEBAR ELEMENTS
+   Desktop: hidden
+   ================================================== */
+
+.sidebar-toggle {
+    display: none;
+}
+
+.sidebar-overlay {
+    display: none;
+}
