@@ -216,12 +216,14 @@
                             type="checkbox"
                             name="remember_me"
                             id="remember_me"
+                            {% if request.POST.remember_me %}checked{% endif %}
                         >
 
                         <span
                             class="checkbox-custom"
                             aria-hidden="true"
                         ></span>
+
 
                         <span>
                             Zapamti me

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import redirect, render
@@ -7,12 +8,6 @@ from .forms import EmailAuthenticationForm, RegistrationForm
 
 
 def register_view(request):
-    """
-    Registracija novog korisnika.
-    """
-
-    # Ako je korisnik već prijavljen, nema potrebe
-    # ponovno prikazivati registraciju.
     if request.user.is_authenticated:
         return redirect("core:dashboard")
 
@@ -28,37 +23,40 @@ def register_view(request):
             )
 
             return redirect("accounts:login")
+
     else:
         form = RegistrationForm()
 
     return render(
         request,
         "accounts/register.html",
-        {
-            "form": form,
-        },
+        {"form": form},
     )
 
 
 class CustomLoginView(LoginView):
-    """
-    Prijava korisnika putem e-mail adrese i lozinke.
-    """
-
     template_name = "accounts/login.html"
     authentication_form = EmailAuthenticationForm
-
-    # Ako je korisnik već prijavljen i ode na login,
-    # preusmjeri ga na dashboard.
     redirect_authenticated_user = True
-
-    # Nakon uspješne prijave.
     next_page = reverse_lazy("core:dashboard")
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        remember_me = self.request.POST.get("remember_me")
+
+        if remember_me:
+            # Koristi standardno Django trajanje sesije
+            # (zadano 14 dana)
+            self.request.session.set_expiry(
+                settings.SESSION_COOKIE_AGE
+            )
+        else:
+            # Sesija prestaje nakon zatvaranja preglednika
+            self.request.session.set_expiry(0)
+
+        return response
 
 
 class CustomLogoutView(LogoutView):
-    """
-    Odjava korisnika.
-    """
-
     next_page = reverse_lazy("accounts:login")
