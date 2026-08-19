@@ -133,8 +133,8 @@
                     <li class="sidebar-menu-item">
 
                         <a
-                            href="#"
-                            class="sidebar-link"
+                            href="{% url 'vehicles:list' %}"
+                            class="sidebar-link {% if request.resolver_match.namespace == 'vehicles' %}is-active{% endif %}"
                         >
 
                             <span

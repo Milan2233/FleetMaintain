@@ -1,0 +1,487 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}
+Vozila | FleetMaintain
+{% endblock %}
+
+
+{% block page_title %}
+Vozila
+{% endblock %}
+
+
+{% block page_subtitle %}
+Pregled i upravljanje vozilima i radnim strojevima
+{% endblock %}
+
+
+{% block content %}
+
+<section class="vehicles-page">
+
+    <!-- ==============================================
+         TOP ACTIONS
+         ============================================== -->
+
+    <div class="vehicles-toolbar-top">
+
+        <a
+            href="{% url 'vehicles:create' %}"
+            class="btn btn-primary vehicles-add-button"
+        >
+            <span
+                class="icon icon-plus"
+                aria-hidden="true"
+            ></span>
+
+            <span>
+                Novo vozilo / stroj
+            </span>
+        </a>
+
+    </div>
+
+
+    <!-- ==============================================
+         FILTERS
+         ============================================== -->
+
+    <form
+        method="get"
+        class="vehicles-filters"
+    >
+
+        <!-- SEARCH -->
+
+        <div class="vehicles-search">
+
+            <span
+                class="icon icon-search vehicles-search-icon"
+                aria-hidden="true"
+            ></span>
+
+            <input
+                type="search"
+                name="search"
+                value="{{ search_query }}"
+                placeholder="Pretraži vozila i strojeve..."
+                aria-label="Pretraži vozila i strojeve"
+            >
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="vehicles-filter-select">
+
+            <span class="vehicles-filter-prefix">
+                Status:
+            </span>
+
+            <select
+                name="status"
+                aria-label="Filtriraj po statusu"
+                onchange="this.form.submit()"
+            >
+
+                <option value="">
+                    Svi
+                </option>
+
+                {% for value, label in status_choices %}
+
+                    <option
+                        value="{{ value }}"
+                        {% if status_filter == value %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ label }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+
+        <!-- TYPE -->
+
+        <div class="vehicles-filter-select">
+
+            <span class="vehicles-filter-prefix">
+                Vrsta:
+            </span>
+
+            <select
+                name="type"
+                aria-label="Filtriraj po vrsti"
+                onchange="this.form.submit()"
+            >
+
+                <option value="">
+                    Sve
+                </option>
+
+                {% for value, label in type_choices %}
+
+                    <option
+                        value="{{ value }}"
+                        {% if type_filter == value %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ label }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+    </form>
+
+
+    <!-- ==============================================
+         VEHICLES TABLE
+         ============================================== -->
+
+    <div class="vehicles-table-card">
+
+        <div class="vehicles-table-scroll">
+
+            <table class="vehicles-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Vozilo / stroj</th>
+                        <th>Registracija</th>
+                        <th>Vrsta</th>
+                        <th>Km / radni sati</th>
+                        <th>Status</th>
+                        <th>Akcije</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for vehicle in vehicles %}
+
+                        <tr>
+
+                            <!-- VEHICLE -->
+
+                            <td>
+
+                                <div class="vehicle-name-cell">
+
+                                    <span class="vehicle-name">
+                                        {{ vehicle.name }}
+                                    </span>
+
+                                    <span class="vehicle-model">
+                                        {{ vehicle.manufacturer }}
+                                        {{ vehicle.model }}
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- REGISTRATION -->
+
+                            <td>
+
+                                {% if vehicle.registration_number %}
+
+                                    {{ vehicle.registration_number }}
+
+                                {% else %}
+
+                                    <span class="table-empty-value">
+                                        —
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- TYPE -->
+
+                            <td>
+                                {{ vehicle.get_vehicle_type_display }}
+                            </td>
+
+
+                            <!-- MILEAGE / WORKING HOURS -->
+
+                            <td>
+
+                                {% if vehicle.current_mileage is not None %}
+
+                                    {{ vehicle.current_mileage }}
+                                    km
+
+                                {% elif vehicle.working_hours is not None %}
+
+                                    {{ vehicle.working_hours }}
+                                    h
+
+                                {% else %}
+
+                                    <span class="table-empty-value">
+                                        —
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- STATUS -->
+
+                            <td>
+
+                                {% if vehicle.status == "OPERATIONAL" %}
+
+                                    <span class="vehicle-status vehicle-status-operational">
+                                        {{ vehicle.get_status_display }}
+                                    </span>
+
+                                {% elif vehicle.status == "IN_SERVICE" %}
+
+                                    <span class="vehicle-status vehicle-status-in-service">
+                                        {{ vehicle.get_status_display }}
+                                    </span>
+
+                                {% elif vehicle.status == "OUT_OF_ORDER" %}
+
+                                    <span class="vehicle-status vehicle-status-out-of-order">
+                                        {{ vehicle.get_status_display }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- ACTIONS -->
+
+                            <td>
+
+                                <div class="vehicle-actions">
+
+                                    <button
+                                        type="button"
+                                        class="vehicle-action-button"
+                                        aria-label="Pregled vozila {{ vehicle.name }}"
+                                        title="Pregled"
+                                    >
+                                        <span
+                                            class="icon icon-eye"
+                                            aria-hidden="true"
+                                        ></span>
+                                    </button>
+
+
+                                    <button
+                                        type="button"
+                                        class="vehicle-action-button"
+                                        aria-label="Uredi vozilo {{ vehicle.name }}"
+                                        title="Uredi"
+                                    >
+                                        <span
+                                            class="icon icon-pencil"
+                                            aria-hidden="true"
+                                        ></span>
+                                    </button>
+
+
+                                    <button
+                                        type="button"
+                                        class="vehicle-action-button vehicle-action-delete"
+                                        aria-label="Izbriši vozilo {{ vehicle.name }}"
+                                        title="Izbriši"
+                                    >
+                                        <span
+                                            class="icon icon-trash"
+                                            aria-hidden="true"
+                                        ></span>
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+
+                    {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                class="vehicles-empty"
+                            >
+
+                                <div class="vehicles-empty-content">
+
+                                    <p class="vehicles-empty-title">
+                                        Nema pronađenih vozila ili strojeva.
+                                    </p>
+
+                                    <p class="vehicles-empty-text">
+                                        Promijenite kriterije pretraživanja ili dodajte novo vozilo / stroj.
+                                    </p>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==============================================
+         TABLE FOOTER
+         ============================================== -->
+
+    {% if page_obj.paginator.count > 0 %}
+
+        <div class="vehicles-table-footer">
+
+            <p class="vehicles-result-count">
+
+                Prikazano
+
+                <strong>
+                    {{ page_obj.start_index }}–{{ page_obj.end_index }}
+                </strong>
+
+                od
+
+                <strong>
+                    {{ page_obj.paginator.count }}
+                </strong>
+
+                vozila / strojeva
+
+            </p>
+
+
+            <!-- ==============================================
+                 PAGINATION
+                 ============================================== -->
+
+            {% if page_obj.paginator.num_pages > 1 %}
+
+                <nav
+                    class="vehicles-pagination"
+                    aria-label="Stranice vozila"
+                >
+
+                    <!-- PREVIOUS -->
+
+                    {% if page_obj.has_previous %}
+
+                        <a
+                            href="?search={{ search_query|urlencode }}&status={{ status_filter|urlencode }}&type={{ type_filter|urlencode }}&page={{ page_obj.previous_page_number }}"
+                            class="pagination-button pagination-arrow"
+                            aria-label="Prethodna stranica"
+                        >
+                            ‹
+                        </a>
+
+                    {% else %}
+
+                        <span
+                            class="pagination-button pagination-arrow is-disabled"
+                            aria-hidden="true"
+                        >
+                            ‹
+                        </span>
+
+                    {% endif %}
+
+
+                    <!-- PAGE NUMBERS -->
+
+                    {% for page_number in page_obj.paginator.page_range %}
+
+                        {% if page_number == page_obj.number %}
+
+                            <span
+                                class="pagination-button is-active"
+                                aria-current="page"
+                            >
+                                {{ page_number }}
+                            </span>
+
+                        {% else %}
+
+                            <a
+                                href="?search={{ search_query|urlencode }}&status={{ status_filter|urlencode }}&type={{ type_filter|urlencode }}&page={{ page_number }}"
+                                class="pagination-button"
+                            >
+                                {{ page_number }}
+                            </a>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+
+                    <!-- NEXT -->
+
+                    {% if page_obj.has_next %}
+
+                        <a
+                            href="?search={{ search_query|urlencode }}&status={{ status_filter|urlencode }}&type={{ type_filter|urlencode }}&page={{ page_obj.next_page_number }}"
+                            class="pagination-button pagination-arrow"
+                            aria-label="Sljedeća stranica"
+                        >
+                            ›
+                        </a>
+
+                    {% else %}
+
+                        <span
+                            class="pagination-button pagination-arrow is-disabled"
+                            aria-hidden="true"
+                        >
+                            ›
+                        </span>
+
+                    {% endif %}
+
+                </nav>
+
+            {% endif %}
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}

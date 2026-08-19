@@ -2242,15 +2242,6 @@ body {
 
 
     /* ==============================================
-       SIDEBAR
-       ============================================== */
-
-    .sidebar {
-        width: min(300px, 86vw);
-    }
-
-
-    /* ==============================================
        TABLE
        ============================================== */
 
@@ -2283,4 +2274,1252 @@ body {
     .maintenance-costs-chart {
         height: 220px;
     }
+}
+
+/* ==================================================
+   8. VEHICLES PAGE
+   ================================================== */
+
+.vehicles-page {
+    width: 100%;
+}
+
+
+/* ==================================================
+   VEHICLES TOP ACTIONS
+   ================================================== */
+
+.vehicles-toolbar-top {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    width: 100%;
+
+    margin-bottom: var(--space-4);
+}
+
+.vehicles-add-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: var(--space-2);
+
+    min-height: 40px;
+
+    padding: 0 18px;
+
+    border: 1px solid var(--blue-900);
+    border-radius: var(--radius-sm);
+
+    background: var(--blue-900);
+
+    color: var(--color-white);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition:
+        background-color var(--transition-fast),
+        color var(--transition-fast),
+        border-color var(--transition-fast);
+}
+
+.vehicles-add-button:hover {
+    background: transparent;
+
+    color: var(--blue-900);
+}
+
+.vehicles-add-button .icon {
+    width: 18px;
+    height: 18px;
+}
+
+
+/* ==================================================
+   VEHICLES FILTERS
+   ================================================== */
+
+.vehicles-filters {
+    display: grid;
+
+    grid-template-columns:
+        minmax(320px, 3fr)
+        minmax(220px, 1.25fr)
+        minmax(220px, 1.25fr);
+
+    align-items: center;
+
+    gap: var(--space-4);
+
+    width: 100%;
+
+    margin-bottom: var(--space-6);
+}
+
+
+/* ==================================================
+   SEARCH
+   ================================================== */
+
+.vehicles-search {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+}
+
+.vehicles-search input {
+    width: 100%;
+    height: 44px;
+
+    padding:
+        0
+        var(--space-4)
+        0
+        44px;
+
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+
+    background: var(--color-white);
+
+    color: var(--color-text-primary);
+
+    font-family: inherit;
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+}
+
+.vehicles-search input::placeholder {
+    color: var(--color-text-muted);
+}
+
+.vehicles-search input:focus {
+    border-color: var(--blue-500);
+
+    box-shadow:
+        0 0 0 2px rgba(107, 108, 144, 0.12);
+}
+
+.vehicles-search-icon {
+    position: absolute;
+    left: var(--space-4);
+
+    width: 18px;
+    height: 18px;
+
+    color: var(--blue-500);
+
+    pointer-events: none;
+}
+
+
+/* ==================================================
+   FILTER SELECT
+   ================================================== */
+
+.vehicles-filter-select {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    height: 44px;
+
+    padding-left: var(--space-4);
+
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+
+    background: var(--color-white);
+
+    box-sizing: border-box;
+}
+
+.vehicles-filter-select select {
+    flex: 1;
+
+    min-width: 0;
+    height: 100%;
+
+    padding:
+        0
+        42px
+        0
+        4px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--blue-900);
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+
+    outline: none;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    cursor: pointer;
+}
+
+
+.vehicles-filter-select:focus-within {
+    border-color: var(--blue-500);
+
+    box-shadow:
+        0 0 0 2px rgba(107, 108, 144, 0.12);
+}
+
+.vehicles-filter-select::after {
+    content: "";
+
+    position: absolute;
+
+    top: 50%;
+    right: var(--space-4);
+
+    width: 16px;
+    height: 16px;
+
+    background-color: var(--blue-900);
+
+    -webkit-mask-image: url("../images/icons/chevron-down.svg");
+    mask-image: url("../images/icons/chevron-down.svg");
+
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    -webkit-mask-position: center;
+    mask-position: center;
+
+    -webkit-mask-size: contain;
+    mask-size: contain;
+
+    transform: translateY(-50%);
+
+    pointer-events: none;
+}
+
+
+.vehicles-filter-prefix {
+    flex-shrink: 0;
+
+    color: var(--blue-900);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    pointer-events: none;
+}
+
+
+/* ==================================================
+   VEHICLES TABLE CARD
+   ================================================== */
+
+.vehicles-table-card {
+    width: 100%;
+
+    overflow: hidden;
+
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-md);
+
+    background: var(--blue-50);
+
+    box-sizing: border-box;
+}
+
+.vehicles-table-scroll {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+
+/* ==================================================
+   VEHICLES TABLE
+   ================================================== */
+
+.vehicles-table {
+    width: 100%;
+
+    border-collapse: collapse;
+    border-spacing: 0;
+
+    table-layout: fixed;
+}
+
+.vehicles-table th,
+.vehicles-table td {
+    padding:
+        0
+        var(--space-5);
+
+    text-align: left;
+    vertical-align: middle;
+}
+
+.vehicles-table thead tr {
+    height: 58px;
+}
+
+.vehicles-table tbody tr {
+    height: 64px;
+
+    border-top: 1px solid var(--color-border);
+}
+
+.vehicles-table tbody tr:hover {
+    background: var(--blue-100);
+}
+
+.vehicles-table th {
+    color: var(--blue-900);
+
+    font-size: 19px;
+    font-weight: 600;
+}
+
+.vehicles-table td {
+    color: var(--blue-500);
+
+    font-size: 16px;
+    font-weight: 500;
+}
+
+
+/* ==================================================
+   TABLE COLUMN WIDTHS
+   ================================================== */
+
+.vehicles-table th:nth-child(1) {
+    width: 24%;
+}
+
+.vehicles-table th:nth-child(2) {
+    width: 16%;
+}
+
+.vehicles-table th:nth-child(3) {
+    width: 16%;
+}
+
+.vehicles-table th:nth-child(4) {
+    width: 18%;
+}
+
+.vehicles-table th:nth-child(5) {
+    width: 14%;
+}
+
+.vehicles-table th:nth-child(6) {
+    width: 12%;
+}
+
+
+/* ==================================================
+   VEHICLE NAME
+   ================================================== */
+
+.vehicle-name-cell {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+
+    min-width: 0;
+}
+
+.vehicle-name {
+    overflow: hidden;
+
+    color: var(--blue-900);
+
+    font-weight: 600;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vehicle-model {
+    overflow: hidden;
+
+    color: var(--blue-500);
+
+    font-size: 12px;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.table-empty-value {
+    color: var(--blue-400);
+}
+
+
+/* ==================================================
+   VEHICLE STATUS
+   ================================================== */
+
+.vehicle-status {
+    display: inline-flex;
+    align-items: center;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.vehicle-status-operational {
+    color: var(--color-success);
+}
+
+.vehicle-status-service {
+    color: var(--color-service);
+}
+
+.vehicle-status-in-service {
+    color: var(--color-service);
+}
+
+.vehicle-status-out-of-order {
+    color: var(--color-danger);
+}
+
+
+/* ==================================================
+   VEHICLE ACTIONS
+   ================================================== */
+
+.vehicle-actions {
+    display: flex;
+    align-items: center;
+
+    gap: var(--space-3);
+}
+
+.vehicle-action-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 32px;
+    height: 32px;
+
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--blue-500);
+
+    cursor: pointer;
+
+    transition: color var(--transition-fast);
+}
+
+.vehicle-action-button:hover {
+    color: var(--blue-900);
+}
+
+.vehicle-action-delete:hover {
+    color: var(--color-danger);
+}
+
+.vehicle-action-button .icon {
+    width: 24px;
+    height: 24px;
+}
+
+.icon-plus {
+    -webkit-mask-image: url("../images/icons/plus.svg");
+    mask-image: url("../images/icons/plus.svg");
+}
+
+.icon-search {
+    -webkit-mask-image: url("../images/icons/search.svg");
+    mask-image: url("../images/icons/search.svg");
+}
+
+.icon-filter {
+    -webkit-mask-image: url("../images/icons/filter.svg");
+    mask-image: url("../images/icons/eye.svg");
+}
+
+.icon-pencil {
+    -webkit-mask-image: url("../images/icons/pen.svg");
+    mask-image: url("../images/icons/pen.svg");
+}
+
+.icon-trash {
+    -webkit-mask-image: url("../images/icons/trash-2.svg");
+    mask-image: url("../images/icons/trash-2.svg");
+}
+
+
+/* ==================================================
+   EMPTY VEHICLES
+   ================================================== */
+
+.vehicles-empty {
+    height: 180px;
+}
+
+.vehicles-empty-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: var(--space-2);
+
+    width: 100%;
+
+    text-align: center;
+}
+
+.vehicles-empty-title {
+    margin: 0;
+
+    color: var(--blue-900);
+
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.vehicles-empty-text {
+    margin: 0;
+
+    color: var(--blue-500);
+
+    font-size: 14px;
+}
+
+
+/* ==================================================
+   TABLE FOOTER
+   ================================================== */
+
+.vehicles-table-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: var(--space-6);
+
+    width: 100%;
+
+    padding:
+        var(--space-6)
+        var(--space-6)
+        0;
+}
+
+.vehicles-result-count {
+    margin: 0;
+
+    color: var(--blue-500);
+
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.vehicles-result-count strong {
+    color: inherit;
+
+    font-weight: 600;
+}
+
+
+/* ==================================================
+   PAGINATION
+   ================================================== */
+
+.vehicles-pagination {
+    display: flex;
+    align-items: center;
+}
+
+.pagination-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 40px;
+    height: 40px;
+
+    margin-left: -1px;
+
+    border: 1px solid var(--color-border);
+
+    background: var(--color-white);
+
+    color: var(--blue-500);
+
+    font-size: 13px;
+    font-weight: 500;
+
+    text-decoration: none;
+
+    transition:
+        background-color var(--transition-fast),
+        color var(--transition-fast),
+        border-color var(--transition-fast);
+}
+
+.pagination-button:hover {
+    position: relative;
+
+    z-index: 1;
+
+    border-color: var(--blue-500);
+
+    background: var(--blue-50);
+
+    color: var(--blue-900);
+}
+
+.pagination-button.is-active {
+    position: relative;
+
+    z-index: 2;
+
+    border-color: var(--blue-900);
+
+    background: var(--blue-900);
+
+    color: var(--color-white);
+}
+
+.pagination-button.is-disabled {
+    color: var(--blue-300);
+
+    cursor: default;
+}
+
+.pagination-button.is-disabled:hover {
+    border-color: var(--color-border);
+
+    background: var(--color-white);
+
+    color: var(--blue-300);
+}
+
+@media (max-width: 1100px){
+    /* ==============================================
+    VEHICLES TABLE
+    Horizontal scroll
+    ============================================== */
+
+    .vehicles-table-scroll {
+        width: 100%;
+
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .vehicles-table {
+        width: 100%;
+        min-width: 950px;
+
+        table-layout: fixed;
+    }
+
+    /* ==============================================
+    VEHICLES FILTERS
+    ============================================== */
+
+    .vehicles-filters {
+        display: flex;
+        flex-wrap: wrap;
+
+        gap: var(--space-4);
+    }
+
+    .vehicles-search {
+        flex: 1 1 320px;
+    }
+
+    .vehicles-filter-select {
+        flex: 1 1 180px;
+
+        max-width: 220px;
+    }    
+}
+
+
+/* ==================================================
+   9. VEHICLE FORM PAGE
+   ================================================== */
+
+.vehicle-form-page {
+    width: 100%;
+}
+
+.vehicle-form {
+    display: flex;
+    flex-direction: column;
+
+    gap: 18px;
+
+    width: 100%;
+}
+
+
+/* ==================================================
+   VEHICLE FORM SECTION
+   ================================================== */
+
+.vehicle-form-section {
+    width: 100%;
+
+    padding: var(--space-6);
+
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-md);
+
+    background: var(--blue-50);
+
+    box-sizing: border-box;
+}
+
+.vehicle-form-section-title {
+    margin:
+        0
+        0
+        var(--space-4);
+
+    color: var(--blue-900);
+
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+
+/* ==================================================
+   VEHICLE FORM GRID
+   ================================================== */
+
+.vehicle-form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap:
+        var(--space-4)
+        var(--space-5);
+
+    width: 100%;
+}
+
+.vehicle-form-grid-three {
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+}
+
+.form-field-span-two {
+    grid-column: span 2;
+}
+
+.vehicle-form-additional-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: var(--space-5);
+
+    width: 100%;
+}
+
+
+/* ==================================================
+   FORM FIELD
+   ================================================== */
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+
+    min-width: 0;
+}
+
+.form-field label {
+    color: var(--blue-900);
+
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+
+/* ==================================================
+   TEXT INPUTS
+   ================================================== */
+
+.vehicle-form input[type="text"],
+.vehicle-form input[type="number"],
+.vehicle-form input[type="email"],
+.vehicle-form textarea,
+.vehicle-form select {
+    width: 100%;
+
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-sm);
+
+    background: var(--color-white);
+
+    color: var(--blue-900);
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+
+    outline: none;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background-color var(--transition-fast);
+}
+
+.vehicle-form input[type="text"],
+.vehicle-form input[type="number"],
+.vehicle-form input[type="email"],
+.vehicle-form select {
+    height: 42px;
+
+    padding:
+        0
+        var(--space-3);
+}
+
+.vehicle-form textarea {
+    min-height: 140px;
+
+    padding: var(--space-3);
+
+    resize: vertical;
+}
+
+
+/* ==================================================
+   PLACEHOLDER
+   ================================================== */
+
+.vehicle-form input::placeholder,
+.vehicle-form textarea::placeholder {
+    color: var(--blue-400);
+
+    opacity: 1;
+}
+
+
+/* ==================================================
+   FOCUS
+   ================================================== */
+
+.vehicle-form input:focus,
+.vehicle-form textarea:focus,
+.vehicle-form select:focus {
+    border-color: var(--blue-500);
+
+    box-shadow:
+        0 0 0 2px rgba(107, 108, 144, 0.12);
+}
+
+
+/* ==================================================
+   SELECT
+   ================================================== */
+
+.form-select-wrapper {
+    position: relative;
+
+    width: 100%;
+}
+
+.form-select-wrapper select {
+    padding-right: 42px;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    cursor: pointer;
+}
+
+.form-select-wrapper::after {
+    content: "";
+
+    position: absolute;
+
+    top: 50%;
+    right: var(--space-3);
+
+    width: 16px;
+    height: 16px;
+
+    background-color: var(--blue-500);
+
+    -webkit-mask-image:
+        url("../images/icons/chevron-down.svg");
+    mask-image:
+        url("../images/icons/chevron-down.svg");
+
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    -webkit-mask-position: center;
+    mask-position: center;
+
+    -webkit-mask-size: contain;
+    mask-size: contain;
+
+    transform: translateY(-50%);
+
+    pointer-events: none;
+}
+
+
+/* ==================================================
+   INPUT WITH UNIT
+   ================================================== */
+
+.form-input-unit {
+    position: relative;
+
+    width: 100%;
+}
+
+.form-input-unit input {
+    padding-right: 42px !important;
+}
+
+.form-input-unit > span {
+    position: absolute;
+
+    top: 50%;
+    right: var(--space-3);
+
+    color: var(--blue-500);
+
+    font-size: 12px;
+    font-weight: 500;
+
+    transform: translateY(-50%);
+
+    pointer-events: none;
+}
+
+
+/* ==================================================
+   IMAGE UPLOAD
+   ================================================== */
+
+.vehicle-image-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: var(--space-2);
+
+    width: 100%;
+    min-height: 140px;
+
+    padding: var(--space-5);
+
+    border: 1px dashed var(--blue-300);
+    border-radius: var(--radius-sm);
+
+    background: var(--color-white);
+
+    text-align: center;
+
+    box-sizing: border-box;
+
+    cursor: pointer;
+
+    transition:
+        border-color var(--transition-fast),
+        background-color var(--transition-fast);
+}
+
+.vehicle-image-upload:hover {
+    border-color: var(--blue-500);
+
+    background: var(--blue-100);
+}
+
+.vehicle-image-upload .icon {
+    width: 28px;
+    height: 28px;
+
+    color: var(--blue-500);
+}
+
+.vehicle-image-upload-title {
+    color: var(--blue-900);
+
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.vehicle-image-upload-info {
+    color: var(--blue-500);
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+
+/* Actual file input remains accessible,
+   but visually hidden */
+
+.vehicle-image-input {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    overflow: hidden;
+
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+
+    white-space: nowrap;
+}
+
+
+/* ==================================================
+   VALIDATION ERRORS
+   ================================================== */
+
+.form-field-error {
+    display: block;
+
+    margin-top: 2px;
+
+    color: var(--color-danger);
+
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.form-field:has(.form-field-error) input,
+.form-field:has(.form-field-error) textarea,
+.form-field:has(.form-field-error) select {
+    border-color: var(--color-danger);
+}
+
+
+/* ==================================================
+   FORM MESSAGE
+   ================================================== */
+
+.form-message {
+    width: 100%;
+
+    padding: var(--space-4);
+
+    border-radius: var(--radius-md);
+
+    box-sizing: border-box;
+}
+
+.form-message p {
+    margin: 0;
+
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.form-message-error {
+    border: 1px solid var(--color-danger);
+
+    background: var(--danger-bg);
+
+    color: var(--color-danger);
+}
+
+
+/* ==================================================
+   VEHICLE FORM ACTIONS
+   ================================================== */
+
+.vehicle-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: var(--space-3);
+
+    width: 100%;
+
+    padding-top: var(--space-1);
+}
+
+.vehicle-form-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: var(--space-2);
+
+    min-width: 130px;
+    height: 42px;
+
+    padding:
+        0
+        var(--space-5);
+
+    border-radius: var(--radius-sm);
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    transition:
+        background-color var(--transition-fast),
+        color var(--transition-fast),
+        border-color var(--transition-fast);
+}
+
+.vehicle-form-actions .btn .icon {
+    width: 18px;
+    height: 18px;
+}
+
+
+/* SECONDARY / CANCEL */
+
+.vehicle-form-actions .btn-outline {
+    border: 1px solid var(--blue-900);
+
+    background: transparent;
+
+    color: var(--blue-900);
+}
+
+.vehicle-form-actions .btn-outline:hover {
+    background: var(--blue-100);
+}
+
+
+/* PRIMARY / SAVE */
+
+.vehicle-form-actions .btn-primary {
+    border: 1px solid var(--blue-900);
+
+    background: var(--blue-900);
+
+    color: var(--color-white);
+}
+
+.vehicle-form-actions .btn-primary:hover {
+    background: transparent;
+
+    color: var(--blue-900);
+}
+
+.icon-upload {
+    -webkit-mask-image:
+        url("../images/icons/upload.svg");
+    mask-image:
+        url("../images/icons/upload.svg");
+}
+
+.icon-save {
+    -webkit-mask-image:
+        url("../images/icons/save.svg");
+    mask-image:
+        url("../images/icons/save.svg");
+}
+
+.vehicle-image-file-name {
+    display: block;
+
+    max-width: 100%;
+
+    overflow: hidden;
+
+    color: var(--blue-900);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    text-align: center;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width: 1100px){
+    .vehicle-form-grid-three {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .form-field-span-two {
+        grid-column: span 1;
+    }
+}
+
+@media (max-width: 767px){
+    .vehicle-form-section {
+        padding: var(--space-4);
+    }
+
+    .vehicle-form-grid,
+    .vehicle-form-grid-three,
+    .vehicle-form-additional-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-field-span-two {
+        grid-column: auto;
+    }
+
+    .vehicle-form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .vehicle-form-actions .btn {
+        width: 100%;
+    }
+
 }

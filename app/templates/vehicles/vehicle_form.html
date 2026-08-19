@@ -1,0 +1,433 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}
+Novo vozilo | FleetMaintain
+{% endblock %}
+
+
+{% block page_title %}
+Novo vozilo / stroj
+{% endblock %}
+
+
+{% block page_subtitle %}
+Unesite podatke o vozilu ili radnom stroju
+{% endblock %}
+
+
+{% block content %}
+
+<section class="vehicle-form-page">
+
+    <form
+        method="post"
+        enctype="multipart/form-data"
+        class="vehicle-form"
+    >
+
+        {% csrf_token %}
+
+
+        <!-- ==============================================
+             FORM ERRORS
+             ============================================== -->
+
+        {% if form.non_field_errors %}
+
+            <div class="form-message form-message-error">
+
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- ==============================================
+             1. BASIC INFORMATION
+             ============================================== -->
+
+        <section class="vehicle-form-section">
+
+            <h2 class="vehicle-form-section-title">
+                1. Osnovni podaci
+            </h2>
+
+
+            <div class="vehicle-form-grid vehicle-form-grid-three">
+
+
+                <!-- NAME -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.name.id_for_label }}">
+                        Naziv vozila
+                    </label>
+
+                    {{ form.name }}
+
+                    {% for error in form.name.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- VEHICLE TYPE -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.vehicle_type.id_for_label }}">
+                        Vrsta vozila
+                    </label>
+
+                    <div class="form-select-wrapper">
+                        {{ form.vehicle_type }}
+                    </div>
+
+                    {% for error in form.vehicle_type.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- MANUFACTURER -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.manufacturer.id_for_label }}">
+                        Proizvođač
+                    </label>
+
+                    {{ form.manufacturer }}
+
+                    {% for error in form.manufacturer.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- MODEL -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.model.id_for_label }}">
+                        Model
+                    </label>
+
+                    {{ form.model }}
+
+                    {% for error in form.model.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- PRODUCTION YEAR -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.production_year.id_for_label }}">
+                        Godina proizvodnje
+                    </label>
+
+                    {{ form.production_year }}
+
+                    {% for error in form.production_year.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- REGISTRATION -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.registration_number.id_for_label }}">
+                        Registracija / oznaka
+                    </label>
+
+                    {{ form.registration_number }}
+
+                    {% for error in form.registration_number.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- FUEL TYPE -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.fuel_type.id_for_label }}">
+                        Vrsta goriva
+                    </label>
+
+                    <div class="form-select-wrapper">
+                        {{ form.fuel_type }}
+                    </div>
+
+                    {% for error in form.fuel_type.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- VIN / SERIAL -->
+
+                <div class="form-field form-field-span-two">
+
+                    <label for="{{ form.vin_serial_number.id_for_label }}">
+                        VIN / serijski broj
+                    </label>
+
+                    {{ form.vin_serial_number }}
+
+                    {% for error in form.vin_serial_number.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==============================================
+             2. OPERATIONAL INFORMATION
+             ============================================== -->
+
+        <section class="vehicle-form-section">
+
+            <h2 class="vehicle-form-section-title">
+                2. Operativni podaci
+            </h2>
+
+
+            <div class="vehicle-form-grid vehicle-form-grid-three">
+
+
+                <!-- MILEAGE -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.current_mileage.id_for_label }}">
+                        Trenutna kilometraža
+                    </label>
+
+                    <div class="form-input-unit">
+
+                        {{ form.current_mileage }}
+
+                        <span>km</span>
+
+                    </div>
+
+                    {% for error in form.current_mileage.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- WORKING HOURS -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.working_hours.id_for_label }}">
+                        Radni sati
+                    </label>
+
+                    <div class="form-input-unit">
+
+                        {{ form.working_hours }}
+
+                        <span>h</span>
+
+                    </div>
+
+                    {% for error in form.working_hours.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.status.id_for_label }}">
+                        Status
+                    </label>
+
+                    <div class="form-select-wrapper">
+                        {{ form.status }}
+                    </div>
+
+                    {% for error in form.status.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==============================================
+             3. ADDITIONAL INFORMATION
+             ============================================== -->
+
+        <section class="vehicle-form-section">
+
+            <h2 class="vehicle-form-section-title">
+                3. Dodatne informacije
+            </h2>
+
+
+            <div class="vehicle-form-additional-grid">
+
+
+                <!-- NOTE -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.note.id_for_label }}">
+                        Napomena
+                    </label>
+
+                    {{ form.note }}
+
+                    {% for error in form.note.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- IMAGE -->
+
+                <div class="form-field">
+
+                    <label>
+                        Dodaj fotografiju
+                    </label>
+
+
+                    <label
+                        for="{{ form.image.id_for_label }}"
+                        class="vehicle-image-upload"
+                        data-image-upload-label
+                    >
+
+                        <span
+                            class="icon icon-upload"
+                            aria-hidden="true"
+                        ></span>
+
+                        <span class="vehicle-image-upload-title">
+                            Kliknite kako biste dodali fotografiju
+                        </span>
+
+                        <span class="vehicle-image-upload-info">
+                            PNG, JPG, JPEG, WEBP do 4 MB
+                        </span>
+
+                    </label>
+
+
+                    <div class="vehicle-image-input">
+                        {{ form.image }}
+                    </div>
+
+
+                    {% for error in form.image.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==============================================
+             ACTIONS
+             ============================================== -->
+
+        <div class="vehicle-form-actions">
+
+            <a
+                href="{% url 'vehicles:list' %}"
+                class="btn btn-outline"
+            >
+                Odustani
+            </a>
+
+
+            <button
+                type="submit"
+                class="btn btn-primary"
+            >
+
+                <span
+                    class="icon icon-save"
+                    aria-hidden="true"
+                ></span>
+
+                Spremi vozilo
+
+            </button>
+
+        </div>
+
+    </form>
+
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/vehicle-form.js' %}"></script>
+{% endblock %}
