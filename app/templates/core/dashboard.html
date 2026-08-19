@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 
 {% block title %}
@@ -11,40 +12,458 @@
 {% endblock %}
 
 
+{% block page_subtitle %}
+    Pregled stanja vozila, strojeva i održavanja
+{% endblock %}
+
+
 {% block content %}
 
-    <section class="dashboard">
+<section class="dashboard">
 
-        <div class="dashboard-header">
+    <!-- ==================================================
+         KPI CARDS
+         ================================================== -->
 
-            <div>
-                <h2 class="dashboard-title">
-                    Dobrodošli,
-                    {% if request.user.first_name %}
-                        {{ request.user.first_name }}
-                    {% else %}
-                        korisniče
-                    {% endif %}
-                </h2>
+    <div class="dashboard-kpi-grid">
 
-                <p class="dashboard-description">
-                    Pregledajte stanje vozila, održavanja i najvažnije aktivnosti.
-                </p>
+
+        <!-- Ukupno vozila -->
+
+        <article class="kpi-card">
+
+            <h2 class="kpi-card-title">
+                Ukupno vozila / strojeva
+            </h2>
+
+            <div class="kpi-card-main">
+
+                <span class="kpi-card-value">
+                    {{ total_vehicles|default:0 }}
+                </span>
+
+                <span
+                    class="icon icon-truck kpi-card-icon"
+                    aria-hidden="true"
+                ></span>
+
             </div>
 
-        </div>
-
-
-        <!-- Privremeni sadržaj dok ne složimo pravi dashboard -->
-
-        <div class="dashboard-placeholder">
-
-            <p>
-                Dashboard sadržaj uskoro dolazi ovdje.
+            <p class="kpi-card-description">
+                Broj vozila koji ste registrirali
             </p>
 
-        </div>
+        </article>
 
-    </section>
+
+        <!-- U servisu -->
+
+        <article class="kpi-card">
+
+            <h2 class="kpi-card-title">
+                U servisu
+            </h2>
+
+            <div class="kpi-card-main">
+
+                <span class="kpi-card-value">
+                    {{ vehicles_in_service|default:0 }}
+                </span>
+
+                <span
+                    class="icon icon-circle-check kpi-card-icon"
+                    aria-hidden="true"
+                ></span>
+
+            </div>
+
+            <p class="kpi-card-description">
+                Trenutačni broj vozila u servisu
+            </p>
+
+        </article>
+
+
+        <!-- Održavanja uskoro -->
+
+        <article class="kpi-card">
+
+            <h2 class="kpi-card-title">
+                Održavanja uskoro
+            </h2>
+
+            <div class="kpi-card-main">
+
+                <span class="kpi-card-value">
+                    {{ upcoming_maintenance_count|default:0 }}
+                </span>
+
+                <span
+                    class="icon icon-clock kpi-card-icon"
+                    aria-hidden="true"
+                ></span>
+
+            </div>
+
+            <p class="kpi-card-description">
+                U sljedećih 30 dana
+            </p>
+
+        </article>
+
+
+        <!-- Kašnjenje -->
+
+        <article class="kpi-card">
+
+            <h2 class="kpi-card-title">
+                Prekoračena održavanja
+            </h2>
+
+            <div class="kpi-card-main">
+
+                <span class="kpi-card-value">
+                    {{ overdue_maintenance_count|default:0 }}
+                </span>
+
+                <span
+                    class="icon icon-triangle-alert kpi-card-icon"
+                    aria-hidden="true"
+                ></span>
+
+            </div>
+
+            <p class="kpi-card-description">
+                Prekoračen rok održavanja
+            </p>
+
+        </article>
+
+
+    </div>
+
+
+    <!-- ==================================================
+        DASHBOARD MIDDLE ROW
+        ================================================== -->
+
+    <div class="dashboard-middle-grid">
+
+
+        <!-- ==================================================
+            NADOLAZEĆA ODRŽAVANJA
+            ================================================== -->
+
+        <section class="dashboard-card upcoming-maintenance-card">
+
+            <div class="dashboard-card-header">
+
+                <h2 class="dashboard-card-title">
+                    Nadolazeća održavanja
+                </h2>
+
+            </div>
+
+
+            <div class="dashboard-table-wrapper">
+
+                <table class="dashboard-table maintenance-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Vozilo / Stroj</th>
+                            <th>Vrsta održavanja</th>
+                            <th>Datum</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        <tr>
+                            <td class="maintenance-vehicle">
+                                VW Transporter
+                            </td>
+
+                            <td class="maintenance-type">
+                                Redovni servis
+                            </td>
+
+                            <td class="maintenance-date">
+                                12.05.2026.
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td class="maintenance-vehicle">
+                                Renault Master
+                            </td>
+
+                            <td class="maintenance-type">
+                                Tehnički pregled
+                            </td>
+
+                            <td class="maintenance-date">
+                                04.06.2026.
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td class="maintenance-vehicle">
+                                CAT 320
+                            </td>
+
+                            <td class="maintenance-type">
+                                Veliki servis
+                            </td>
+
+                            <td class="maintenance-date">
+                                08.06.2026.
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+
+                    <tfoot>
+
+                        <tr>
+                            <td colspan="3">
+
+                                <a
+                                    href="#"
+                                    class="dashboard-card-link"
+                                >
+                                    Prikaži sve
+                                </a>
+
+                            </td>
+                        </tr>
+
+                    </tfoot>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+            STATUS VOZILA I STROJEVA
+            ================================================== -->
+
+        <section class="dashboard-card vehicle-status-card">
+
+            <div class="dashboard-card-header">
+
+                <h2 class="dashboard-card-title">
+                    Status vozila i strojeva
+                </h2>
+
+            </div>
+
+            <div class="vehicle-status-content">
+
+                <div class="vehicle-status-chart">
+                    <canvas id="vehicleStatusChart"></canvas>
+                </div>
+
+                <div class="vehicle-status-legend">
+
+                    <div class="vehicle-status-legend-item">
+                        <span
+                            class="vehicle-status-dot vehicle-status-active"
+                        ></span>
+
+                        <span>Ispravna</span>
+                    </div>
+
+                    <div class="vehicle-status-legend-item">
+                        <span
+                            class="vehicle-status-dot vehicle-status-service"
+                        ></span>
+
+                        <span>U servisu</span>
+                    </div>
+
+                    <div class="vehicle-status-legend-item">
+                        <span
+                            class="vehicle-status-dot vehicle-status-broken"
+                        ></span>
+
+                        <span>Neispravna</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- ==================================================
+        DASHBOARD BOTTOM ROW
+        ================================================== -->
+
+    <div class="dashboard-bottom-grid">
+
+
+        <!-- ==================================================
+            TROŠKOVI ODRŽAVANJA
+            ================================================== -->
+
+        <section class="dashboard-card maintenance-costs-card">
+
+            <div class="dashboard-card-header">
+
+                <h2 class="dashboard-card-title">
+                    Troškovi održavanja
+                </h2>
+
+            </div>
+
+            <div class="maintenance-costs-content">
+
+                <div class="maintenance-costs-chart">
+                    <canvas id="maintenanceCostsChart"></canvas>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+            NEDAVNE AKTIVNOSTI
+            ================================================== -->
+
+        <section class="dashboard-card recent-activities-card">
+
+            <div class="dashboard-card-header">
+
+                <h2 class="dashboard-card-title">
+                    Nedavne aktivnosti
+                </h2>
+
+            </div>
+
+
+            <div class="recent-activities-list">
+
+                <div class="recent-activity-row">
+
+                    <div class="recent-activity-content">
+                        <span class="recent-activity-title">
+                            Dodano novo vozilo
+                        </span>
+
+                        <span class="recent-activity-vehicle">
+                            VW Transporter
+                        </span>
+                    </div>
+
+                    <span class="recent-activity-date">
+                        04.06.2026.
+                    </span>
+
+                </div>
+
+
+                <div class="recent-activity-row">
+
+                    <div class="recent-activity-content">
+                        <span class="recent-activity-title">
+                            Evidentiran redovni servis
+                        </span>
+
+                        <span class="recent-activity-vehicle">
+                            Renault Master
+                        </span>
+                    </div>
+
+                    <span class="recent-activity-date">
+                        03.06.2026.
+                    </span>
+
+                </div>
+
+
+                <div class="recent-activity-row">
+
+                    <div class="recent-activity-content">
+                        <span class="recent-activity-title">
+                            Ažurirana kilometraža
+                        </span>
+
+                        <span class="recent-activity-vehicle">
+                            VW Transporter
+                        </span>
+                    </div>
+
+                    <span class="recent-activity-date">
+                        02.06.2026.
+                    </span>
+
+                </div>
+
+
+                <div class="recent-activity-row">
+
+                    <div class="recent-activity-content">
+                        <span class="recent-activity-title">
+                            Dodana servisna dokumentacija
+                        </span>
+
+                        <span class="recent-activity-vehicle">
+                            CAT 320
+                        </span>
+                    </div>
+
+                    <span class="recent-activity-date">
+                        01.06.2026.
+                    </span>
+
+                </div>
+
+
+                <div class="recent-activity-row">
+
+                    <div class="recent-activity-content">
+                        <span class="recent-activity-title">
+                            Promijenjen status vozila
+                        </span>
+
+                        <span class="recent-activity-vehicle">
+                            Renault Master
+                        </span>
+                    </div>
+
+                    <span class="recent-activity-date">
+                        31.05.2026.
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>    
+
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="{% static 'js/dashboard.js' %}"></script>
 
 {% endblock %}

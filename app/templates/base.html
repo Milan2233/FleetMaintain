@@ -66,7 +66,7 @@
                 >
 
                     <img
-                        src="{% static 'images/logo.svg' %}"
+                        src="{% static 'images/logo-white.png' %}"
                         alt="FleetMaintain"
                         class="sidebar-logo"
                     >
@@ -76,6 +76,18 @@
                     </span>
 
                 </a>
+                
+                <button
+                    type="button"
+                    class="sidebar-close"
+                    data-sidebar-close
+                    aria-label="Zatvori navigaciju"
+                >
+                    <span
+                        class="icon icon-x"
+                        aria-hidden="true"
+                    ></span>
+                </button>
 
             </div>
 
@@ -314,75 +326,78 @@
                  HEADER
                  ================================================== -->
 
-            <header class="app-header">
+                <header class="app-header">
 
-                <div class="app-header-left">
+                    <div class="app-header-left">
 
-                    <!-- Mobile sidebar button -->
+                        <h1 class="page-title">
+                            {% block page_title %}
+                                Nadzorna ploča
+                            {% endblock %}
+                        </h1>
 
-                    <button
-                        type="button"
-                        class="sidebar-toggle"
-                        data-sidebar-toggle
-                        aria-label="Otvori navigaciju"
-                        aria-controls="sidebar"
-                        aria-expanded="false"
-                    >
-
-                        <span
-                            class="icon icon-menu"
-                            aria-hidden="true"
-                        ></span>
-
-                    </button>
-
-
-                    <!-- Naslov stranice -->
-
-                    <h1 class="page-title">
-                        {% block page_title %}
-                            Nadzorna ploča
-                        {% endblock %}
-                    </h1>
-
-                </div>
-
-
-                <!-- User -->
-
-                <div class="app-header-user">
-
-                    <div class="app-header-user-icon">
-
-                        <span
-                            class="icon icon-user"
-                            aria-hidden="true"
-                        ></span>
+                        <p class="page-subtitle">
+                            {% block page_subtitle %}
+                            {% endblock %}
+                        </p>
 
                     </div>
 
-                    <div class="app-header-user-info">
 
-                        <span class="app-header-user-name">
+                    <div class="app-header-right">
 
-                            {% if request.user.first_name %}
-                                {{ request.user.first_name }}
-                                {{ request.user.last_name }}
-                            {% else %}
-                                Korisnik
-                            {% endif %}
+                        <!-- Responsive menu button -->
 
-                        </span>
+                        <button
+                            type="button"
+                            class="sidebar-toggle"
+                            data-sidebar-toggle
+                            aria-label="Otvori navigaciju"
+                            aria-controls="sidebar"
+                            aria-expanded="false"
+                        >
+                            <span
+                                class="icon icon-menu"
+                                aria-hidden="true"
+                            ></span>
+                        </button>
 
-                        <span class="app-header-user-email">
-                            {{ request.user.email }}
-                        </span>
+
+                        <!-- User -->
+
+                        <div class="app-header-user">
+
+                            <div class="app-header-user-icon">
+
+                                <span
+                                    class="icon icon-user"
+                                    aria-hidden="true"
+                                ></span>
+
+                            </div>
+
+                            <div class="app-header-user-info">
+
+                                <span class="app-header-user-name">
+                                    {% if request.user.first_name %}
+                                        {{ request.user.first_name }}
+                                        {{ request.user.last_name }}
+                                    {% else %}
+                                        Korisnik
+                                    {% endif %}
+                                </span>
+
+                                <span class="app-header-user-email">
+                                    {{ request.user.email }}
+                                </span>
+
+                            </div>
+
+                        </div>
 
                     </div>
 
-                </div>
-
-            </header>
+                </header>
 
 
             <!-- ==================================================

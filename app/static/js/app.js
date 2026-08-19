@@ -78,4 +78,113 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
+    /* ==============================================
+    RESPONSIVE SIDEBAR
+    ============================================== */
+
+    const sidebarToggle = document.querySelector(
+        "[data-sidebar-toggle]"
+    );
+
+    const sidebarClose = document.querySelector(
+        "[data-sidebar-close]"
+    );
+
+    const sidebarLinks = document.querySelectorAll(
+        ".sidebar a.sidebar-link"
+    );
+
+
+    function openSidebar() {
+
+        document.body.classList.add("sidebar-open");
+
+        if (sidebarToggle) {
+            sidebarToggle.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+        }
+
+        document.body.style.overflow = "hidden";
+
+    }
+
+
+    function closeSidebar() {
+
+        document.body.classList.remove("sidebar-open");
+
+        if (sidebarToggle) {
+            sidebarToggle.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+        }
+
+        document.body.style.overflow = "";
+
+    }
+
+
+    /* Otvori */
+
+    if (sidebarToggle) {
+
+        sidebarToggle.addEventListener(
+            "click",
+            openSidebar
+        );
+
+    }
+
+
+    /* Zatvori preko X */
+
+    if (sidebarClose) {
+
+        sidebarClose.addEventListener(
+            "click",
+            closeSidebar
+        );
+
+    }
+
+
+    /* Zatvori nakon klika na link */
+
+    sidebarLinks.forEach((link) => {
+
+        link.addEventListener(
+            "click",
+            closeSidebar
+        );
+
+    });
+
+
+    /* Escape */
+
+    document.addEventListener("keydown", (event) => {
+
+        if (
+            event.key === "Escape" &&
+            document.body.classList.contains("sidebar-open")
+        ) {
+            closeSidebar();
+        }
+
+    });
+
+
+    /* Ako korisnik proširi ekran nazad na desktop */
+
+    window.addEventListener("resize", () => {
+
+        if (window.innerWidth >= 1366) {
+            closeSidebar();
+        }
+
+    });    
+
 });
