@@ -1,0 +1,633 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}
+Detalji vozila | FleetMaintain
+{% endblock %}
+
+
+{% block page_title %}
+Detalji vozila
+{% endblock %}
+
+
+{% block page_subtitle %}
+Pregled podataka o vozilu ili radnom stroju
+{% endblock %}
+
+
+{% block content %}
+
+<section class="vehicle-detail-page">
+
+
+    <!-- ==============================================
+         TOP ACTIONS
+         ============================================== -->
+
+    <div class="vehicle-detail-top-actions">
+
+        <a
+            href="{% url 'vehicles:list' %}"
+            class="vehicle-detail-back-button"
+        >
+            <span
+                class="icon icon-arrow-left"
+                aria-hidden="true"
+            ></span>
+
+            <span>
+                Natrag na vozila
+            </span>
+        </a>
+
+    </div>
+
+
+    <!-- ==============================================
+         VEHICLE HEADER
+         ============================================== -->
+
+    <div class="vehicle-detail-header-card">
+
+
+        <!-- IMAGE -->
+
+        <div class="vehicle-detail-image">
+
+            {% if vehicle.image %}
+
+                <img
+                    src="{{ vehicle.image.url }}"
+                    alt="{{ vehicle.name }}"
+                >
+
+            {% else %}
+
+                <div class="vehicle-detail-image-placeholder">
+
+                    <span
+                        class="icon icon-car"
+                        aria-hidden="true"
+                    ></span>
+
+                    <span>
+                        Nema fotografije
+                    </span>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- MAIN INFO -->
+
+        <div class="vehicle-detail-main-info">
+
+            <div class="vehicle-detail-title-row">
+
+                <!-- TITLE + STATUS -->
+
+                <div class="vehicle-detail-heading">
+
+                    <div class="vehicle-detail-name-status">
+
+                        <h2 class="vehicle-detail-name">
+                            {{ vehicle.name }}
+                        </h2>
+
+
+                        {% if vehicle.status == "OPERATIONAL" %}
+
+                            <span class="vehicle-status vehicle-status-operational">
+                                {{ vehicle.get_status_display }}
+                            </span>
+
+                        {% elif vehicle.status == "IN_SERVICE" %}
+
+                            <span class="vehicle-status vehicle-status-service">
+                                {{ vehicle.get_status_display }}
+                            </span>
+
+                        {% elif vehicle.status == "OUT_OF_ORDER" %}
+
+                            <span class="vehicle-status vehicle-status-out-of-order">
+                                {{ vehicle.get_status_display }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <p class="vehicle-detail-model">
+                        {{ vehicle.manufacturer }}
+                        {{ vehicle.model }}
+                    </p>
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="vehicle-detail-actions">
+
+                    <a
+                        href="{% url 'vehicles:update' vehicle.pk %}"
+                        class="vehicle-detail-action"
+                        aria-label="Uredi vozilo {{ vehicle.name }}"
+                        title="Uredi"
+                    >
+                        <span
+                            class="icon icon-pencil"
+                            aria-hidden="true"
+                        ></span>
+                    </a>
+
+
+                    <button
+                        type="button"
+                        class="vehicle-detail-action is-delete"
+                        data-delete-open
+                        aria-label="Izbriši vozilo {{ vehicle.name }}"
+                        title="Izbriši"
+                    >
+                        <span
+                            class="icon icon-trash"
+                            aria-hidden="true"
+                        ></span>
+                    </button>
+                </div>
+
+            </div>
+
+
+            <div class="vehicle-detail-summary">
+
+                <div class="vehicle-detail-summary-item">
+
+                    <span class="vehicle-detail-summary-label">
+                        Vrsta
+                    </span>
+
+                    <span class="vehicle-detail-summary-value">
+                        {{ vehicle.get_vehicle_type_display }}
+                    </span>
+
+                </div>
+
+
+                <div class="vehicle-detail-summary-item">
+
+                    <span class="vehicle-detail-summary-label">
+                        Registracija
+                    </span>
+
+                    <span class="vehicle-detail-summary-value">
+
+                        {% if vehicle.registration_number %}
+                            {{ vehicle.registration_number }}
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+                <div class="vehicle-detail-summary-item">
+
+                    <span class="vehicle-detail-summary-label">
+                        Godina
+                    </span>
+
+                    <span class="vehicle-detail-summary-value">
+
+                        {% if vehicle.production_year %}
+                            {{ vehicle.production_year }}
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==============================================
+         TABS
+         ============================================== -->
+
+    <nav
+        class="vehicle-detail-tabs"
+        aria-label="Podaci o vozilu"
+    >
+
+        <span class="vehicle-detail-tab is-active">
+            Pregled
+        </span>
+
+        <span
+            class="vehicle-detail-tab is-disabled"
+            aria-disabled="true"
+        >
+            Održavanja
+        </span>
+
+        <span
+            class="vehicle-detail-tab is-disabled"
+            aria-disabled="true"
+        >
+            Registracija i tehnički
+        </span>
+
+        <span
+            class="vehicle-detail-tab is-disabled"
+            aria-disabled="true"
+        >
+            Dokumenti
+        </span>
+
+        <span
+            class="vehicle-detail-tab is-disabled"
+            aria-disabled="true"
+        >
+            Troškovi
+        </span>
+
+    </nav>
+
+
+    <!-- ==============================================
+         DETAIL CONTENT
+         ============================================== -->
+
+    <div class="vehicle-detail-content">
+
+
+        <!-- ==============================================
+             BASIC INFORMATION
+             ============================================== -->
+
+        <section class="vehicle-detail-section">
+
+            <h3 class="vehicle-detail-section-title">
+                Osnovni podaci
+            </h3>
+
+
+            <div class="vehicle-detail-data-grid">
+
+
+                <div class="vehicle-detail-data-item">
+
+                    <span class="vehicle-detail-data-label">
+                        Naziv
+                    </span>
+
+                    <span class="vehicle-detail-data-value">
+                        {{ vehicle.name }}
+                    </span>
+
+                </div>
+
+
+                <div class="vehicle-detail-data-item">
+
+                    <span class="vehicle-detail-data-label">
+                        Vrsta vozila / stroja
+                    </span>
+
+                    <span class="vehicle-detail-data-value">
+                        {{ vehicle.get_vehicle_type_display }}
+                    </span>
+
+                </div>
+
+
+                <div class="vehicle-detail-data-item">
+
+                    <span class="vehicle-detail-data-label">
+                        Proizvođač
+                    </span>
+
+                    <span class="vehicle-detail-data-value">
+                        {{ vehicle.manufacturer }}
+                    </span>
+
+                </div>
+
+
+                <div class="vehicle-detail-data-item">
+
+                    <span class="vehicle-detail-data-label">
+                        Model
+                    </span>
+
+                    <span class="vehicle-detail-data-value">
+                        {{ vehicle.model }}
+                    </span>
+
+                </div>
+
+
+                <div class="vehicle-detail-data-item">
+
+                    <span class="vehicle-detail-data-label">
+                        Godina proizvodnje
+                    </span>
+
+                    <span class="vehicle-detail-data-value">
+
+                        {% if vehicle.production_year %}
+                            {{ vehicle.production_year }}
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+                <div class="vehicle-detail-data-item">
+
+                    <span class="vehicle-detail-data-label">
+                        Vrsta goriva
+                    </span>
+
+                    <span class="vehicle-detail-data-value">
+
+                        {% if vehicle.fuel_type %}
+                            {{ vehicle.get_fuel_type_display }}
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==============================================
+             IDENTIFICATION
+             ============================================== -->
+
+        <section class="vehicle-detail-section">
+
+            <h3 class="vehicle-detail-section-title">
+                Identifikacijski podaci
+            </h3>
+
+
+            <div class="vehicle-detail-data-grid">
+
+
+                <div class="vehicle-detail-data-item">
+
+                    <span class="vehicle-detail-data-label">
+                        Registracija / oznaka
+                    </span>
+
+                    <span class="vehicle-detail-data-value">
+
+                        {% if vehicle.registration_number %}
+                            {{ vehicle.registration_number }}
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+                <div class="vehicle-detail-data-item">
+
+                    <span class="vehicle-detail-data-label">
+                        VIN / serijski broj
+                    </span>
+
+                    <span class="vehicle-detail-data-value">
+
+                        {% if vehicle.vin_serial_number %}
+                            {{ vehicle.vin_serial_number }}
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==============================================
+             OPERATIONAL INFORMATION
+             ============================================== -->
+
+        <section class="vehicle-detail-section">
+
+            <h3 class="vehicle-detail-section-title">
+                Operativni podaci
+            </h3>
+
+
+            <div class="vehicle-detail-data-grid">
+
+
+                <div class="vehicle-detail-data-item">
+
+                    <span class="vehicle-detail-data-label">
+                        Trenutna kilometraža
+                    </span>
+
+                    <span class="vehicle-detail-data-value">
+
+                        {% if vehicle.current_mileage is not None %}
+                            {{ vehicle.current_mileage }} km
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+                <div class="vehicle-detail-data-item">
+
+                    <span class="vehicle-detail-data-label">
+                        Radni sati
+                    </span>
+
+                    <span class="vehicle-detail-data-value">
+
+                        {% if vehicle.working_hours is not None %}
+                            {{ vehicle.working_hours }} h
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+                <div class="vehicle-detail-data-item">
+
+                    <span class="vehicle-detail-data-label">
+                        Status
+                    </span>
+
+                    <span class="vehicle-detail-data-value">
+                        {{ vehicle.get_status_display }}
+                    </span>
+
+                </div>
+
+
+                <div class="vehicle-detail-data-item">
+
+                    <span class="vehicle-detail-data-label">
+                        Zadnja izmjena
+                    </span>
+
+                    <span class="vehicle-detail-data-value">
+                        {{ vehicle.updated_at|date:"d.m.Y. H:i" }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==============================================
+             NOTE
+             ============================================== -->
+
+        <section class="vehicle-detail-section">
+
+            <h3 class="vehicle-detail-section-title">
+                Napomena
+            </h3>
+
+
+            <div class="vehicle-detail-note">
+
+                {% if vehicle.note %}
+
+                    {{ vehicle.note|linebreaksbr }}
+
+                {% else %}
+
+                    <span class="vehicle-detail-empty-value">
+                        Nema dodatne napomene.
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+    </div>
+
+</section>
+
+<!-- ==============================================
+     DELETE VEHICLE MODAL
+     ============================================== -->
+
+<div
+    class="delete-modal"
+    data-delete-modal
+    aria-hidden="true"
+    hidden
+>
+
+    <div
+        class="delete-modal-backdrop"
+        data-delete-close
+    ></div>
+
+
+    <div
+        class="delete-modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="delete-modal-title"
+    >
+
+        <h2
+            class="delete-modal-title"
+            id="delete-modal-title"
+        >
+            Brisanje vozila / stroja
+        </h2>
+
+
+        <p class="delete-modal-text">
+            Jeste li sigurni da želite izbrisati
+            <strong>{{ vehicle.name }}</strong>?
+        </p>
+
+
+        <div class="delete-modal-actions">
+
+            <button
+                type="button"
+                class="btn btn-outline"
+                data-delete-close
+            >
+                Ne
+            </button>
+
+
+            <form
+                method="post"
+                action="{% url 'vehicles:delete' vehicle.pk %}"
+            >
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="btn vehicles-add-button"
+                >
+                    Da
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/vehicle-detail.js' %}"></script>
+{% endblock %}
+

@@ -281,8 +281,8 @@ Pregled i upravljanje vozilima i radnim strojevima
 
                                 <div class="vehicle-actions">
 
-                                    <button
-                                        type="button"
+                                    <a
+                                        href="{% url 'vehicles:detail' vehicle.pk %}"
                                         class="vehicle-action-button"
                                         aria-label="Pregled vozila {{ vehicle.name }}"
                                         title="Pregled"
@@ -291,11 +291,11 @@ Pregled i upravljanje vozilima i radnim strojevima
                                             class="icon icon-eye"
                                             aria-hidden="true"
                                         ></span>
-                                    </button>
+                                    </a>
 
 
-                                    <button
-                                        type="button"
+                                    <a
+                                        href="{% url 'vehicles:update' vehicle.pk %}"
                                         class="vehicle-action-button"
                                         aria-label="Uredi vozilo {{ vehicle.name }}"
                                         title="Uredi"
@@ -304,12 +304,15 @@ Pregled i upravljanje vozilima i radnim strojevima
                                             class="icon icon-pencil"
                                             aria-hidden="true"
                                         ></span>
-                                    </button>
+                                    </a>
 
 
                                     <button
                                         type="button"
                                         class="vehicle-action-button vehicle-action-delete"
+                                        data-delete-open
+                                        data-delete-name="{{ vehicle.name }}"
+                                        data-delete-url="{% url 'vehicles:delete' vehicle.pk %}"
                                         aria-label="Izbriši vozilo {{ vehicle.name }}"
                                         title="Izbriši"
                                     >
@@ -484,4 +487,77 @@ Pregled i upravljanje vozilima i radnim strojevima
 
 </section>
 
+<!-- ==============================================
+     DELETE VEHICLE MODAL
+     ============================================== -->
+
+<div
+    class="delete-modal"
+    data-delete-modal
+    aria-hidden="true"
+>
+
+    <div
+        class="delete-modal-backdrop"
+        data-delete-close
+    ></div>
+
+
+    <div
+        class="delete-modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="delete-modal-title"
+    >
+
+        <h2
+            class="delete-modal-title"
+            id="delete-modal-title"
+        >
+            Brisanje vozila / stroja
+        </h2>
+
+
+        <p class="delete-modal-text">
+            Jeste li sigurni da želite izbrisati
+            <strong data-delete-vehicle-name></strong>?
+        </p>
+
+
+        <div class="delete-modal-actions">
+
+            <button
+                type="button"
+                class="btn btn-outline"
+                data-delete-close
+            >
+                Ne
+            </button>
+
+
+            <form
+                method="post"
+                data-delete-form
+            >
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="btn vehicles-add-button"
+                >
+                    Da
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/vehicle-list.js' %}"></script>
 {% endblock %}

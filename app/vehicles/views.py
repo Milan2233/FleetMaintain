@@ -2,7 +2,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 
 from .forms import VehicleForm
 from .models import Vehicle
@@ -152,4 +153,108 @@ def vehicle_create_view(request):
         request,
         "vehicles/vehicle_form.html",
         context,
+    )
+
+# ==================================================
+# VEHICLE DETAIL
+# ==================================================
+
+@login_required
+def vehicle_detail_view(request, pk):
+
+    vehicle = get_object_or_404(
+        Vehicle,
+        pk=pk,
+        user=request.user,
+    )
+
+    context = {
+        "vehicle": vehicle,
+    }
+
+    return render(
+        request,
+        "vehicles/vehicle_detail.html",
+        context,
+    )
+
+# ==================================================
+# UPDATE VEHICLE
+# ==================================================
+
+@login_required
+def vehicle_update_view(request, pk):
+
+    vehicle = get_object_or_404(
+        Vehicle,
+        pk=pk,
+        user=request.user,
+    )
+
+    if request.method == "POST":
+
+        form = VehicleForm(
+            request.POST,
+            request.FILES,
+            instance=vehicle,
+        )
+
+        if form.is_valid():
+
+            form.save()
+
+            messages.success(
+                request,
+                "Podaci o vozilu / stroju uspješno su ažurirani.",
+            )
+
+            return redirect(
+                "vehicles:detail",
+                pk=vehicle.pk,
+            )
+
+    else:
+
+        form = VehicleForm(
+            instance=vehicle,
+        )
+
+    context = {
+        "form": form,
+        "vehicle": vehicle,
+        "is_edit": True,
+    }
+
+    return render(
+        request,
+        "vehicles/vehicle_form.html",
+        context,
+    )
+
+
+# ==================================================
+# DELETE VEHICLE
+# ==================================================
+
+@login_required
+@require_POST
+def vehicle_delete_view(request, pk):
+
+    vehicle = get_object_or_404(
+        Vehicle,
+        pk=pk,
+        user=request.user,
+    )
+
+    vehicle_name = vehicle.name
+
+    vehicle.delete()
+
+    messages.success(
+        request,
+        f'Vozilo / stroj "{vehicle_name}" uspješno je izbrisano.',
+    )
+
+    return redirect(
+        "vehicles:list"
     )
