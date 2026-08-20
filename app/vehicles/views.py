@@ -168,8 +168,51 @@ def vehicle_detail_view(request, pk):
         user=request.user,
     )
 
+
+    # ==============================================
+    # ACTIVE TAB
+    # ==============================================
+
+    active_tab = request.GET.get(
+        "tab",
+        "overview",
+    )
+
+    allowed_tabs = {
+        "overview",
+        "maintenance",
+    }
+
+    if active_tab not in allowed_tabs:
+        active_tab = "overview"
+
+
+    # ==============================================
+    # VEHICLE MAINTENANCES
+    # ==============================================
+
+    maintenances = None
+
+    if active_tab == "maintenance":
+
+        maintenances = (
+            vehicle.maintenances
+            .all()
+            .order_by(
+                "-scheduled_date",
+                "-created_at",
+            )
+        )
+
+
+    # ==============================================
+    # CONTEXT
+    # ==============================================
+
     context = {
         "vehicle": vehicle,
+        "active_tab": active_tab,
+        "maintenances": maintenances,
     }
 
     return render(

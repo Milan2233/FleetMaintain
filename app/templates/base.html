@@ -157,7 +157,7 @@
 
                         <a
                             href="{% url 'maintenance:list' %}"
-                            class="sidebar-link"
+                            class="sidebar-link {% if request.resolver_match.namespace == 'maintenance' %}is-active{% endif %}"
                         >
 
                             <span

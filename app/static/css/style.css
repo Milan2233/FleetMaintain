@@ -2969,6 +2969,75 @@ body {
     }    
 }
 
+/* ==============================================
+   VEHICLE DETAIL TABS
+   ============================================== */
+
+.vehicle-detail-tab {
+    color: var(--blue-400);
+
+    font-weight: 600;
+
+    text-decoration: none;
+
+    transition:
+        color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+/* ACTIVE TAB */
+
+.vehicle-detail-tab.is-active {
+    color: var(--blue-900);
+
+    text-decoration: none;
+}
+
+
+/* HOVER */
+
+a.vehicle-detail-tab:hover {
+    color: var(--blue-900);
+
+    text-decoration: none;
+}
+
+
+/* DISABLED / FUTURE TABS */
+
+.vehicle-detail-tab.is-disabled {
+    color: var(--blue-400);
+
+    cursor: default;
+
+    text-decoration: none;
+}
+
+/* ==============================================
+   VEHICLE MAINTENANCE TAB
+   ============================================== */
+
+.vehicle-maintenance-tab {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-4);
+
+    padding-top: var(--space-4);
+}
+
+
+/* TOOLBAR */
+
+.vehicle-maintenance-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    width: 100%;
+}
+
 
 /* ==================================================
    9. VEHICLE FORM PAGE
@@ -3957,7 +4026,7 @@ body {
 
     min-height: 48px;
 
-    color: var(--blue-900);
+    color: var(--blue-400);
 
     font-size: 19px;
     font-weight: 600;
