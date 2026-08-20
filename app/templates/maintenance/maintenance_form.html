@@ -1,0 +1,448 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}
+Novo održavanje | FleetMaintain
+{% endblock %}
+
+
+{% block page_title %}
+Novo održavanje
+{% endblock %}
+
+
+{% block page_subtitle %}
+Unesite podatke o održavanju vozila ili radnog stroja
+{% endblock %}
+
+
+{% block content %}
+
+<section class="maintenance-form-page">
+
+    <form
+        method="post"
+        class="maintenance-form"
+    >
+
+        {% csrf_token %}
+
+
+        <!-- ==============================================
+             FORM ERRORS
+             ============================================== -->
+
+        {% if form.non_field_errors %}
+
+            <div class="form-message form-message-error">
+
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- ==============================================
+             1. BASIC INFORMATION
+             ============================================== -->
+
+        <section class="maintenance-form-section">
+
+            <h2 class="maintenance-form-section-title">
+                1. Osnovni podaci
+            </h2>
+
+
+            <div class="maintenance-form-grid maintenance-form-grid-three">
+
+
+                <!-- VEHICLE -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.vehicle.id_for_label }}">
+                        Vozilo / stroj
+                    </label>
+
+                    <div class="form-select-wrapper">
+                        {{ form.vehicle }}
+                    </div>
+
+                    {% for error in form.vehicle.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- TITLE -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.title.id_for_label }}">
+                        Naziv održavanja
+                    </label>
+
+                    {{ form.title }}
+
+                    {% for error in form.title.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- TYPE -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.maintenance_type.id_for_label }}">
+                        Vrsta održavanja
+                    </label>
+
+                    <div class="form-select-wrapper">
+                        {{ form.maintenance_type }}
+                    </div>
+
+                    {% for error in form.maintenance_type.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.status.id_for_label }}">
+                        Status
+                    </label>
+
+                    <div class="form-select-wrapper">
+                        {{ form.status }}
+                    </div>
+
+                    {% for error in form.status.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- SCHEDULED DATE -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.scheduled_date.id_for_label }}">
+                        Planirani datum
+                    </label>
+
+                    {{ form.scheduled_date }}
+
+                    {% for error in form.scheduled_date.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- COMPLETED DATE -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.completed_date.id_for_label }}">
+                        Datum završetka
+                    </label>
+
+                    {{ form.completed_date }}
+
+                    {% for error in form.completed_date.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- SERVICE PROVIDER -->
+
+                <div class="form-field maintenance-form-span-three">
+
+                    <label for="{{ form.service_provider.id_for_label }}">
+                        Servis / izvođač
+                    </label>
+
+                    {{ form.service_provider }}
+
+                    {% for error in form.service_provider.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==============================================
+             2. VEHICLE STATE AND COST
+             ============================================== -->
+
+        <section class="maintenance-form-section">
+
+            <h2 class="maintenance-form-section-title">
+                2. Podaci pri održavanju
+            </h2>
+
+
+            <div class="maintenance-form-grid maintenance-form-grid-three">
+
+
+                <!-- MILEAGE -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.mileage.id_for_label }}">
+                        Kilometraža
+                    </label>
+
+                    <div class="form-input-unit">
+
+                        {{ form.mileage }}
+
+                        <span>km</span>
+
+                    </div>
+
+                    {% for error in form.mileage.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- WORKING HOURS -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.working_hours.id_for_label }}">
+                        Radni sati
+                    </label>
+
+                    <div class="form-input-unit">
+
+                        {{ form.working_hours }}
+
+                        <span>h</span>
+
+                    </div>
+
+                    {% for error in form.working_hours.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- COST -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.cost.id_for_label }}">
+                        Trošak
+                    </label>
+
+                    <div class="form-input-unit">
+
+                        {{ form.cost }}
+
+                        <span>€</span>
+
+                    </div>
+
+                    {% for error in form.cost.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==============================================
+             3. NEXT SERVICE
+             ============================================== -->
+
+        <section class="maintenance-form-section">
+
+            <h2 class="maintenance-form-section-title">
+                3. Sljedeći servis
+            </h2>
+
+
+            <div class="maintenance-form-grid maintenance-form-grid-three">
+
+
+                <!-- NEXT SERVICE DATE -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.next_service_date.id_for_label }}">
+                        Datum sljedećeg servisa
+                    </label>
+
+                    {{ form.next_service_date }}
+
+                    {% for error in form.next_service_date.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- NEXT SERVICE MILEAGE -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.next_service_mileage.id_for_label }}">
+                        Kilometraža sljedećeg servisa
+                    </label>
+
+                    <div class="form-input-unit">
+
+                        {{ form.next_service_mileage }}
+
+                        <span>km</span>
+
+                    </div>
+
+                    {% for error in form.next_service_mileage.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- NEXT SERVICE WORKING HOURS -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.next_service_working_hours.id_for_label }}">
+                        Radni sati sljedećeg servisa
+                    </label>
+
+                    <div class="form-input-unit">
+
+                        {{ form.next_service_working_hours }}
+
+                        <span>h</span>
+
+                    </div>
+
+                    {% for error in form.next_service_working_hours.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==============================================
+             4. ADDITIONAL INFORMATION
+             ============================================== -->
+
+        <section class="maintenance-form-section">
+
+            <h2 class="maintenance-form-section-title">
+                4. Dodatne informacije
+            </h2>
+
+
+            <div class="form-field">
+
+                <label for="{{ form.description.id_for_label }}">
+                    Opis radova
+                </label>
+
+                {{ form.description }}
+
+                {% for error in form.description.errors %}
+                    <span class="form-field-error">
+                        {{ error }}
+                    </span>
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
+        <!-- ==============================================
+             ACTIONS
+             ============================================== -->
+
+        <div class="maintenance-form-actions">
+
+            <a
+                href="{% url 'maintenance:list' %}"
+                class="btn btn-outline"
+            >
+                Odustani
+            </a>
+
+
+            <button
+                type="submit"
+                class="btn maintenance-save-button"
+            >
+                <span
+                    class="icon icon-save"
+                    aria-hidden="true"
+                ></span>
+
+                Spremi održavanje
+            </button>
+
+        </div>
+
+    </form>
+
+</section>
+
+{% endblock %}

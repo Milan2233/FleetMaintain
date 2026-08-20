@@ -1,0 +1,567 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}
+{{ maintenance.title }} | FleetMaintain
+{% endblock %}
+
+
+{% block page_title %}
+Detalji održavanja
+{% endblock %}
+
+
+{% block page_subtitle %}
+Pregled podataka o održavanju vozila ili radnog stroja
+{% endblock %}
+
+
+{% block content %}
+
+<section class="maintenance-detail-page">
+
+
+    <!-- ==============================================
+         TOP ACTIONS
+         ============================================== -->
+
+    <div class="maintenance-detail-top-actions">
+
+        <a
+            href="{% url 'maintenance:list' %}"
+            class="maintenance-detail-back-button"
+        >
+            <span
+                class="icon icon-arrow-left"
+                aria-hidden="true"
+            ></span>
+
+            <span>
+                Natrag na održavanja
+            </span>
+        </a>
+
+    </div>
+
+
+    <!-- ==============================================
+         MAIN HEADER
+         ============================================== -->
+
+    <section class="maintenance-detail-header-card">
+
+        <div class="maintenance-detail-heading">
+
+            <div class="maintenance-detail-title-status">
+
+                <h2 class="maintenance-detail-name">
+                    {{ maintenance.title }}
+                </h2>
+
+
+                {% if maintenance.status == "PLANNED" %}
+
+                    <span class="maintenance-status maintenance-status-planned">
+                        {{ maintenance.get_status_display }}
+                    </span>
+
+                {% elif maintenance.status == "IN_PROGRESS" %}
+
+                    <span class="maintenance-status maintenance-status-progress">
+                        {{ maintenance.get_status_display }}
+                    </span>
+
+                {% elif maintenance.status == "COMPLETED" %}
+
+                    <span class="maintenance-status maintenance-status-completed">
+                        {{ maintenance.get_status_display }}
+                    </span>
+
+                {% elif maintenance.status == "CANCELED" %}
+
+                    <span class="maintenance-status maintenance-status-canceled">
+                        {{ maintenance.get_status_display }}
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <a
+                href="{% url 'vehicles:detail' maintenance.vehicle.pk %}"
+                class="maintenance-detail-vehicle-link"
+            >
+                {{ maintenance.vehicle.name }}
+                ·
+                {{ maintenance.vehicle.manufacturer }}
+                {{ maintenance.vehicle.model }}
+            </a>
+
+        </div>
+
+
+        <!-- ACTIONS -->
+
+        <div class="maintenance-detail-actions">
+
+            <a
+                href="{% url 'maintenance:update' maintenance.pk %}"
+                class="maintenance-detail-action"
+                aria-label="Uredi održavanje {{ maintenance.title }}"
+                title="Uredi"
+            >
+                <span
+                    class="icon icon-pencil"
+                    aria-hidden="true"
+                ></span>
+            </a>
+
+
+            <button
+                type="button"
+                class="maintenance-detail-action is-delete"
+                data-delete-open
+                data-delete-name="{{ maintenance.title }}"
+                data-delete-url="{% url 'maintenance:delete' maintenance.pk %}"
+                aria-label="Izbriši održavanje {{ maintenance.title }}"
+                title="Izbriši"
+            >
+                <span
+                    class="icon icon-trash"
+                    aria-hidden="true"
+                ></span>
+            </button>
+
+        </div>
+
+
+        <!-- SUMMARY -->
+
+        <div class="maintenance-detail-summary">
+
+            <div class="maintenance-detail-summary-item">
+
+                <span class="maintenance-detail-summary-label">
+                    Vrsta
+                </span>
+
+                <span class="maintenance-detail-summary-value">
+                    {{ maintenance.get_maintenance_type_display }}
+                </span>
+
+            </div>
+
+
+            <div class="maintenance-detail-summary-item">
+
+                <span class="maintenance-detail-summary-label">
+                    Planirani datum
+                </span>
+
+                <span class="maintenance-detail-summary-value">
+
+                    {% if maintenance.scheduled_date %}
+                        {{ maintenance.scheduled_date|date:"d.m.Y." }}
+                    {% else %}
+                        —
+                    {% endif %}
+
+                </span>
+
+            </div>
+
+
+            <div class="maintenance-detail-summary-item">
+
+                <span class="maintenance-detail-summary-label">
+                    Trošak
+                </span>
+
+                <span class="maintenance-detail-summary-value">
+
+                    {% if maintenance.cost is not None %}
+                        {{ maintenance.cost|floatformat:2 }} €
+                    {% else %}
+                        —
+                    {% endif %}
+
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ==============================================
+         DETAIL GRID
+         ============================================== -->
+
+    <div class="maintenance-detail-content">
+
+
+        <!-- BASIC -->
+
+        <section class="maintenance-detail-section">
+
+            <h3 class="maintenance-detail-section-title">
+                Osnovni podaci
+            </h3>
+
+
+            <div class="maintenance-detail-data-grid">
+
+                <div class="maintenance-detail-data-item">
+
+                    <span class="maintenance-detail-data-label">
+                        Vozilo / stroj
+                    </span>
+
+                    <a
+                        href="{% url 'vehicles:detail' maintenance.vehicle.pk %}"
+                        class="maintenance-detail-data-link"
+                    >
+                        {{ maintenance.vehicle.name }}
+                    </a>
+
+                </div>
+
+
+                <div class="maintenance-detail-data-item">
+
+                    <span class="maintenance-detail-data-label">
+                        Vrsta održavanja
+                    </span>
+
+                    <span class="maintenance-detail-data-value">
+                        {{ maintenance.get_maintenance_type_display }}
+                    </span>
+
+                </div>
+
+
+                <div class="maintenance-detail-data-item">
+
+                    <span class="maintenance-detail-data-label">
+                        Status
+                    </span>
+
+                    <span class="maintenance-detail-data-value">
+                        {{ maintenance.get_status_display }}
+                    </span>
+
+                </div>
+
+
+                <div class="maintenance-detail-data-item">
+
+                    <span class="maintenance-detail-data-label">
+                        Servis
+                    </span>
+
+                    <span class="maintenance-detail-data-value">
+
+                        {% if maintenance.service_provider %}
+                            {{ maintenance.service_provider }}
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+                <div class="maintenance-detail-data-item">
+
+                    <span class="maintenance-detail-data-label">
+                        Planirani datum
+                    </span>
+
+                    <span class="maintenance-detail-data-value">
+
+                        {% if maintenance.scheduled_date %}
+                            {{ maintenance.scheduled_date|date:"d.m.Y." }}
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+                <div class="maintenance-detail-data-item">
+
+                    <span class="maintenance-detail-data-label">
+                        Datum završetka
+                    </span>
+
+                    <span class="maintenance-detail-data-value">
+
+                        {% if maintenance.completed_date %}
+                            {{ maintenance.completed_date|date:"d.m.Y." }}
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- VEHICLE STATE -->
+
+        <section class="maintenance-detail-section">
+
+            <h3 class="maintenance-detail-section-title">
+                Podaci pri održavanju
+            </h3>
+
+
+            <div class="maintenance-detail-data-grid">
+
+                <div class="maintenance-detail-data-item">
+
+                    <span class="maintenance-detail-data-label">
+                        Kilometraža
+                    </span>
+
+                    <span class="maintenance-detail-data-value">
+
+                        {% if maintenance.mileage is not None %}
+                            {{ maintenance.mileage }} km
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+                <div class="maintenance-detail-data-item">
+
+                    <span class="maintenance-detail-data-label">
+                        Radni sati
+                    </span>
+
+                    <span class="maintenance-detail-data-value">
+
+                        {% if maintenance.working_hours is not None %}
+                            {{ maintenance.working_hours }} h
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+                <div class="maintenance-detail-data-item">
+
+                    <span class="maintenance-detail-data-label">
+                        Trošak
+                    </span>
+
+                    <span class="maintenance-detail-data-value">
+
+                        {% if maintenance.cost is not None %}
+                            {{ maintenance.cost|floatformat:2 }} €
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- NEXT SERVICE -->
+
+        <section class="maintenance-detail-section">
+
+            <h3 class="maintenance-detail-section-title">
+                Sljedeći servis
+            </h3>
+
+
+            <div class="maintenance-detail-data-grid">
+
+                <div class="maintenance-detail-data-item">
+
+                    <span class="maintenance-detail-data-label">
+                        Datum
+                    </span>
+
+                    <span class="maintenance-detail-data-value">
+
+                        {% if maintenance.next_service_date %}
+                            {{ maintenance.next_service_date|date:"d.m.Y." }}
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+                <div class="maintenance-detail-data-item">
+
+                    <span class="maintenance-detail-data-label">
+                        Kilometraža
+                    </span>
+
+                    <span class="maintenance-detail-data-value">
+
+                        {% if maintenance.next_service_mileage is not None %}
+                            {{ maintenance.next_service_mileage }} km
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+
+                <div class="maintenance-detail-data-item">
+
+                    <span class="maintenance-detail-data-label">
+                        Radni sati
+                    </span>
+
+                    <span class="maintenance-detail-data-value">
+
+                        {% if maintenance.next_service_working_hours is not None %}
+                            {{ maintenance.next_service_working_hours }} h
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- DESCRIPTION -->
+
+        <section class="maintenance-detail-section maintenance-detail-description-section">
+
+            <h3 class="maintenance-detail-section-title">
+                Opis radova
+            </h3>
+
+
+            <div class="maintenance-detail-description">
+
+                {% if maintenance.description %}
+
+                    {{ maintenance.description|linebreaksbr }}
+
+                {% else %}
+
+                    <span class="maintenance-detail-empty-value">
+                        Nema dodatnog opisa.
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <!-- ==============================================
+         DELETE MODAL
+         ============================================== -->
+
+    <div
+        class="delete-modal"
+        data-delete-modal
+        aria-hidden="true"
+        hidden
+    >
+
+        <div
+            class="delete-modal-backdrop"
+            data-delete-close
+        ></div>
+
+
+        <div
+            class="delete-modal-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="delete-modal-title"
+        >
+
+            <h2
+                class="delete-modal-title"
+                id="delete-modal-title"
+            >
+                Brisanje održavanja
+            </h2>
+
+
+            <p class="delete-modal-text">
+                Jeste li sigurni da želite izbrisati
+                <strong>{{ maintenance.title }}</strong>?
+            </p>
+
+
+            <div class="delete-modal-actions">
+
+                <button
+                    type="button"
+                    class="btn btn-outline"
+                    data-delete-close
+                >
+                    Ne
+                </button>
+
+
+                <form
+                    method="post"
+                    action="{% url 'maintenance:delete' maintenance.pk %}"
+                >
+
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="btn vehicles-add-button"
+                    >
+                        Da
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

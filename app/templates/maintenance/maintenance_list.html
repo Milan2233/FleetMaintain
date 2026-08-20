@@ -3,33 +3,34 @@
 
 
 {% block title %}
-Vozila | FleetMaintain
+Održavanje | FleetMaintain
 {% endblock %}
 
 
 {% block page_title %}
-Vozila
+Održavanje
 {% endblock %}
 
 
 {% block page_subtitle %}
-Pregled i upravljanje vozilima i radnim strojevima
+Pregled i upravljanje održavanjima vozila i radnih strojeva
 {% endblock %}
 
 
 {% block content %}
 
-<section class="vehicles-page">
+<section class="maintenance-page">
+
 
     <!-- ==============================================
          TOP ACTIONS
          ============================================== -->
 
-    <div class="vehicles-toolbar-top">
+    <div class="maintenance-toolbar-top">
 
         <a
-            href="{% url 'vehicles:create' %}"
-            class="btn btn-primary vehicles-add-button"
+            href="{% url 'maintenance:create' %}"
+            class="btn btn-primary maintenance-add-button"
         >
             <span
                 class="icon icon-plus"
@@ -37,7 +38,7 @@ Pregled i upravljanje vozilima i radnim strojevima
             ></span>
 
             <span>
-                Novo vozilo / stroj
+                Novo održavanje
             </span>
         </a>
 
@@ -50,15 +51,15 @@ Pregled i upravljanje vozilima i radnim strojevima
 
     <form
         method="get"
-        class="vehicles-filters"
+        class="maintenance-filters"
     >
 
         <!-- SEARCH -->
 
-        <div class="vehicles-search">
+        <div class="maintenance-search">
 
             <span
-                class="icon icon-search vehicles-search-icon"
+                class="icon icon-search maintenance-search-icon"
                 aria-hidden="true"
             ></span>
 
@@ -66,8 +67,8 @@ Pregled i upravljanje vozilima i radnim strojevima
                 type="search"
                 name="search"
                 value="{{ search_query }}"
-                placeholder="Pretraži vozila i strojeve..."
-                aria-label="Pretraži vozila i strojeve"
+                placeholder="Pretraži održavanja..."
+                aria-label="Pretraži održavanja"
             >
 
         </div>
@@ -75,15 +76,15 @@ Pregled i upravljanje vozilima i radnim strojevima
 
         <!-- STATUS -->
 
-        <div class="vehicles-filter-select">
+        <div class="maintenance-filter-select">
 
-            <span class="vehicles-filter-prefix">
+            <span class="maintenance-filter-prefix">
                 Status:
             </span>
 
             <select
                 name="status"
-                aria-label="Filtriraj po statusu"
+                aria-label="Filtriraj prema statusu"
                 onchange="this.form.submit()"
             >
 
@@ -111,15 +112,15 @@ Pregled i upravljanje vozilima i radnim strojevima
 
         <!-- TYPE -->
 
-        <div class="vehicles-filter-select">
+        <div class="maintenance-filter-select">
 
-            <span class="vehicles-filter-prefix">
+            <span class="maintenance-filter-prefix">
                 Vrsta:
             </span>
 
             <select
                 name="type"
-                aria-label="Filtriraj po vrsti"
+                aria-label="Filtriraj prema vrsti održavanja"
                 onchange="this.form.submit()"
             >
 
@@ -144,27 +145,64 @@ Pregled i upravljanje vozilima i radnim strojevima
 
         </div>
 
+
+        <!-- VEHICLE -->
+
+        <div class="maintenance-filter-select">
+
+            <span class="maintenance-filter-prefix">
+                Vozilo / stroj:
+            </span>
+
+            <select
+                name="vehicle"
+                aria-label="Filtriraj prema vozilu ili stroju"
+                onchange="this.form.submit()"
+            >
+
+                <option value="">
+                    Svi
+                </option>
+
+                {% for vehicle in vehicles %}
+
+                    <option
+                        value="{{ vehicle.pk }}"
+                        {% if vehicle_filter == vehicle.pk|stringformat:"s" %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ vehicle.name }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
     </form>
 
 
     <!-- ==============================================
-         VEHICLES TABLE
+         MAINTENANCE TABLE
          ============================================== -->
 
-    <div class="vehicles-table-card">
+    <div class="maintenance-table-card">
 
-        <div class="vehicles-table-scroll">
+        <div class="maintenance-table-scroll">
 
-            <table class="vehicles-table">
+            <table class="maintenance-table">
 
                 <thead>
 
                     <tr>
+                        <th>Održavanje</th>
                         <th>Vozilo / stroj</th>
-                        <th>Registracija</th>
                         <th>Vrsta</th>
-                        <th>Km / radni sati</th>
+                        <th>Planirani datum</th>
                         <th>Status</th>
+                        <th>Trošak</th>
                         <th>Akcije</th>
                     </tr>
 
@@ -173,23 +211,47 @@ Pregled i upravljanje vozilima i radnim strojevima
 
                 <tbody>
 
-                    {% for vehicle in vehicles %}
+                    {% for maintenance in maintenances %}
 
                         <tr>
+
+
+                            <!-- TITLE -->
+
+                            <td>
+
+                                <div class="maintenance-title-cell">
+
+                                    <span class="maintenance-title">
+                                        {{ maintenance.title }}
+                                    </span>
+
+                                    {% if maintenance.service_provider %}
+
+                                        <span class="maintenance-provider">
+                                            {{ maintenance.service_provider }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </td>
+
 
                             <!-- VEHICLE -->
 
                             <td>
 
-                                <div class="vehicle-name-cell">
+                                <div class="maintenance-vehicle-cell">
 
-                                    <span class="vehicle-name">
-                                        {{ vehicle.name }}
+                                    <span class="maintenance-vehicle-name">
+                                        {{ maintenance.vehicle.name }}
                                     </span>
 
-                                    <span class="vehicle-model">
-                                        {{ vehicle.manufacturer }}
-                                        {{ vehicle.model }}
+                                    <span class="maintenance-vehicle-model">
+                                        {{ maintenance.vehicle.manufacturer }}
+                                        {{ maintenance.vehicle.model }}
                                     </span>
 
                                 </div>
@@ -197,45 +259,20 @@ Pregled i upravljanje vozilima i radnim strojevima
                             </td>
 
 
-                            <!-- REGISTRATION -->
-
-                            <td>
-
-                                {% if vehicle.registration_number %}
-
-                                    {{ vehicle.registration_number }}
-
-                                {% else %}
-
-                                    <span class="table-empty-value">
-                                        —
-                                    </span>
-
-                                {% endif %}
-
-                            </td>
-
-
                             <!-- TYPE -->
 
                             <td>
-                                {{ vehicle.get_vehicle_type_display }}
+                                {{ maintenance.get_maintenance_type_display }}
                             </td>
 
 
-                            <!-- MILEAGE / WORKING HOURS -->
+                            <!-- SCHEDULED DATE -->
 
                             <td>
 
-                                {% if vehicle.current_mileage is not None %}
+                                {% if maintenance.scheduled_date %}
 
-                                    {{ vehicle.current_mileage }}
-                                    km
-
-                                {% elif vehicle.working_hours is not None %}
-
-                                    {{ vehicle.working_hours }}
-                                    h
+                                    {{ maintenance.scheduled_date|date:"d.m.Y." }}
 
                                 {% else %}
 
@@ -252,22 +289,47 @@ Pregled i upravljanje vozilima i radnim strojevima
 
                             <td>
 
-                                {% if vehicle.status == "OPERATIONAL" %}
+                                {% if maintenance.status == "PLANNED" %}
 
-                                    <span class="vehicle-status vehicle-status-operational">
-                                        {{ vehicle.get_status_display }}
+                                    <span class="maintenance-status maintenance-status-planned">
+                                        {{ maintenance.get_status_display }}
                                     </span>
 
-                                {% elif vehicle.status == "IN_SERVICE" %}
+                                {% elif maintenance.status == "IN_PROGRESS" %}
 
-                                    <span class="vehicle-status vehicle-status-in-service">
-                                        {{ vehicle.get_status_display }}
+                                    <span class="maintenance-status maintenance-status-progress">
+                                        {{ maintenance.get_status_display }}
                                     </span>
 
-                                {% elif vehicle.status == "OUT_OF_ORDER" %}
+                                {% elif maintenance.status == "COMPLETED" %}
 
-                                    <span class="vehicle-status vehicle-status-out-of-order">
-                                        {{ vehicle.get_status_display }}
+                                    <span class="maintenance-status maintenance-status-completed">
+                                        {{ maintenance.get_status_display }}
+                                    </span>
+
+                                {% elif maintenance.status == "CANCELED" %}
+
+                                    <span class="maintenance-status maintenance-status-canceled">
+                                        {{ maintenance.get_status_display }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- COST -->
+
+                            <td>
+
+                                {% if maintenance.cost is not None %}
+
+                                    {{ maintenance.cost|floatformat:2 }} €
+
+                                {% else %}
+
+                                    <span class="table-empty-value">
+                                        —
                                     </span>
 
                                 {% endif %}
@@ -279,12 +341,14 @@ Pregled i upravljanje vozilima i radnim strojevima
 
                             <td>
 
-                                <div class="vehicle-actions">
+                                <div class="maintenance-actions">
+
+                                    <!-- VIEW -->
 
                                     <a
-                                        href="{% url 'vehicles:detail' vehicle.pk %}"
-                                        class="vehicle-action-button"
-                                        aria-label="Pregled vozila {{ vehicle.name }}"
+                                        href="{% url 'maintenance:detail' maintenance.pk %}"
+                                        class="maintenance-action-button"
+                                        aria-label="Pregled održavanja {{ maintenance.title }}"
                                         title="Pregled"
                                     >
                                         <span
@@ -294,10 +358,12 @@ Pregled i upravljanje vozilima i radnim strojevima
                                     </a>
 
 
+                                    <!-- EDIT -->
+
                                     <a
-                                        href="{% url 'vehicles:update' vehicle.pk %}"
-                                        class="vehicle-action-button"
-                                        aria-label="Uredi vozilo {{ vehicle.name }}"
+                                        href="{% url 'maintenance:update' maintenance.pk %}"
+                                        class="maintenance-action-button"
+                                        aria-label="Uredi održavanje {{ maintenance.title }}"
                                         title="Uredi"
                                     >
                                         <span
@@ -307,13 +373,15 @@ Pregled i upravljanje vozilima i radnim strojevima
                                     </a>
 
 
+                                    <!-- DELETE -->
+
                                     <button
                                         type="button"
-                                        class="vehicle-action-button vehicle-action-delete"
+                                        class="maintenance-action-button maintenance-action-delete"
                                         data-delete-open
-                                        data-delete-name="{{ vehicle.name }}"
-                                        data-delete-url="{% url 'vehicles:delete' vehicle.pk %}"
-                                        aria-label="Izbriši vozilo {{ vehicle.name }}"
+                                        data-delete-name="{{ maintenance.title }}"
+                                        data-delete-url="{% url 'maintenance:delete' maintenance.pk %}"
+                                        aria-label="Izbriši održavanje {{ maintenance.title }}"
                                         title="Izbriši"
                                     >
                                         <span
@@ -334,18 +402,18 @@ Pregled i upravljanje vozilima i radnim strojevima
                         <tr>
 
                             <td
-                                colspan="6"
-                                class="vehicles-empty"
+                                colspan="7"
+                                class="maintenance-empty"
                             >
 
-                                <div class="vehicles-empty-content">
+                                <div class="maintenance-empty-content">
 
-                                    <p class="vehicles-empty-title">
-                                        Nema pronađenih vozila ili strojeva.
+                                    <p class="maintenance-empty-title">
+                                        Nema pronađenih održavanja.
                                     </p>
 
-                                    <p class="vehicles-empty-text">
-                                        Promijenite kriterije pretraživanja ili dodajte novo vozilo / stroj.
+                                    <p class="maintenance-empty-text">
+                                        Promijenite kriterije pretraživanja ili dodajte novo održavanje.
                                     </p>
 
                                 </div>
@@ -371,9 +439,9 @@ Pregled i upravljanje vozilima i radnim strojevima
 
     {% if page_obj.paginator.count > 0 %}
 
-        <div class="vehicles-table-footer">
+        <div class="maintenance-table-footer">
 
-            <p class="vehicles-result-count">
+            <p class="maintenance-result-count">
 
                 Prikazano
 
@@ -387,7 +455,7 @@ Pregled i upravljanje vozilima i radnim strojevima
                     {{ page_obj.paginator.count }}
                 </strong>
 
-                vozila / strojeva
+                održavanja
 
             </p>
 
@@ -399,8 +467,8 @@ Pregled i upravljanje vozilima i radnim strojevima
             {% if page_obj.paginator.num_pages > 1 %}
 
                 <nav
-                    class="vehicles-pagination"
-                    aria-label="Stranice vozila"
+                    class="maintenance-pagination"
+                    aria-label="Stranice održavanja"
                 >
 
                     <!-- PREVIOUS -->
@@ -408,7 +476,7 @@ Pregled i upravljanje vozilima i radnim strojevima
                     {% if page_obj.has_previous %}
 
                         <a
-                            href="?search={{ search_query|urlencode }}&status={{ status_filter|urlencode }}&type={{ type_filter|urlencode }}&page={{ page_obj.previous_page_number }}"
+                            href="?search={{ search_query|urlencode }}&status={{ status_filter|urlencode }}&type={{ type_filter|urlencode }}&vehicle={{ vehicle_filter|urlencode }}&page={{ page_obj.previous_page_number }}"
                             class="pagination-button pagination-arrow"
                             aria-label="Prethodna stranica"
                         >
@@ -443,7 +511,7 @@ Pregled i upravljanje vozilima i radnim strojevima
                         {% else %}
 
                             <a
-                                href="?search={{ search_query|urlencode }}&status={{ status_filter|urlencode }}&type={{ type_filter|urlencode }}&page={{ page_number }}"
+                                href="?search={{ search_query|urlencode }}&status={{ status_filter|urlencode }}&type={{ type_filter|urlencode }}&vehicle={{ vehicle_filter|urlencode }}&page={{ page_number }}"
                                 class="pagination-button"
                             >
                                 {{ page_number }}
@@ -459,7 +527,7 @@ Pregled i upravljanje vozilima i radnim strojevima
                     {% if page_obj.has_next %}
 
                         <a
-                            href="?search={{ search_query|urlencode }}&status={{ status_filter|urlencode }}&type={{ type_filter|urlencode }}&page={{ page_obj.next_page_number }}"
+                            href="?search={{ search_query|urlencode }}&status={{ status_filter|urlencode }}&type={{ type_filter|urlencode }}&vehicle={{ vehicle_filter|urlencode }}&page={{ page_obj.next_page_number }}"
                             class="pagination-button pagination-arrow"
                             aria-label="Sljedeća stranica"
                         >
@@ -487,21 +555,17 @@ Pregled i upravljanje vozilima i radnim strojevima
 
 </section>
 
-<!-- ==============================================
-     DELETE VEHICLE MODAL
-     ============================================== -->
-
 <div
     class="delete-modal"
     data-delete-modal
     aria-hidden="true"
+    hidden
 >
 
     <div
         class="delete-modal-backdrop"
         data-delete-close
     ></div>
-
 
     <div
         class="delete-modal-dialog"
@@ -514,15 +578,13 @@ Pregled i upravljanje vozilima i radnim strojevima
             class="delete-modal-title"
             id="delete-modal-title"
         >
-            Brisanje vozila / stroja
+            Brisanje održavanja
         </h2>
-
 
         <p class="delete-modal-text">
             Jeste li sigurni da želite izbrisati
             <strong data-delete-name></strong>?
         </p>
-
 
         <div class="delete-modal-actions">
 
@@ -533,7 +595,6 @@ Pregled i upravljanje vozilima i radnim strojevima
             >
                 Ne
             </button>
-
 
             <form
                 method="post"
@@ -547,7 +608,6 @@ Pregled i upravljanje vozilima i radnim strojevima
                 >
                     Da
                 </button>
-
             </form>
 
         </div>

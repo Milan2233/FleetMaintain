@@ -152,6 +152,8 @@ Pregled podataka o vozilu ili radnom stroju
                         type="button"
                         class="vehicle-detail-action is-delete"
                         data-delete-open
+                        data-delete-name="{{ vehicle.name }}"
+                        data-delete-url="{% url 'vehicles:delete' vehicle.pk %}"
                         aria-label="Izbriši vozilo {{ vehicle.name }}"
                         title="Izbriši"
                     >
@@ -605,7 +607,6 @@ Pregled podataka o vozilu ili radnom stroju
 
             <form
                 method="post"
-                action="{% url 'vehicles:delete' vehicle.pk %}"
             >
 
                 {% csrf_token %}
@@ -627,7 +628,4 @@ Pregled podataka o vozilu ili radnom stroju
 
 {% endblock %}
 
-{% block extra_js %}
-<script src="{% static 'js/vehicle-detail.js' %}"></script>
-{% endblock %}
 
