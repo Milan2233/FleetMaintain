@@ -1,12 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
 from .forms import VehicleForm
 from .models import Vehicle
+from decimal import Decimal
+from django.utils import timezone
 
 
 # ==================================================
@@ -168,6 +170,152 @@ def vehicle_detail_view(request, pk):
         user=request.user,
     )
 
+    # ==============================================
+    # MAINTENANCE STATISTICS
+    # ==============================================
+
+    vehicle_maintenances = (
+        vehicle.maintenances
+        .all()
+    )
+
+
+    # Total number of maintenances
+
+    total_maintenances = (
+        vehicle_maintenances
+        .count()
+    )
+
+
+    # Last completed maintenance
+
+    last_maintenance = (
+        vehicle_maintenances
+        .filter(
+            status="COMPLETED",
+            completed_date__isnull=False,
+        )
+        .order_by(
+            "-completed_date",
+            "-created_at",
+        )
+        .first()
+    )
+
+
+    # ==============================================
+    # NEXT SERVICE
+    # ==============================================
+
+    today = timezone.localdate()
+
+
+    # Najbliže planirano održavanje
+
+    next_planned_maintenance = (
+        vehicle_maintenances
+        .filter(
+            scheduled_date__gte=today,
+        )
+        .exclude(
+            status__in=[
+                "COMPLETED",
+                "CANCELED",
+            ]
+        )
+        .order_by(
+            "scheduled_date",
+            "created_at",
+        )
+        .first()
+    )
+
+
+    # Preporučeni sljedeći servis iz zadnjeg
+    # završenog održavanja
+
+    recommended_service_date = None
+    recommended_service_mileage = None
+    recommended_service_working_hours = None
+
+    if last_maintenance:
+
+        recommended_service_date = (
+            last_maintenance.next_service_date
+        )
+
+        recommended_service_mileage = (
+            last_maintenance.next_service_mileage
+        )
+
+        recommended_service_working_hours = (
+            last_maintenance.next_service_working_hours
+        )
+
+
+    # Odabir najbližeg sljedećeg servisa
+
+    next_service_date = None
+    next_service_mileage = None
+    next_service_working_hours = None
+    next_service_title = None
+    next_service_is_planned = False
+    next_service_overdue = False
+
+
+    if (
+        next_planned_maintenance
+        and next_planned_maintenance.scheduled_date
+        and (
+            not recommended_service_date
+            or
+            next_planned_maintenance.scheduled_date
+            <= recommended_service_date
+        )
+    ):
+
+        next_service_date = (
+            next_planned_maintenance.scheduled_date
+        )
+
+        next_service_title = (
+            next_planned_maintenance.title
+        )
+
+        next_service_is_planned = True
+
+    else:
+
+        next_service_date = (
+            recommended_service_date
+        )
+
+        next_service_mileage = (
+            recommended_service_mileage
+        )
+
+        next_service_working_hours = (
+            recommended_service_working_hours
+        )
+
+
+    if (
+        next_service_date
+        and next_service_date < today
+    ):
+        next_service_overdue = True
+
+    # Total maintenance costs
+
+    total_maintenance_cost = (
+        vehicle_maintenances
+        .aggregate(
+            total=Sum("cost")
+        )["total"]
+        or Decimal("0.00")
+    )    
+
 
     # ==============================================
     # ACTIVE TAB
@@ -213,6 +361,18 @@ def vehicle_detail_view(request, pk):
         "vehicle": vehicle,
         "active_tab": active_tab,
         "maintenances": maintenances,
+
+        "total_maintenances": total_maintenances,
+        "last_maintenance": last_maintenance,
+
+        "next_service_date": next_service_date,
+        "next_service_mileage": next_service_mileage,
+        "next_service_working_hours": next_service_working_hours,
+        "next_service_overdue": next_service_overdue,
+        "next_service_title": next_service_title,
+        "next_service_is_planned": next_service_is_planned,        
+
+        "total_maintenance_cost": total_maintenance_cost,
     }
 
     return render(

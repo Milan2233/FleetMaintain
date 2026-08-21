@@ -21,6 +21,146 @@ Pregled i upravljanje održavanjima vozila i radnih strojeva
 
 <section class="maintenance-page">
 
+        <!-- ==============================================
+        MAINTENANCE STATISTICS
+        ============================================== -->
+
+    <div class="maintenance-stats">
+
+
+        <!-- TOTAL MAINTENANCES -->
+
+        <div class="maintenance-stat-card">
+
+            <div class="maintenance-stat-icon">
+
+                <span
+                    class="icon icon-wrench"
+                    aria-hidden="true"
+                ></span>
+
+            </div>
+
+
+            <div class="maintenance-stat-content">
+
+                <span class="maintenance-stat-label">
+                    Održavanja
+                </span>
+
+                <strong class="maintenance-stat-value">
+                    {{ total_maintenances }}
+                </strong>
+
+                <span class="maintenance-stat-description">
+                    Ukupan broj evidentiranih održavanja
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- UPCOMING -->
+
+        <div class="maintenance-stat-card">
+
+            <div class="maintenance-stat-icon">
+
+                <span
+                    class="icon icon-calendar"
+                    aria-hidden="true"
+                ></span>
+
+            </div>
+
+
+            <div class="maintenance-stat-content">
+
+                <span class="maintenance-stat-label">
+                    Održavanja uskoro
+                </span>
+
+                <strong class="maintenance-stat-value">
+                    {{ upcoming_maintenances }}
+                </strong>
+
+                <span class="maintenance-stat-description">
+                    Planirana u sljedećih 30 dana
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- OVERDUE -->
+
+        <div class="maintenance-stat-card">
+
+            <div class="maintenance-stat-icon">
+
+                <span
+                    class="icon icon-clock"
+                    aria-hidden="true"
+                ></span>
+
+            </div>
+
+
+            <div class="maintenance-stat-content">
+
+                <span class="maintenance-stat-label">
+                    Prekoračena
+                </span>
+
+                <strong class="maintenance-stat-value">
+                    {{ overdue_maintenances }}
+                </strong>
+
+                <span class="maintenance-stat-description">
+                    Održavanja s prekoračenim rokom
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL COSTS -->
+
+        <div class="maintenance-stat-card">
+
+            <div class="maintenance-stat-icon">
+
+                <span
+                    class="icon icon-euro"
+                    aria-hidden="true"
+                ></span>
+
+            </div>
+
+
+            <div class="maintenance-stat-content">
+
+                <span class="maintenance-stat-label">
+                    Troškovi
+                </span>
+
+                <strong class="maintenance-stat-value">
+                    {{ total_costs|floatformat:2 }} €
+                </strong>
+
+                <span class="maintenance-stat-description">
+                    Ukupni trošak svih održavanja
+                </span>
+
+            </div>
+
+        </div>
+
+
+    </div>    
 
     <!-- ==============================================
          TOP ACTIONS
@@ -43,6 +183,8 @@ Pregled i upravljanje održavanjima vozila i radnih strojeva
         </a>
 
     </div>
+
+
 
 
     <!-- ==============================================

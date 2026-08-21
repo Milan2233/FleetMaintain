@@ -575,6 +575,192 @@ Pregled podataka o vozilu ili radnom stroju
 
                 <div class="vehicle-maintenance-tab">
 
+                    <!-- ==============================================
+                        MAINTENANCE STATISTICS
+                        ============================================== -->
+
+                    <div class="vehicle-maintenance-stats">
+
+
+                        <!-- TOTAL MAINTENANCES -->
+
+                        <div class="vehicle-maintenance-stat-card">
+
+                            <div class="vehicle-maintenance-stat-icon">
+                                <span
+                                    class="icon icon-wrench"
+                                    aria-hidden="true"
+                                ></span>
+                            </div>
+
+
+                            <div class="vehicle-maintenance-stat-content">
+
+                                <span class="vehicle-maintenance-stat-label">
+                                    Ukupno održavanja
+                                </span>
+
+                                <strong class="vehicle-maintenance-stat-value">
+                                    {{ total_maintenances }}
+                                </strong>
+
+                                <span class="vehicle-maintenance-stat-description">
+                                    Za {{ vehicle.name }}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- LAST MAINTENANCE -->
+
+                        <div class="vehicle-maintenance-stat-card">
+
+                            <div class="vehicle-maintenance-stat-icon">
+                                <span
+                                    class="icon icon-clipboard-check"
+                                    aria-hidden="true"
+                                ></span>
+                            </div>
+
+
+                            <div class="vehicle-maintenance-stat-content">
+
+                                <span class="vehicle-maintenance-stat-label">
+                                    Zadnje održavanje
+                                </span>
+
+                                <strong class="vehicle-maintenance-stat-value">
+
+                                    {% if last_maintenance %}
+                                        {{ last_maintenance.completed_date|date:"d.m.Y." }}
+                                    {% else %}
+                                        —
+                                    {% endif %}
+
+                                </strong>
+
+                                <span class="vehicle-maintenance-stat-description">
+
+                                    {% if last_maintenance %}
+                                        {{ last_maintenance.title }}
+                                    {% else %}
+                                        Nema završenih održavanja
+                                    {% endif %}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- NEXT SERVICE -->
+
+                        <div class="vehicle-maintenance-stat-card">
+
+                            <div class="vehicle-maintenance-stat-icon">
+                                <span
+                                    class="icon icon-clock"
+                                    aria-hidden="true"
+                                ></span>
+                            </div>
+
+
+                            <div class="vehicle-maintenance-stat-content">
+
+                                <span class="vehicle-maintenance-stat-label">
+                                    Sljedeći servis
+                                </span>
+
+                                <strong class="vehicle-maintenance-stat-value">
+
+                                    {% if next_service_date %}
+                                        {{ next_service_date|date:"d.m.Y." }}
+                                    {% elif next_service_mileage %}
+                                        {{ next_service_mileage }} km
+                                    {% elif next_service_working_hours %}
+                                        {{ next_service_working_hours }} h
+                                    {% else %}
+                                        —
+                                    {% endif %}
+
+                                </strong>
+
+
+                                <span class="vehicle-maintenance-stat-description">
+
+                                    {% if next_service_overdue %}
+
+                                        Rok je prekoračen
+
+                                    {% elif next_service_date and next_service_working_hours %}
+
+                                        Na {{ next_service_working_hours }} h
+
+                                    {% elif next_service_date and next_service_mileage %}
+
+                                        Na {{ next_service_mileage }} km
+
+                                    {% elif next_service_date %}
+
+                                        Prema datumu servisa
+
+                                    {% elif next_service_working_hours %}
+
+                                        Prema radnim satima
+
+                                    {% elif next_service_mileage %}
+
+                                        Prema kilometraži
+
+                                    {% else %}
+
+                                        Sljedeći servis nije definiran
+
+                                    {% endif %}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- TOTAL COST -->
+
+                        <div class="vehicle-maintenance-stat-card">
+
+                            <div class="vehicle-maintenance-stat-icon">
+                                <span
+                                    class="icon icon-euro"
+                                    aria-hidden="true"
+                                ></span>
+                            </div>
+
+
+                            <div class="vehicle-maintenance-stat-content">
+
+                                <span class="vehicle-maintenance-stat-label">
+                                    Ukupni trošak
+                                </span>
+
+                                <strong class="vehicle-maintenance-stat-value">
+                                    {{ total_maintenance_cost|floatformat:2 }} €
+                                </strong>
+
+                                <span class="vehicle-maintenance-stat-description">
+                                    Sva održavanja
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>                    
+
 
                     <!-- ==============================================
                         TAB ACTION

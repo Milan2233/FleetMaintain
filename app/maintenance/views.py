@@ -1,12 +1,15 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
 from .forms import MaintenanceForm
 from .models import Maintenance
+from datetime import timedelta
+from decimal import Decimal
+from django.utils import timezone
 
 
 # ==================================================
@@ -16,11 +19,67 @@ from .models import Maintenance
 @login_required
 def maintenance_list_view(request):
 
-    maintenances = (
+    # ==============================================
+    # USER MAINTENANCES
+    # ==============================================
+
+    base_maintenances = (
         Maintenance.objects
         .filter(vehicle__user=request.user)
         .select_related("vehicle")
     )
+
+
+    # ==============================================
+    # STATISTICS
+    # ==============================================
+
+    today = timezone.localdate()
+
+    upcoming_limit = today + timedelta(days=30)
+
+
+    total_maintenances = (
+        base_maintenances.count()
+    )
+
+
+    upcoming_maintenances = (
+        base_maintenances
+        .filter(
+            next_service_date__gte=today,
+            next_service_date__lte=upcoming_limit,
+        )
+        .count()
+    )
+
+
+    overdue_maintenances = (
+        base_maintenances
+        .filter(
+            scheduled_date__lt=today,
+        )
+        .exclude(
+            status__in=[
+                Maintenance.Status.COMPLETED,
+                Maintenance.Status.CANCELED,
+            ]
+        )
+        .count()
+    )
+
+
+    total_costs = (
+        base_maintenances
+        .aggregate(
+            total=Sum("cost")
+        )["total"]
+        or Decimal("0.00")
+    )
+
+
+    # Queryset koji dalje koriste search/filteri
+    maintenances = base_maintenances
 
 
     # ==============================================
@@ -131,6 +190,11 @@ def maintenance_list_view(request):
         "type_choices": Maintenance.MaintenanceType.choices,
 
         "vehicles": vehicles,
+
+        "total_maintenances": total_maintenances,
+        "upcoming_maintenances": upcoming_maintenances,
+        "overdue_maintenances": overdue_maintenances,
+        "total_costs": total_costs,
     }
 
     return render(

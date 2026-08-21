@@ -4159,7 +4159,6 @@ a.vehicle-detail-tab:hover {
 
 /* ==================================================
    NOTE
-   Zadnja kartica preko cijele širine
    ================================================== */
 
 .vehicle-detail-section:last-child {
@@ -4369,7 +4368,110 @@ a.vehicle-detail-tab:hover {
     color: var(--color-danger);
 }
 
+/* ==============================================
+   VEHICLE MAINTENANCE STATISTICS
+   ============================================== */
 
+.vehicle-maintenance-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+
+    gap: var(--space-4);
+
+    width: 100%;
+
+    margin-bottom: var(--space-4);
+}
+
+
+/* CARD */
+
+.vehicle-maintenance-stat-card {
+    display: flex;
+    align-items: center;
+
+    gap: var(--space-4);
+
+    min-width: 0;
+    min-height: 130px;
+
+    padding: var(--space-5);
+
+    background-color: var(--blue-50);
+
+    border: 1px solid var(--blue-200);
+    border-radius: 4px;
+}
+
+
+/* ICON */
+
+.vehicle-maintenance-stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    color: var(--blue-500);
+}
+
+.vehicle-maintenance-stat-icon .icon {
+    width: 32px;
+    height: 32px;
+}
+
+
+/* CONTENT */
+
+.vehicle-maintenance-stat-content {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-2);
+
+    min-width: 0;
+}
+
+
+/* LABEL */
+
+.vehicle-maintenance-stat-label {
+    color: var(--blue-500);
+
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+
+/* VALUE */
+
+.vehicle-maintenance-stat-value {
+    color: var(--blue-900);
+
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+
+    white-space: nowrap;
+}
+
+
+/* DESCRIPTION */
+
+.vehicle-maintenance-stat-description {
+    color: var(--blue-500);
+
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.icon-clipboard-check {
+    -webkit-mask-image: url("../images/icons/clipboard-check.svg");
+    mask-image: url("../images/icons/clipboard-check.svg");
+}
 
 /* ==================================================
    <= 1365px
@@ -4588,6 +4690,121 @@ a.vehicle-detail-tab:hover {
     height: 18px;
 }
 
+/* ==============================================
+   MAINTENANCE STATISTICS
+   ============================================== */
+
+.maintenance-stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+
+    gap: var(--space-4);
+
+    width: 100%;
+
+    margin-bottom: var(--space-6);
+}
+
+
+/* CARD */
+
+.maintenance-stat-card {
+    display: flex;
+    align-items: center;
+
+    gap: var(--space-4);
+
+    min-width: 0;
+    min-height: 130px;
+
+    padding: var(--space-4);
+
+    background-color: var(--blue-50);
+
+    border: 1px solid var(--blue-200);
+    border-radius: 4px;
+}
+
+
+/* ICON */
+
+.maintenance-stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    color: var(--blue-500);
+}
+
+.maintenance-stat-icon .icon {
+    width: 36px;
+    height: 36px;
+}
+
+.icon-wrench {
+    -webkit-mask-image: url("../images/icons/wrench.svg");
+    mask-image: url("../images/icons/wrench.svg");
+}
+
+.icon-calendar {
+    -webkit-mask-image: url("../images/icons/calendar.svg");
+    mask-image: url("../images/icons/calendar.svg");
+}
+
+.icon-clock {
+    -webkit-mask-image: url("../images/icons/clock.svg");
+    mask-image: url("../images/icons/clock.svg");
+}
+
+.icon-euro {
+    -webkit-mask-image: url("../images/icons/euro.svg");
+    mask-image: url("../images/icons/euro.svg");
+}
+
+/* CONTENT */
+
+.maintenance-stat-content {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-2);
+
+    min-width: 0;
+}
+
+
+/* LABEL */
+
+.maintenance-stat-label {
+    color: var(--blue-500);
+
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+
+/* VALUE */
+
+.maintenance-stat-value {
+    color: var(--blue-900);
+
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+
+    white-space: nowrap;
+}
+
+.maintenance-stat-description {
+    color: var(--blue-500);
+
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.3;
+}
 
 /* ==================================================
    MAINTENANCE FILTERS
@@ -5552,7 +5769,12 @@ a.vehicle-detail-tab:hover {
 
     .maintenance-form-span-three {
         grid-column: 1 / -1;
-    }  
+    } 
+    
+    .maintenance-stats {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }    
 } 
 
 @media (max-width: 767px) {
@@ -5579,6 +5801,25 @@ a.vehicle-detail-tab:hover {
     .maintenance-form-actions .btn {
         width: 100%;
     }
+
+    .maintenance-stats {
+        grid-template-columns: 1fr;
+
+        gap: var(--space-3);
+
+        margin-bottom: var(--space-4);
+    }
+
+    .maintenance-stat-card {
+        min-height: 82px;
+
+        padding: var(--space-4);
+    }
+
+    .maintenance-stat-icon .icon {
+        width: 32px;
+        height: 32px;
+    }  
 }    
 
 /* ==================================================
