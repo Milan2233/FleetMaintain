@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'activities',
     'core',
     'registrations',
+    'documents',
 ]
 
 AUTH_USER_MODEL = "accounts.CustomUser"

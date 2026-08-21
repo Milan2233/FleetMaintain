@@ -264,12 +264,12 @@ Pregled podataka o vozilu ili radnom stroju
                     Registracija i tehnički
                 </a>
 
-                <span
-                    class="vehicle-detail-tab is-disabled"
-                    aria-disabled="true"
+                <a
+                    href="{% url 'vehicles:detail' vehicle.pk %}?tab=documents"
+                    class="vehicle-detail-tab {% if active_tab == 'documents' %}is-active{% endif %}"
                 >
                     Dokumenti
-                </span>
+                </a>
 
                 <span
                     class="vehicle-detail-tab is-disabled"
@@ -1474,6 +1474,241 @@ Pregled podataka o vozilu ili radnom stroju
 
                                                     <p class="registration-empty-text">
                                                         Dodajte prvu registraciju ili tehnički pregled za ovo vozilo ili stroj.
+                                                    </p>
+
+                                                </div>
+
+                                            </td>
+
+                                        </tr>
+
+                                    {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endif %}   
+            
+            <!-- ==============================================
+                DOCUMENTS TAB
+                ============================================== -->
+
+            {% if active_tab == "documents" %}
+
+                <div class="vehicle-documents-tab">
+
+
+                    <!-- ==============================================
+                        TOOLBAR
+                        ============================================== -->
+
+                    <div class="vehicle-documents-toolbar">
+
+                        <a
+                            href="{% url 'documents:create' %}?vehicle={{ vehicle.pk }}"
+                            class="vehicles-add-button"
+                        >
+                            <span
+                                class="icon icon-plus"
+                                aria-hidden="true"
+                            ></span>
+
+                            Novi dokument
+                        </a>
+
+                    </div>
+
+
+                    <!-- ==============================================
+                        DOCUMENTS TABLE
+                        ============================================== -->
+
+                    <div class="documents-table-card">
+
+                        <div class="documents-table-scroll">
+
+                            <table class="documents-table">
+
+                                <thead>
+
+                                    <tr>
+                                        <th>Dokument</th>
+                                        <th>Vrsta</th>
+                                        <th>Datum izdavanja</th>
+                                        <th>Vrijedi do</th>
+                                        <th>Datoteka</th>
+                                        <th>Akcije</th>
+                                    </tr>
+
+                                </thead>
+
+
+                                <tbody>
+
+                                    {% for document in vehicle_documents %}
+
+                                        <tr>
+
+
+                                            <!-- NAME -->
+
+                                            <td>
+
+                                                <div class="document-title-cell">
+
+                                                    <span class="document-title">
+                                                        {{ document.name }}
+                                                    </span>
+
+                                                    {% if document.description %}
+
+                                                        <span class="document-description">
+                                                            {{ document.description|truncatechars:55 }}
+                                                        </span>
+
+                                                    {% endif %}
+
+                                                </div>
+
+                                            </td>
+
+
+                                            <!-- TYPE -->
+
+                                            <td>
+                                                {{ document.get_document_type_display }}
+                                            </td>
+
+
+                                            <!-- ISSUE DATE -->
+
+                                            <td>
+
+                                                {% if document.issue_date %}
+
+                                                    {{ document.issue_date|date:"d.m.Y." }}
+
+                                                {% else %}
+
+                                                    <span class="table-empty-value">
+                                                        —
+                                                    </span>
+
+                                                {% endif %}
+
+                                            </td>
+
+
+                                            <!-- VALID UNTIL -->
+
+                                            <td>
+
+                                                {% if document.valid_until %}
+
+                                                    {{ document.valid_until|date:"d.m.Y." }}
+
+                                                {% else %}
+
+                                                    <span class="table-empty-value">
+                                                        —
+                                                    </span>
+
+                                                {% endif %}
+
+                                            </td>
+
+
+                                            <!-- FILE -->
+
+                                            <td>
+
+                                                <a
+                                                    href="{{ document.file.url }}"
+                                                    target="_blank"
+                                                    rel="noopener"
+                                                    class="document-file-link"
+                                                >
+                                                    <span
+                                                        class="icon icon-external-link"
+                                                        aria-hidden="true"
+                                                    ></span>
+
+                                                    Otvori
+                                                </a>
+
+                                            </td>
+
+
+                                            <!-- ACTIONS -->
+
+                                            <td>
+
+                                                <div class="document-actions">
+
+
+                                                    <!-- EDIT -->
+
+                                                    <a
+                                                        href="{% url 'documents:update' document.pk %}"
+                                                        class="document-action-button"
+                                                        aria-label="Uredi dokument {{ document.name }}"
+                                                        title="Uredi"
+                                                    >
+                                                        <span
+                                                            class="icon icon-pencil"
+                                                            aria-hidden="true"
+                                                        ></span>
+                                                    </a>
+
+
+                                                    <!-- DELETE -->
+
+                                                    <button
+                                                        type="button"
+                                                        class="document-action-button document-action-delete"
+                                                        data-delete-open
+                                                        data-delete-name="{{ document.name }}"
+                                                        data-delete-url="{% url 'documents:delete' document.pk %}"
+                                                        aria-label="Izbriši dokument {{ document.name }}"
+                                                        title="Izbriši"
+                                                    >
+                                                        <span
+                                                            class="icon icon-trash"
+                                                            aria-hidden="true"
+                                                        ></span>
+                                                    </button>
+
+                                                </div>
+
+                                            </td>
+
+                                        </tr>
+
+
+                                    {% empty %}
+
+                                        <tr>
+
+                                            <td
+                                                colspan="6"
+                                                class="documents-empty"
+                                            >
+
+                                                <div class="documents-empty-content">
+
+                                                    <p class="documents-empty-title">
+                                                        Nema spremljenih dokumenata.
+                                                    </p>
+
+                                                    <p class="documents-empty-text">
+                                                        Dodajte prvi dokument za ovo vozilo ili stroj.
                                                     </p>
 
                                                 </div>

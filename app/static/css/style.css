@@ -482,6 +482,11 @@ body {
     mask-image: url("../images/icons/mail.svg");
 }
 
+.icon-external-link {
+    -webkit-mask-image: url("../images/icons/external-link.svg");
+    mask-image: url("../images/icons/external-link.svg");
+}
+
 /* ==================================================
    AUTH OPTIONS
    ================================================== */
@@ -3832,6 +3837,294 @@ a.vehicle-detail-tab:hover {
 
     .registration-table th,
     .registration-table td {
+        padding: 16px;
+    }
+}
+
+/* ==============================================
+   VEHICLE DOCUMENTS TAB
+   ============================================== */
+
+.vehicle-documents-tab {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-4);
+
+    width: 100%;
+
+    padding-top: var(--space-4);
+}
+
+
+/* ==============================================
+   TOOLBAR
+   ============================================== */
+
+.vehicle-documents-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    width: 100%;
+}
+
+
+/* ==============================================
+   TABLE CARD
+   ============================================== */
+
+.documents-table-card {
+    width: 100%;
+
+    overflow: hidden;
+
+    background: var(--blue-50);
+
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-md);
+
+    box-sizing: border-box;
+}
+
+.documents-table-scroll {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+
+/* ==============================================
+   TABLE
+   ============================================== */
+
+.documents-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    color: var(--blue-500);
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.documents-table th,
+.documents-table td {
+    padding: 18px 20px;
+
+    text-align: left;
+    vertical-align: middle;
+
+    border-bottom: 1px solid var(--blue-200);
+}
+
+.documents-table thead th {
+    color: var(--blue-900);
+
+    font-size: 16px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.documents-table tbody tr {
+    transition:
+        background-color var(--transition-fast);
+}
+
+.documents-table tbody tr:hover {
+    background: var(--blue-100);
+}
+
+.documents-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+
+/* ==============================================
+   DOCUMENT TITLE
+   ============================================== */
+
+.document-title-cell {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+
+    min-width: 0;
+}
+
+.document-title {
+    color: var(--blue-900);
+
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.document-description {
+    max-width: 300px;
+
+    color: var(--blue-500);
+
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+
+/* ==============================================
+   FILE LINK
+   ============================================== */
+
+.document-file-link {
+    display: inline-flex;
+    align-items: center;
+
+    gap: var(--space-2);
+
+    color: var(--blue-500);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    white-space: nowrap;
+
+    transition:
+        color var(--transition-fast);
+}
+
+.document-file-link .icon {
+    width: 20px;
+    height: 20px;
+}
+
+.document-file-link:hover {
+    color: var(--blue-900);
+}
+
+
+/* ==============================================
+   ACTIONS
+   ============================================== */
+
+.document-actions {
+    display: flex;
+    align-items: center;
+
+    gap: var(--space-2);
+
+    white-space: nowrap;
+}
+
+.document-action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 32px;
+    height: 32px;
+
+    padding: 0;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--blue-500);
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        color var(--transition-fast);
+}
+
+.document-action-button .icon {
+    width: 24px;
+    height: 24px;
+}
+
+.document-action-button:hover {
+    color: var(--blue-900);
+}
+
+.document-action-delete:hover {
+    color: var(--color-danger);
+}
+
+
+/* ==============================================
+   EMPTY STATE
+   ============================================== */
+
+.documents-empty {
+    padding: var(--space-6) !important;
+    height: 180px;
+    text-align: center !important;
+}
+
+.documents-empty-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: var(--space-2);
+}
+
+.documents-empty-title {
+    margin: 0;
+
+    color: var(--blue-900);
+
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.documents-empty-text {
+    margin: 0;
+
+    color: var(--blue-500);
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+
+/* ==============================================
+   TABLET
+   ============================================== */
+
+@media (max-width: 1100px) {
+
+    .documents-table {
+        min-width: 950px;
+    }
+}
+
+
+/* ==============================================
+   MOBILE
+   ============================================== */
+
+@media (max-width: 767px) {
+
+    .vehicle-documents-tab {
+        gap: var(--space-3);
+
+        padding-top: var(--space-3);
+    }
+
+    .vehicle-documents-toolbar {
+        justify-content: flex-end;
+    }
+
+    .documents-table th,
+    .documents-table td {
         padding: 16px;
     }
 }
@@ -7251,4 +7544,549 @@ a.vehicle-detail-tab:hover {
     .vehicle-registration-stat-value {
         font-size: 17px;
     }    
+}
+
+/* ==================================================
+   14. DOCUMENT FORM PAGE
+   ================================================== */
+
+.document-form-page {
+    width: 100%;
+}
+
+.document-form {
+    display: flex;
+    flex-direction: column;
+
+    gap: 18px;
+
+    width: 100%;
+}
+
+
+/* ==================================================
+   DOCUMENT FORM SECTION
+   ================================================== */
+
+.document-form-section {
+    width: 100%;
+
+    padding: var(--space-6);
+
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-md);
+
+    background: var(--blue-50);
+
+    box-sizing: border-box;
+}
+
+.document-form-section-title {
+    margin:
+        0
+        0
+        var(--space-4);
+
+    color: var(--blue-900);
+
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+
+/* ==================================================
+   DOCUMENT FORM GRID
+   ================================================== */
+
+.document-form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap:
+        var(--space-4)
+        var(--space-5);
+
+    width: 100%;
+}
+
+.document-form-span-two {
+    grid-column: 1 / -1;
+}
+
+
+/* ==================================================
+   FIELD
+   ================================================== */
+
+.document-form .form-field {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-2);
+
+    min-width: 0;
+}
+
+.document-form .form-field label {
+    color: var(--blue-900);
+
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+
+/* ==================================================
+   INPUTS
+   ================================================== */
+
+.document-form input[type="text"],
+.document-form input[type="date"],
+.document-form textarea,
+.document-form select {
+    width: 100%;
+
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-sm);
+
+    background: var(--color-white);
+
+    color: var(--blue-900);
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+
+    outline: none;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background-color var(--transition-fast);
+}
+
+
+.document-form input[type="text"],
+.document-form input[type="date"],
+.document-form select {
+    height: 42px;
+
+    padding:
+        0
+        var(--space-3);
+}
+
+
+.document-form textarea {
+    min-height: 140px;
+
+    padding: var(--space-3);
+
+    resize: vertical;
+}
+
+
+/* ==================================================
+   PLACEHOLDERS
+   ================================================== */
+
+.document-form input::placeholder,
+.document-form textarea::placeholder {
+    color: var(--blue-400);
+
+    opacity: 1;
+}
+
+
+/* ==================================================
+   FOCUS
+   ================================================== */
+
+.document-form input:focus,
+.document-form textarea:focus,
+.document-form select:focus {
+    border-color: var(--blue-500);
+
+    box-shadow:
+        0 0 0 2px rgba(107, 108, 144, 0.12);
+}
+
+
+/* ==================================================
+   DATE INPUT
+   ================================================== */
+
+.document-form input[type="date"] {
+    color: var(--blue-900);
+
+    cursor: pointer;
+}
+
+.document-form input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0.65;
+
+    cursor: pointer;
+}
+
+
+/* ==================================================
+   SELECT
+   ================================================== */
+
+.document-form .form-select-wrapper {
+    position: relative;
+
+    width: 100%;
+}
+
+.document-form .form-select-wrapper select {
+    padding-right: 42px;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    cursor: pointer;
+}
+
+.document-form .form-select-wrapper::after {
+    content: "";
+
+    position: absolute;
+
+    top: 50%;
+    right: var(--space-3);
+
+    width: 16px;
+    height: 16px;
+
+    background-color: var(--blue-500);
+
+    -webkit-mask-image:
+        url("../images/icons/chevron-down.svg");
+    mask-image:
+        url("../images/icons/chevron-down.svg");
+
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    -webkit-mask-position: center;
+    mask-position: center;
+
+    -webkit-mask-size: contain;
+    mask-size: contain;
+
+    transform: translateY(-50%);
+
+    pointer-events: none;
+}
+
+
+/* ==================================================
+   FILE UPLOAD
+   ================================================== */
+
+.document-upload-field {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: var(--space-4);
+
+    width: 100%;
+    min-height: 105px;
+
+    padding: var(--space-4);
+
+    border: 1px dashed var(--blue-300);
+    border-radius: var(--radius-sm);
+
+    background: var(--color-white);
+
+    box-sizing: border-box;
+
+    cursor: pointer;
+
+    transition:
+        border-color var(--transition-fast),
+        background-color var(--transition-fast);
+}
+
+.document-upload-field:hover {
+    border-color: var(--blue-500);
+
+    background: var(--blue-100);
+}
+
+
+/* Upload icon */
+
+.document-upload-field > .icon {
+    flex: 0 0 auto;
+
+    width: 30px;
+    height: 30px;
+
+    color: var(--blue-500);
+}
+
+
+/* Upload text */
+
+.document-upload-content {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-1);
+
+    min-width: 0;
+}
+
+.document-upload-title {
+    color: var(--blue-900);
+
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.document-upload-description {
+    color: var(--blue-500);
+
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+
+/* Actual file input */
+
+.document-upload-field input[type="file"] {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    opacity: 0;
+
+    cursor: pointer;
+}
+
+
+/* ==================================================
+   CURRENT FILE
+   ================================================== */
+
+.document-current-file {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    gap: var(--space-2);
+
+    margin-top: var(--space-2);
+
+    color: var(--blue-500);
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.document-current-file a {
+    color: var(--blue-900);
+
+    font-weight: 600;
+
+    text-decoration: none;
+}
+
+.document-current-file a:hover {
+    text-decoration: underline;
+}
+
+
+/* ==================================================
+   ERRORS
+   ================================================== */
+
+.document-form .form-field-error {
+    display: block;
+
+    margin-top: 2px;
+
+    color: var(--color-danger);
+
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.document-form .form-field:has(.form-field-error) input,
+.document-form .form-field:has(.form-field-error) textarea,
+.document-form .form-field:has(.form-field-error) select,
+.document-form .form-field:has(.form-field-error)
+.document-upload-field {
+    border-color: var(--color-danger);
+}
+
+.document-form .form-errors {
+    padding: var(--space-4);
+
+    border: 1px solid var(--color-danger);
+    border-radius: var(--radius-sm);
+
+    background: var(--blue-50);
+
+    color: var(--color-danger);
+}
+
+.document-form .form-errors p {
+    margin: 0;
+}
+
+
+/* ==================================================
+   FORM ACTIONS
+   ================================================== */
+
+.document-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: var(--space-3);
+
+    width: 100%;
+
+    padding-top: var(--space-1);
+}
+
+.document-form-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: var(--space-2);
+
+    min-width: 130px;
+    height: 42px;
+
+    padding:
+        0
+        var(--space-5);
+
+    border-radius: var(--radius-sm);
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    transition:
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        color var(--transition-fast);
+}
+
+
+/* ==================================================
+   CANCEL BUTTON
+   ================================================== */
+
+.document-form-actions .btn-outline {
+    border: 1px solid var(--blue-900);
+
+    background: transparent;
+
+    color: var(--blue-900);
+}
+
+.document-form-actions .btn-outline:hover {
+    border-color: var(--blue-400);
+
+    background: var(--blue-400);
+
+    color: var(--color-white);
+}
+
+
+/* ==================================================
+   SAVE BUTTON
+   ================================================== */
+
+.document-save-button {
+    border: 1px solid var(--blue-900);
+
+    background: var(--blue-900);
+
+    color: var(--color-white);
+}
+
+.document-save-button:hover {
+    background: transparent;
+
+    color: var(--blue-900);
+}
+
+.document-save-button .icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* ==================================================
+   DOCUMENT FORM - TABLET
+   ================================================== */
+
+@media (max-width: 1024px) {
+
+    .document-form-section {
+        padding: var(--space-5);
+    }
+}
+
+
+/* ==================================================
+   DOCUMENT FORM - MOBILE
+   ================================================== */
+
+@media (max-width: 767px) {
+
+    .document-form-section {
+        padding: var(--space-4);
+    }
+
+    .document-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .document-form-span-two {
+        grid-column: auto;
+    }
+
+    .document-form-actions {
+        flex-direction: column-reverse;
+
+        width: 100%;
+    }
+
+    .document-form-actions .btn {
+        width: 100%;
+    }
+
+    .document-upload-field {
+        min-height: 100px;
+
+        padding: var(--space-4);
+    }
 }

@@ -1,0 +1,409 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    {% if is_edit %}
+        Uredi dokument | FleetMaintain
+    {% else %}
+        Novi dokument | FleetMaintain
+    {% endif %}
+{% endblock %}
+
+
+{% block page_title %}
+    {% if is_edit %}
+        Uredi dokument
+    {% else %}
+        Novi dokument
+    {% endif %}
+{% endblock %}
+
+
+{% block page_subtitle %}
+    {% if is_edit %}
+        Uredite podatke i datoteku dokumenta vozila ili radnog stroja
+    {% else %}
+        Dodajte dokument povezan s vozilom ili radnim strojem
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+<section class="document-form-page">
+
+
+    <!-- ==============================================
+         FORM
+         ============================================== -->
+
+    <form
+        method="post"
+        enctype="multipart/form-data"
+        class="document-form"
+        novalidate
+    >
+
+        {% csrf_token %}
+
+
+        <!-- ==============================================
+             NON FIELD ERRORS
+             ============================================== -->
+
+        {% if form.non_field_errors %}
+
+            <div class="form-errors">
+
+                {% for error in form.non_field_errors %}
+
+                    <p>
+                        {{ error }}
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- ==============================================
+             BASIC INFORMATION
+             ============================================== -->
+
+        <div class="document-form-section">
+
+            <h2 class="document-form-section-title">
+                1. Osnovni podaci
+            </h2>
+
+
+            <div class="document-form-grid">
+
+
+                <!-- VEHICLE -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.vehicle.id_for_label }}">
+                        {{ form.vehicle.label }}
+                    </label>
+
+                    <div class="form-select-wrapper">
+                        {{ form.vehicle }}
+                    </div>
+
+                    {% for error in form.vehicle.errors %}
+
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- DOCUMENT TYPE -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.document_type.id_for_label }}">
+                        {{ form.document_type.label }}
+                    </label>
+
+                    <div class="form-select-wrapper">
+                        {{ form.document_type }}
+                    </div>
+
+                    {% for error in form.document_type.errors %}
+
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- NAME -->
+
+                <div class="form-field document-form-span-two">
+
+                    <label for="{{ form.name.id_for_label }}">
+                        {{ form.name.label }}
+                    </label>
+
+                    {{ form.name }}
+
+                    {% for error in form.name.errors %}
+
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==============================================
+             FILE
+             ============================================== -->
+
+        <div class="document-form-section">
+
+            <h2 class="document-form-section-title">
+                2. Objava dokumenta
+            </h2>
+
+
+            <div class="document-form-grid">
+
+                <div class="form-field document-form-span-two">
+
+                    <label for="{{ form.file.id_for_label }}">
+                        {{ form.file.label }}
+                    </label>
+
+
+                    <div class="document-upload-field">
+
+                        <span
+                            class="icon icon-upload"
+                            aria-hidden="true"
+                        ></span>
+
+
+                        <div class="document-upload-content">
+
+                            <span class="document-upload-title">
+                                Odaberite datoteku
+                            </span>
+
+                            <span class="document-upload-description">
+                                PDF, JPG, JPEG, PNG ili WEBP · maksimalno 10 MB
+                            </span>
+
+                        </div>
+
+
+                        {{ form.file }}
+
+                    </div>
+
+
+                    {% if is_edit and document.file %}
+
+                        <div class="document-current-file">
+
+                            <span>
+                                Trenutna datoteka:
+                            </span>
+
+                            <a
+                                href="{{ document.file.url }}"
+                                target="_blank"
+                                rel="noopener"
+                            >
+                                {{ document.file.name }}
+                            </a>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% for error in form.file.errors %}
+
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==============================================
+             DATES
+             ============================================== -->
+
+        <div class="document-form-section">
+
+            <h2 class="document-form-section-title">
+                3. Datumi
+            </h2>
+
+
+            <div class="document-form-grid">
+
+
+                <!-- ISSUE DATE -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.issue_date.id_for_label }}">
+                        {{ form.issue_date.label }}
+                    </label>
+
+                    {{ form.issue_date }}
+
+                    {% for error in form.issue_date.errors %}
+
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- VALID UNTIL -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.valid_until.id_for_label }}">
+                        {{ form.valid_until.label }}
+                    </label>
+
+                    {{ form.valid_until }}
+
+                    {% for error in form.valid_until.errors %}
+
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==============================================
+             DESCRIPTION
+             ============================================== -->
+
+        <div class="document-form-section">
+
+            <h2 class="document-form-section-title">
+                4. Dodatne informacije
+            </h2>
+
+
+            <div class="document-form-grid">
+
+                <div class="form-field document-form-span-two">
+
+                    <label for="{{ form.description.id_for_label }}">
+                        {{ form.description.label }}
+                    </label>
+
+                    {{ form.description }}
+
+                    {% for error in form.description.errors %}
+
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==============================================
+             ACTIONS
+             ============================================== -->
+
+        <div class="document-form-actions">
+
+
+            <!-- CANCEL -->
+
+            {% if is_edit %}
+
+                <a
+                    href="{% url 'vehicles:detail' document.vehicle.pk %}?tab=documents"
+                    class="btn btn-outline"
+                >
+                    Odustani
+                </a>
+
+            {% else %}
+
+                {% if request.GET.vehicle %}
+
+                    <a
+                        href="{% url 'vehicles:detail' request.GET.vehicle %}?tab=documents"
+                        class="btn btn-outline"
+                    >
+                        Odustani
+                    </a>
+
+                {% else %}
+
+                    <a
+                        href="{% url 'vehicles:list' %}"
+                        class="btn btn-outline"
+                    >
+                        Odustani
+                    </a>
+
+                {% endif %}
+
+            {% endif %}
+
+
+            <!-- SAVE -->
+
+            <button
+                type="submit"
+                class="btn document-save-button"
+            >
+
+                <span
+                    class="icon icon-save"
+                    aria-hidden="true"
+                ></span>
+
+                {% if is_edit %}
+                    Spremi promjene
+                {% else %}
+                    Spremi dokument
+                {% endif %}
+
+            </button>
+
+        </div>
+
+    </form>
+
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+    {% load static %}
+
+    <script src="{% static 'js/document-form.js' %}"></script>
+{% endblock %}

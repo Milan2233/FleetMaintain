@@ -330,6 +330,7 @@ def vehicle_detail_view(request, pk):
         "overview",
         "maintenance",
         "registration",
+        "documents",
     }
 
     if active_tab not in allowed_tabs:
@@ -502,7 +503,23 @@ def vehicle_detail_view(request, pk):
                 total=Sum("cost")
             )["total"]
             or Decimal("0.00")
-        )               
+        )     
+
+    # ==============================================
+    # VEHICLE DOCUMENTS
+    # ==============================================
+
+    vehicle_documents = None
+
+    if active_tab == "documents":
+
+        vehicle_documents = (
+            vehicle.documents
+            .all()
+            .order_by(
+                "-created_at",
+            )
+        )                  
 
     # ==============================================
     # CONTEXT
@@ -538,6 +555,8 @@ def vehicle_detail_view(request, pk):
         "next_obligation_overdue": next_obligation_overdue,
 
         "total_registration_cost": total_registration_cost,
+        
+        "vehicle_documents": vehicle_documents,
     }
 
     return render(
