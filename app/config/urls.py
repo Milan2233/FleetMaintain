@@ -27,6 +27,7 @@ urlpatterns = [
     path("", include("core.urls")),
     path("vozila/", include("vehicles.urls")),
     path("odrzavanja/", include("maintenance.urls")),
+    path("registracije/", include("registrations.urls")),
 ]
 
 if settings.DEBUG:

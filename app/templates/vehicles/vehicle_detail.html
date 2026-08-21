@@ -257,12 +257,12 @@ Pregled podataka o vozilu ili radnom stroju
 
                 <!-- FUTURE TABS -->
 
-                <span
-                    class="vehicle-detail-tab is-disabled"
-                    aria-disabled="true"
+                <a
+                    href="{% url 'vehicles:detail' vehicle.pk %}?tab=registration"
+                    class="vehicle-detail-tab {% if active_tab == 'registration' %}is-active{% endif %}"
                 >
                     Registracija i tehnički
-                </span>
+                </a>
 
                 <span
                     class="vehicle-detail-tab is-disabled"
@@ -1013,6 +1013,488 @@ Pregled podataka o vozilu ili radnom stroju
                 </div>
 
             {% endif %}
+
+            <!-- ==============================================
+                REGISTRATION / TECHNICAL INSPECTION TAB
+                ============================================== -->
+
+            {% if active_tab == "registration" %}
+
+                <div class="vehicle-registration-tab">
+
+                    <!-- ==============================================
+                        REGISTRATION / INSPECTION STATISTICS
+                        ============================================== -->
+
+                    <div class="vehicle-registration-stats">
+
+
+                        <!-- REGISTRATION VALID UNTIL -->
+
+                        <div class="vehicle-registration-stat-card">
+
+                            <div class="vehicle-registration-stat-icon">
+                                <span
+                                    class="icon icon-calendar"
+                                    aria-hidden="true"
+                                ></span>
+                            </div>
+
+
+                            <div class="vehicle-registration-stat-content">
+
+                                <span class="vehicle-registration-stat-label">
+                                    Registracija vrijedi do
+                                </span>
+
+                                <strong class="vehicle-registration-stat-value">
+
+                                    {% if current_registration and current_registration.valid_until %}
+
+                                        {{ current_registration.valid_until|date:"d.m.Y." }}
+
+                                    {% else %}
+
+                                        —
+
+                                    {% endif %}
+
+                                </strong>
+
+
+                                <span class="vehicle-registration-stat-description">
+
+                                    {% if current_registration and current_registration.valid_until %}
+
+                                        {% if registration_expired %}
+
+                                            Registracija je istekla
+
+                                        {% elif registration_valid_days == 0 %}
+
+                                            Istječe danas
+
+                                        {% elif registration_valid_days == 1 %}
+
+                                            Važeća još 1 dan
+
+                                        {% else %}
+
+                                            Važeća još {{ registration_valid_days }} dana
+
+                                        {% endif %}
+
+                                    {% else %}
+
+                                        Registracija nije evidentirana
+
+                                    {% endif %}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- LAST TECHNICAL INSPECTION -->
+
+                        <div class="vehicle-registration-stat-card">
+
+                            <div class="vehicle-registration-stat-icon">
+                                <span
+                                    class="icon icon-clipboard-check"
+                                    aria-hidden="true"
+                                ></span>
+                            </div>
+
+
+                            <div class="vehicle-registration-stat-content">
+
+                                <span class="vehicle-registration-stat-label">
+                                    Zadnji tehnički pregled
+                                </span>
+
+                                <strong class="vehicle-registration-stat-value">
+
+                                    {% if last_technical_inspection %}
+
+                                        {{ last_technical_inspection.date|date:"d.m.Y." }}
+
+                                    {% else %}
+
+                                        —
+
+                                    {% endif %}
+
+                                </strong>
+
+
+                                <span class="vehicle-registration-stat-description">
+
+                                    {% if last_technical_inspection %}
+
+                                        {% if last_technical_inspection.provider %}
+
+                                            {{ last_technical_inspection.provider }}
+
+                                        {% else %}
+
+                                            Pružatelj nije evidentiran
+
+                                        {% endif %}
+
+                                    {% else %}
+
+                                        Nema evidentiranog tehničkog pregleda
+
+                                    {% endif %}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- NEXT OBLIGATION -->
+
+                        <div class="vehicle-registration-stat-card">
+
+                            <div class="vehicle-registration-stat-icon">
+                                <span
+                                    class="icon icon-clock"
+                                    aria-hidden="true"
+                                ></span>
+                            </div>
+
+
+                            <div class="vehicle-registration-stat-content">
+
+                                <span class="vehicle-registration-stat-label">
+                                    Sljedeća obveza
+                                </span>
+
+                                <strong class="vehicle-registration-stat-value">
+
+                                    {% if next_obligation_date %}
+
+                                        {{ next_obligation_date|date:"d.m.Y." }}
+
+                                    {% else %}
+
+                                        —
+
+                                    {% endif %}
+
+                                </strong>
+
+
+                                <span class="vehicle-registration-stat-description">
+
+                                    {% if next_obligation_date %}
+
+                                        {% if next_obligation_overdue %}
+
+                                            {{ next_obligation_type }} · rok je prekoračen
+
+                                        {% elif next_obligation_days == 0 %}
+
+                                            {{ next_obligation_type }} · istječe danas
+
+                                        {% elif next_obligation_days <= 30 %}
+
+                                            {{ next_obligation_type }} · za
+                                            {{ next_obligation_days }} dana
+
+                                        {% else %}
+
+                                            {{ next_obligation_type }}
+
+                                        {% endif %}
+
+                                    {% else %}
+
+                                        Nema evidentirane sljedeće obveze
+
+                                    {% endif %}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- TOTAL COST -->
+
+                        <div class="vehicle-registration-stat-card">
+
+                            <div class="vehicle-registration-stat-icon">
+                                <span
+                                    class="icon icon-euro"
+                                    aria-hidden="true"
+                                ></span>
+                            </div>
+
+
+                            <div class="vehicle-registration-stat-content">
+
+                                <span class="vehicle-registration-stat-label">
+                                    Ukupni trošak
+                                </span>
+
+                                <strong class="vehicle-registration-stat-value">
+                                    {{ total_registration_cost|floatformat:2 }} €
+                                </strong>
+
+                                <span class="vehicle-registration-stat-description">
+                                    Registracije i tehnički pregledi
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>                    
+
+
+                    <!-- ==============================================
+                        TOOLBAR
+                        ============================================== -->
+
+                    <div class="vehicle-registration-toolbar">
+
+                        <a
+                            href="{% url 'registrations:create' %}?vehicle={{ vehicle.pk }}"
+                            class="vehicles-add-button"
+                        >
+                            <span
+                                class="icon icon-plus"
+                                aria-hidden="true"
+                            ></span>
+
+                            Novi zapis
+                        </a>
+
+                    </div>
+
+
+                    <!-- ==============================================
+                        TABLE
+                        ============================================== -->
+
+                    <div class="registration-table-card">
+
+                        <div class="registration-table-scroll">
+
+                            <table class="registration-table">
+
+                                <thead>
+
+                                    <tr>
+                                        <th>Vrsta</th>
+                                        <th>Datum</th>
+                                        <th>Vrijedi do</th>
+                                        <th>Stanica / pružatelj</th>
+                                        <th>Stanje vozila / stroja</th>
+                                        <th>Trošak</th>
+                                        <th>Akcije</th>
+                                    </tr>
+
+                                </thead>
+
+
+                                <tbody>
+
+                                    {% for registration in registration_inspections %}
+
+                                        <tr>
+
+
+                                            <!-- TYPE -->
+
+                                            <td>
+
+                                                <span class="registration-type">
+                                                    {{ registration.get_record_type_display }}
+                                                </span>
+
+                                            </td>
+
+
+                                            <!-- DATE -->
+
+                                            <td>
+                                                {{ registration.date|date:"d.m.Y." }}
+                                            </td>
+
+
+                                            <!-- VALID UNTIL -->
+
+                                            <td>
+
+                                                {% if registration.valid_until %}
+
+                                                    {{ registration.valid_until|date:"d.m.Y." }}
+
+                                                {% else %}
+
+                                                    <span class="table-empty-value">
+                                                        —
+                                                    </span>
+
+                                                {% endif %}
+
+                                            </td>
+
+
+                                            <!-- PROVIDER -->
+
+                                            <td>
+
+                                                {% if registration.provider %}
+
+                                                    {{ registration.provider }}
+
+                                                {% else %}
+
+                                                    <span class="table-empty-value">
+                                                        —
+                                                    </span>
+
+                                                {% endif %}
+
+                                            </td>
+
+
+                                            <!-- VEHICLE STATE -->
+
+                                            <td>
+
+                                                {% if registration.mileage is not None %}
+
+                                                    {{ registration.mileage }} km
+
+                                                {% elif registration.working_hours is not None %}
+
+                                                    {{ registration.working_hours }} h
+
+                                                {% else %}
+
+                                                    <span class="table-empty-value">
+                                                        —
+                                                    </span>
+
+                                                {% endif %}
+
+                                            </td>
+
+
+                                            <!-- COST -->
+
+                                            <td>
+
+                                                {% if registration.cost is not None %}
+
+                                                    {{ registration.cost|floatformat:2 }} €
+
+                                                {% else %}
+
+                                                    <span class="table-empty-value">
+                                                        —
+                                                    </span>
+
+                                                {% endif %}
+
+                                            </td>
+
+
+                                            <!-- ACTIONS -->
+
+                                            <td>
+
+                                                <div class="registration-actions">
+
+
+                                                    <!-- EDIT -->
+
+                                                    <a
+                                                        href="{% url 'registrations:update' registration.pk %}"
+                                                        class="registration-action-button"
+                                                        aria-label="Uredi {{ registration.get_record_type_display }}"
+                                                        title="Uredi"
+                                                    >
+                                                        <span
+                                                            class="icon icon-pencil"
+                                                            aria-hidden="true"
+                                                        ></span>
+                                                    </a>
+
+
+                                                    <!-- DELETE -->
+
+                                                    <button
+                                                        type="button"
+                                                        class="registration-action-button registration-action-delete"
+                                                        data-delete-open
+                                                        data-delete-name="{{ registration.get_record_type_display }}"
+                                                        data-delete-url="{% url 'registrations:delete' registration.pk %}"
+                                                        aria-label="Izbriši {{ registration.get_record_type_display }}"
+                                                        title="Izbriši"
+                                                    >
+                                                        <span
+                                                            class="icon icon-trash"
+                                                            aria-hidden="true"
+                                                        ></span>
+                                                    </button>
+
+                                                </div>
+
+                                            </td>
+
+                                        </tr>
+
+
+                                    {% empty %}
+
+                                        <tr>
+
+                                            <td
+                                                colspan="7"
+                                                class="registration-empty"
+                                            >
+
+                                                <div class="registration-empty-content">
+
+                                                    <p class="registration-empty-title">
+                                                        Nema evidentiranih zapisa.
+                                                    </p>
+
+                                                    <p class="registration-empty-text">
+                                                        Dodajte prvu registraciju ili tehnički pregled za ovo vozilo ili stroj.
+                                                    </p>
+
+                                                </div>
+
+                                            </td>
+
+                                        </tr>
+
+                                    {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endif %}            
 
             <!-- ==============================================
                 DELETE MODAL

@@ -3597,6 +3597,245 @@ a.vehicle-detail-tab:hover {
 
 }
 
+/* ==============================================
+   VEHICLE REGISTRATION / INSPECTION TAB
+   ============================================== */
+
+.vehicle-registration-tab {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-4);
+
+    width: 100%;
+
+    padding-top: var(--space-4);
+}
+
+
+/* ==============================================
+   TOOLBAR
+   ============================================== */
+
+.vehicle-registration-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    width: 100%;
+}
+
+
+/* ==============================================
+   TABLE CARD
+   ============================================== */
+
+.registration-table-card {
+    width: 100%;
+
+    overflow: hidden;
+
+    background-color: var(--blue-50);
+
+    border: 1px solid var(--blue-200);
+    border-radius: 4px;
+}
+
+
+.registration-table-scroll {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+
+/* ==============================================
+   TABLE
+   ============================================== */
+
+.registration-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    color: var(--blue-500);
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+.registration-table th,
+.registration-table td {
+    padding: 18px 20px;
+
+    text-align: left;
+    vertical-align: middle;
+
+    border-bottom: 1px solid var(--blue-200);
+}
+
+
+.registration-table thead th {
+    color: var(--blue-900);
+
+    font-size: 16px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+.registration-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+
+/* ==============================================
+   TABLE VALUES
+   ============================================== */
+
+.registration-type {
+    color: var(--blue-900);
+
+    font-weight: 600;
+}
+
+
+.table-empty-value {
+    color: var(--blue-400);
+}
+
+
+/* ==============================================
+   ACTIONS
+   ============================================== */
+
+.registration-actions {
+    display: flex;
+    align-items: center;
+
+    gap: var(--space-2);
+
+    white-space: nowrap;
+}
+
+
+.registration-action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 32px;
+    height: 32px;
+
+    padding: 0;
+
+    color: var(--blue-500);
+
+    background-color: transparent;
+
+    border: 0;
+
+    cursor: pointer;
+
+    text-decoration: none;
+
+    transition:
+        color 0.2s ease,
+        background-color 0.2s ease;
+}
+
+
+.registration-action-button .icon {
+    width: 24px;
+    height: 24px;
+}
+
+
+.registration-action-button:hover {
+    color: var(--blue-900);
+}
+
+
+.registration-action-delete:hover {
+    color: var(--danger);
+}
+
+
+/* ==============================================
+   EMPTY STATE
+   ============================================== */
+
+.registration-empty {
+    padding: var(--space-6) !important;
+    height: 180px;
+    text-align: center !important;
+}
+
+
+.registration-empty-content {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-2);
+
+    align-items: center;
+}
+
+
+.registration-empty-title {
+    margin: 0;
+
+    color: var(--blue-900);
+
+    font-size: 16px;
+    font-weight: 600;
+}
+
+
+.registration-empty-text {
+    margin: 0;
+
+    color: var(--blue-500);
+
+    font-size: 14px;
+}
+
+/* ==============================================
+   REGISTRATION TABLE - TABLET
+   ============================================== */
+
+@media (max-width: 1024px) {
+
+    .registration-table {
+        min-width: 1050px;
+    }
+}
+
+
+/* ==============================================
+   REGISTRATION TABLE - MOBILE
+   ============================================== */
+
+@media (max-width: 767px) {
+
+    .vehicle-registration-tab {
+        gap: var(--space-3);
+
+        padding-top: var(--space-3);
+    }
+
+    .vehicle-registration-toolbar {
+        justify-content: flex-end;
+    }
+
+    .registration-table th,
+    .registration-table td {
+        padding: 16px;
+    }
+}
+
 /* ==================================================
    10. VEHICLE DETAIL PAGE
    ================================================== */
@@ -5774,7 +6013,12 @@ a.vehicle-detail-tab:hover {
     .maintenance-stats {
         grid-template-columns:
             repeat(2, minmax(0, 1fr));
-    }    
+    }  
+    
+    .vehicle-maintenance-stats {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
 } 
 
 @media (max-width: 767px) {
@@ -5819,7 +6063,31 @@ a.vehicle-detail-tab:hover {
     .maintenance-stat-icon .icon {
         width: 32px;
         height: 32px;
-    }  
+    } 
+    
+    .vehicle-maintenance-stats {
+        grid-template-columns: 1fr;
+
+        gap: var(--space-3);
+
+        margin-bottom: var(--space-4);
+    }
+
+    .vehicle-maintenance-stat-card {
+        min-height: 110px;
+
+        padding: var(--space-4);
+    }
+
+    .vehicle-maintenance-stat-icon .icon {
+        width: 28px;
+        height: 28px;
+    }
+
+    .vehicle-maintenance-stat-value {
+        font-size: 17px;
+    }    
+
 }    
 
 /* ==================================================
@@ -6359,4 +6627,628 @@ a.vehicle-detail-tab:hover {
     .maintenance-detail-section {
         padding: var(--space-4);
     }
+}
+
+/* ==================================================
+   13. REGISTRATION / INSPECTION FORM PAGE
+   ================================================== */
+
+.registration-form-page {
+    width: 100%;
+}
+
+.registration-form {
+    display: flex;
+    flex-direction: column;
+
+    gap: 18px;
+
+    width: 100%;
+}
+
+/* ==============================================
+   TABLE ROW HOVER
+   ============================================== */
+
+.registration-table tbody tr {
+    transition:
+        background-color var(--transition-fast);
+}
+
+.registration-table tbody tr:hover {
+    background-color: var(--blue-100);
+}
+
+/* ==============================================
+   DELETE HOVER
+   ============================================== */
+
+.registration-action-delete:hover {
+    color: var(--color-danger);
+}
+
+/* ==================================================
+   PAGE HEADER
+   ================================================== */
+
+.registration-form-header {
+    margin-bottom: var(--space-5);
+}
+
+.registration-form-title {
+    margin: 0;
+
+    color: var(--blue-900);
+
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.registration-form-subtitle {
+    margin:
+        var(--space-2)
+        0
+        0;
+
+    color: var(--blue-500);
+
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+
+/* ==================================================
+   FORM SECTION
+   ================================================== */
+
+.registration-form-section {
+    width: 100%;
+
+    padding: var(--space-6);
+
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-md);
+
+    background: var(--blue-50);
+
+    box-sizing: border-box;
+}
+
+.registration-form-section-header {
+    margin-bottom: var(--space-4);
+}
+
+.registration-form-section-title {
+    margin: 0;
+
+    color: var(--blue-900);
+
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.registration-form-section-description {
+    margin:
+        var(--space-2)
+        0
+        0;
+
+    color: var(--blue-500);
+
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+/* ==================================================
+   SELECT
+   ================================================== */
+
+.registration-form .form-select-wrapper {
+    position: relative;
+
+    width: 100%;
+}
+
+.registration-form .form-select-wrapper select {
+    padding-right: 42px;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    cursor: pointer;
+}
+
+.registration-form .form-select-wrapper::after {
+    content: "";
+
+    position: absolute;
+
+    top: 50%;
+    right: var(--space-3);
+
+    width: 16px;
+    height: 16px;
+
+    background-color: var(--blue-500);
+
+    -webkit-mask-image:
+        url("../images/icons/chevron-down.svg");
+    mask-image:
+        url("../images/icons/chevron-down.svg");
+
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    -webkit-mask-position: center;
+    mask-position: center;
+
+    -webkit-mask-size: contain;
+    mask-size: contain;
+
+    transform: translateY(-50%);
+
+    pointer-events: none;
+}
+
+/* ==================================================
+   FORM GRID
+   ================================================== */
+
+.registration-form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap:
+        var(--space-4)
+        var(--space-5);
+
+    width: 100%;
+}
+
+.registration-form-field-full {
+    grid-column: 1 / -1;
+}
+
+
+/* ==================================================
+   FIELD
+   ================================================== */
+
+.registration-form .form-field {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-2);
+
+    min-width: 0;
+}
+
+.registration-form .form-field label {
+    color: var(--blue-900);
+
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+
+/* ==================================================
+   INPUTS
+   ================================================== */
+
+.registration-form input[type="text"],
+.registration-form input[type="number"],
+.registration-form input[type="date"],
+.registration-form textarea,
+.registration-form select {
+    width: 100%;
+
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-sm);
+
+    background: var(--color-white);
+
+    color: var(--blue-900);
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+
+    outline: none;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background-color var(--transition-fast);
+}
+
+
+.registration-form input[type="text"],
+.registration-form input[type="number"],
+.registration-form input[type="date"],
+.registration-form select {
+    height: 42px;
+
+    padding:
+        0
+        var(--space-3);
+}
+
+
+.registration-form textarea {
+    min-height: 140px;
+
+    padding: var(--space-3);
+
+    resize: vertical;
+}
+
+
+/* ==================================================
+   PLACEHOLDERS
+   ================================================== */
+
+.registration-form input::placeholder,
+.registration-form textarea::placeholder {
+    color: var(--blue-400);
+
+    opacity: 1;
+}
+
+
+/* ==================================================
+   FOCUS
+   ================================================== */
+
+.registration-form input:focus,
+.registration-form textarea:focus,
+.registration-form select:focus {
+    border-color: var(--blue-500);
+
+    box-shadow:
+        0 0 0 2px rgba(107, 108, 144, 0.12);
+}
+
+
+/* ==================================================
+   DATE INPUT
+   ================================================== */
+
+.registration-form input[type="date"] {
+    color: var(--blue-900);
+
+    cursor: pointer;
+}
+
+.registration-form input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0.65;
+
+    cursor: pointer;
+}
+
+
+/* ==================================================
+   SELECT
+   ================================================== */
+
+.registration-form select {
+    cursor: pointer;
+}
+
+
+/* ==================================================
+   ERRORS
+   ================================================== */
+
+.registration-form .form-field-error {
+    display: block;
+
+    margin-top: 2px;
+
+    color: var(--color-danger);
+
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.registration-form .form-field:has(.form-field-error) input,
+.registration-form .form-field:has(.form-field-error) textarea,
+.registration-form .form-field:has(.form-field-error) select {
+    border-color: var(--color-danger);
+}
+
+.registration-form .form-errors {
+    padding: var(--space-4);
+
+    border: 1px solid var(--color-danger);
+    border-radius: var(--radius-sm);
+
+    color: var(--color-danger);
+
+    background: var(--blue-50);
+}
+
+.registration-form .form-errors p {
+    margin: 0;
+}
+
+
+/* ==================================================
+   FORM ACTIONS
+   ================================================== */
+
+.registration-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: var(--space-3);
+
+    width: 100%;
+
+    padding-top: var(--space-1);
+}
+
+.registration-form-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: var(--space-2);
+
+    min-width: 130px;
+    height: 42px;
+
+    padding:
+        0
+        var(--space-5);
+
+    border-radius: var(--radius-sm);
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    transition:
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        color var(--transition-fast);
+}
+
+
+/* ==================================================
+   CANCEL BUTTON
+   ================================================== */
+
+.registration-form-actions .btn-outline {
+    border: 1px solid var(--blue-900);
+
+    background: transparent;
+
+    color: var(--blue-900);
+}
+
+.registration-form-actions .btn-outline:hover {
+    border-color: var(--blue-400);
+
+    background: var(--blue-400);
+
+    color: var(--color-white);
+}
+
+
+/* ==================================================
+   SAVE BUTTON
+   ================================================== */
+
+.registration-form-actions .vehicles-add-button {
+    border: 1px solid var(--blue-900);
+
+    background: var(--blue-900);
+
+    color: var(--color-white);
+}
+
+.registration-form-actions .vehicles-add-button:hover {
+    background: transparent;
+
+    color: var(--blue-900);
+}
+
+/* ==============================================
+   VEHICLE REGISTRATION STATISTICS
+   ============================================== */
+
+.vehicle-registration-stats {
+    display: grid;
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: var(--space-4);
+
+    width: 100%;
+
+    margin-bottom: var(--space-4);
+}
+
+
+/* ==============================================
+   CARD
+   ============================================== */
+
+.vehicle-registration-stat-card {
+    display: flex;
+    align-items: center;
+
+    gap: var(--space-4);
+
+    min-width: 0;
+    min-height: 130px;
+
+    padding: var(--space-5);
+
+    background: var(--blue-50);
+
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-md);
+
+    box-sizing: border-box;
+}
+
+
+/* ==============================================
+   ICON
+   ============================================== */
+
+.vehicle-registration-stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    color: var(--blue-500);
+}
+
+.vehicle-registration-stat-icon .icon {
+    width: 32px;
+    height: 32px;
+}
+
+
+/* ==============================================
+   CONTENT
+   ============================================== */
+
+.vehicle-registration-stat-content {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-2);
+
+    min-width: 0;
+}
+
+
+/* ==============================================
+   LABEL
+   ============================================== */
+
+.vehicle-registration-stat-label {
+    color: var(--blue-500);
+
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+
+/* ==============================================
+   VALUE
+   ============================================== */
+
+.vehicle-registration-stat-value {
+    color: var(--blue-900);
+
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+
+    white-space: nowrap;
+}
+
+
+/* ==============================================
+   DESCRIPTION
+   ============================================== */
+
+.vehicle-registration-stat-description {
+    color: var(--blue-500);
+
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+/* ==================================================
+   RESPONSIVE
+   ================================================== */
+
+@media (max-width: 1024px) {
+
+    .registration-form-section {
+        padding: var(--space-5);
+    }
+
+    .vehicle-registration-stats {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+
+@media (max-width: 767px) {
+
+    .registration-form-title {
+        font-size: 24px;
+    }
+
+    .registration-form-section {
+        padding: var(--space-4);
+    }
+
+    .registration-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .registration-form-field-full {
+        grid-column: auto;
+    }
+
+    .registration-form-actions {
+        flex-direction: column-reverse;
+
+        width: 100%;
+    }
+
+    .registration-form-actions .btn {
+        width: 100%;
+    }
+
+    .vehicle-registration-stats {
+        grid-template-columns: 1fr;
+
+        gap: var(--space-3);
+
+        margin-bottom: var(--space-4);
+    }
+
+    .vehicle-registration-stat-card {
+        min-height: 110px;
+
+        padding: var(--space-4);
+    }
+
+    .vehicle-registration-stat-icon .icon {
+        width: 28px;
+        height: 28px;
+    }
+
+    .vehicle-registration-stat-value {
+        font-size: 17px;
+    }    
 }

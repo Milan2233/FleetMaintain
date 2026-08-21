@@ -329,6 +329,7 @@ def vehicle_detail_view(request, pk):
     allowed_tabs = {
         "overview",
         "maintenance",
+        "registration",
     }
 
     if active_tab not in allowed_tabs:
@@ -352,6 +353,156 @@ def vehicle_detail_view(request, pk):
             )
         )
 
+    # ==============================================
+    # REGISTRATION / TECHNICAL INSPECTION
+    # ==============================================
+
+    registration_inspections = None
+
+    if active_tab == "registration":
+
+        registration_inspections = (
+            vehicle.registration_inspections
+            .all()
+            .order_by(
+                "-date",
+                "-created_at",
+            )
+        ) 
+
+    # ==============================================
+    # REGISTRATION / INSPECTION STATISTICS
+    # ==============================================
+
+    current_registration = None
+    last_technical_inspection = None
+
+    next_obligation_date = None
+    next_obligation_type = None
+    next_obligation_days = None
+    next_obligation_overdue = False
+
+    registration_valid_days = None
+    registration_expired = False
+
+    total_registration_cost = Decimal("0.00")
+
+
+    if active_tab == "registration":
+
+        today = timezone.localdate()
+
+
+        # ==========================================
+        # CURRENT REGISTRATION
+        # ==========================================
+
+        current_registration = (
+            vehicle.registration_inspections
+            .filter(
+                record_type="REGISTRATION",
+            )
+            .order_by(
+                "-date",
+                "-created_at",
+            )
+            .first()
+        )
+
+
+        # ==========================================
+        # LAST TECHNICAL INSPECTION
+        # ==========================================
+
+        last_technical_inspection = (
+            vehicle.registration_inspections
+            .filter(
+                record_type="TECHNICAL_INSPECTION",
+            )
+            .order_by(
+                "-date",
+                "-created_at",
+            )
+            .first()
+        )
+
+
+        # ==========================================
+        # REGISTRATION VALIDITY
+        # ==========================================
+
+        if (
+            current_registration
+            and current_registration.valid_until
+        ):
+
+            registration_valid_days = (
+                current_registration.valid_until
+                - today
+            ).days
+
+            if registration_valid_days < 0:
+                registration_expired = True
+
+
+        # ==========================================
+        # NEXT OBLIGATION
+        # ==========================================
+
+        obligations = []
+
+
+        if (
+            current_registration
+            and current_registration.valid_until
+        ):
+            obligations.append(
+                (
+                    current_registration.valid_until,
+                    "Registracija",
+                )
+            )
+
+
+        if (
+            last_technical_inspection
+            and last_technical_inspection.valid_until
+        ):
+            obligations.append(
+                (
+                    last_technical_inspection.valid_until,
+                    "Tehnički pregled",
+                )
+            )
+
+
+        if obligations:
+
+            next_obligation_date, next_obligation_type = min(
+                obligations,
+                key=lambda item: item[0],
+            )
+
+            next_obligation_days = (
+                next_obligation_date
+                - today
+            ).days
+
+            if next_obligation_days < 0:
+                next_obligation_overdue = True
+
+
+        # ==========================================
+        # TOTAL COST
+        # ==========================================
+
+        total_registration_cost = (
+            vehicle.registration_inspections
+            .aggregate(
+                total=Sum("cost")
+            )["total"]
+            or Decimal("0.00")
+        )               
 
     # ==============================================
     # CONTEXT
@@ -373,6 +524,20 @@ def vehicle_detail_view(request, pk):
         "next_service_is_planned": next_service_is_planned,        
 
         "total_maintenance_cost": total_maintenance_cost,
+
+        "registration_inspections": registration_inspections,
+        "current_registration": current_registration,
+        "last_technical_inspection": last_technical_inspection,
+
+        "registration_valid_days": registration_valid_days,
+        "registration_expired": registration_expired,
+
+        "next_obligation_date": next_obligation_date,
+        "next_obligation_type": next_obligation_type,
+        "next_obligation_days": next_obligation_days,
+        "next_obligation_overdue": next_obligation_overdue,
+
+        "total_registration_cost": total_registration_cost,
     }
 
     return render(

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'maintenance',
     'activities',
     'core',
+    'registrations',
 ]
 
 AUTH_USER_MODEL = "accounts.CustomUser"

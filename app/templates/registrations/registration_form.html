@@ -1,0 +1,377 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    {% if is_edit %}
+        Uredi registraciju / tehnički | FleetMaintain
+    {% else %}
+        Nova registracija / tehnički | FleetMaintain
+    {% endif %}
+{% endblock %}
+
+
+{% block page_title %}
+    {% if is_edit %}
+        Uredi registraciju / tehnički
+    {% else %}
+        Nova registracija / tehnički
+    {% endif %}
+{% endblock %}
+
+
+{% block page_subtitle %}
+    {% if is_edit %}
+        Uredite podatke o registraciji ili tehničkom pregledu vozila
+    {% else %}
+        Unesite podatke o registraciji ili tehničkom pregledu vozila
+    {% endif %}
+{% endblock %}
+
+
+{% block content %}
+
+<section class="registration-form-page">
+
+    <!-- ==============================================
+         FORM
+         ============================================== -->
+
+    <form
+        method="post"
+        class="registration-form"
+        novalidate
+    >
+
+        {% csrf_token %}
+
+
+        <!-- ==============================================
+             NON FIELD ERRORS
+             ============================================== -->
+
+        {% if form.non_field_errors %}
+
+            <div class="form-errors">
+
+                {% for error in form.non_field_errors %}
+
+                    <p>
+                        {{ error }}
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- ==============================================
+             BASIC INFORMATION
+             ============================================== -->
+
+        <div class="registration-form-section">
+
+            <div class="registration-form-section-header">
+
+                <h2 class="registration-form-section-title">
+                    1. Osnovni podaci
+                </h2>
+
+            </div>
+
+
+            <div class="registration-form-grid">
+
+
+                <!-- VEHICLE -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.vehicle.id_for_label }}">
+                        {{ form.vehicle.label }}
+                    </label>
+
+                    <div class="form-select-wrapper">
+                        {{ form.vehicle }}
+                    </div>
+
+                    {% for error in form.vehicle.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- RECORD TYPE -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.record_type.id_for_label }}">
+                        {{ form.record_type.label }}
+                    </label>
+
+                    <div class="form-select-wrapper">
+                        {{ form.record_type }}
+                    </div>
+
+                    {% for error in form.record_type.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- DATE -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.date.id_for_label }}">
+                        {{ form.date.label }}
+                    </label>
+
+                    {{ form.date }}
+
+                    {% for error in form.date.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- VALID UNTIL -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.valid_until.id_for_label }}">
+                        {{ form.valid_until.label }}
+                    </label>
+
+                    {{ form.valid_until }}
+
+                    {% for error in form.valid_until.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- PROVIDER -->
+
+                <div class="form-field registration-form-field-full">
+
+                    <label for="{{ form.provider.id_for_label }}">
+                        {{ form.provider.label }}
+                    </label>
+
+                    {{ form.provider }}
+
+                    {% for error in form.provider.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==============================================
+             VEHICLE STATE
+             ============================================== -->
+
+        <div class="registration-form-section">
+
+            <div class="registration-form-section-header">
+
+                <h2 class="registration-form-section-title">
+                    2. Stanje vozila / stroja
+                </h2>
+
+            </div>
+
+
+            <div class="registration-form-grid">
+
+
+                <!-- MILEAGE -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.mileage.id_for_label }}">
+                        {{ form.mileage.label }}
+                    </label>
+
+                    {{ form.mileage }}
+
+                    {% for error in form.mileage.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- WORKING HOURS -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.working_hours.id_for_label }}">
+                        {{ form.working_hours.label }}
+                    </label>
+
+                    {{ form.working_hours }}
+
+                    {% for error in form.working_hours.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==============================================
+             COST + NOTE
+             ============================================== -->
+
+        <div class="registration-form-section">
+
+            <div class="registration-form-section-header">
+
+                <h2 class="registration-form-section-title">
+                    3. Dodatne informacije
+                </h2>
+
+            </div>
+
+
+            <div class="registration-form-grid">
+
+
+                <!-- COST -->
+
+                <div class="form-field">
+
+                    <label for="{{ form.cost.id_for_label }}">
+                        {{ form.cost.label }}
+                    </label>
+
+                    {{ form.cost }}
+
+                    {% for error in form.cost.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- NOTE -->
+
+                <div class="form-field registration-form-field-full">
+
+                    <label for="{{ form.note.id_for_label }}">
+                        {{ form.note.label }}
+                    </label>
+
+                    {{ form.note }}
+
+                    {% for error in form.note.errors %}
+                        <span class="form-field-error">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==============================================
+             ACTIONS
+             ============================================== -->
+
+        <div class="registration-form-actions">
+
+
+            <!-- CANCEL -->
+
+            {% if is_edit %}
+
+                <a
+                    href="{% url 'vehicles:detail' registration.vehicle.pk %}?tab=registration"
+                    class="btn btn-outline"
+                >
+                    Odustani
+                </a>
+
+            {% else %}
+
+                {% if request.GET.vehicle %}
+
+                    <a
+                        href="{% url 'vehicles:detail' request.GET.vehicle %}?tab=registration"
+                        class="btn btn-outline"
+                    >
+                        Odustani
+                    </a>
+
+                {% else %}
+
+                    <a
+                        href="{% url 'vehicles:list' %}"
+                        class="btn btn-outline"
+                    >
+                        Odustani
+                    </a>
+
+                {% endif %}
+
+            {% endif %}
+
+
+            <!-- SAVE -->
+
+            <button
+                type="submit"
+                class="btn vehicles-add-button"
+            >
+                <span
+                    class="icon icon-save"
+                    aria-hidden="true"
+                ></span>
+
+                {% if is_edit %}
+                    Spremi promjene
+                {% else %}
+                    Spremi zapis
+                {% endif %}
+            </button>
+
+        </div>
+
+    </form>
+
+</section>
+
+{% endblock %}
