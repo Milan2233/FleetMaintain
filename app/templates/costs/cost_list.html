@@ -1,0 +1,639 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    Troškovi | FleetMaintain
+{% endblock %}
+
+
+{% block page_title %}
+    Troškovi
+{% endblock %}
+
+
+{% block page_subtitle %}
+    Pregled troškova svih vozila i radnih strojeva
+{% endblock %}
+
+
+{% block content %}
+
+<section class="costs-page">
+
+
+    <!-- ==============================================
+         STATISTICS
+         ============================================== -->
+
+    <div class="costs-stats">
+
+
+        <!-- TOTAL -->
+
+        <div class="cost-stat-card">
+
+            <div class="cost-stat-icon">
+                <span
+                    class="icon icon-euro"
+                    aria-hidden="true"
+                ></span>
+            </div>
+
+
+            <div class="cost-stat-content">
+
+                <span class="cost-stat-label">
+                    Ukupni troškovi
+                </span>
+
+                <strong class="cost-stat-value">
+                    {{ total_cost|floatformat:2 }} €
+                </strong>
+
+                <span class="cost-stat-description">
+                    Svi evidentirani troškovi
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- MAINTENANCE -->
+
+        <div class="cost-stat-card">
+
+            <div class="cost-stat-icon">
+                <span
+                    class="icon icon-wrench"
+                    aria-hidden="true"
+                ></span>
+            </div>
+
+
+            <div class="cost-stat-content">
+
+                <span class="cost-stat-label">
+                    Održavanja
+                </span>
+
+                <strong class="cost-stat-value">
+                    {{ total_maintenance_cost|floatformat:2 }} €
+                </strong>
+
+                <span class="cost-stat-description">
+                    Servisi i popravci
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- REGISTRATION -->
+
+        <div class="cost-stat-card">
+
+            <div class="cost-stat-icon">
+                <span
+                    class="icon icon-clipboard-check"
+                    aria-hidden="true"
+                ></span>
+            </div>
+
+
+            <div class="cost-stat-content">
+
+                <span class="cost-stat-label">
+                    Registracije i tehnički
+                </span>
+
+                <strong class="cost-stat-value">
+                    {{ total_registration_cost|floatformat:2 }} €
+                </strong>
+
+                <span class="cost-stat-description">
+                    Registracije i pregledi
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- CURRENT MONTH -->
+
+        <div class="cost-stat-card">
+
+            <div class="cost-stat-icon">
+                <span
+                    class="icon icon-calendar"
+                    aria-hidden="true"
+                ></span>
+            </div>
+
+
+            <div class="cost-stat-content">
+
+                <span class="cost-stat-label">
+                    Ovaj mjesec
+                </span>
+
+                <strong class="cost-stat-value">
+                    {{ current_month_cost|floatformat:2 }} €
+                </strong>
+
+                <span class="cost-stat-description">
+                    Troškovi u tekućem mjesecu
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ==============================================
+        COST ANALYTICS
+        ============================================== -->
+
+    <div class="costs-analytics">
+
+
+        <!-- ==========================================
+            COST OVERVIEW CHART
+            ========================================== -->
+
+        <div class="costs-chart-card">
+
+            <div class="costs-chart-header">
+
+                <div>
+
+                    <h2 class="costs-chart-title">
+                        Pregled troškova
+                    </h2>
+
+                    <p class="costs-chart-description">
+                        Troškovi u posljednjih 12 mjeseci
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="costs-chart-wrapper">
+
+                <canvas
+                    id="costsOverviewChart"
+                    aria-label="Graf troškova u posljednjih 12 mjeseci"
+                    role="img"
+                ></canvas>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==========================================
+            COST DISTRIBUTION
+            ========================================== -->
+
+        <div class="costs-distribution-card">
+
+            <div class="costs-distribution-header">
+
+                <h2 class="costs-distribution-title">
+                    Raspodjela troškova
+                </h2>
+
+                <p class="costs-distribution-description">
+                    Troškovi prema kategoriji
+                </p>
+
+            </div>
+
+
+            <div class="costs-distribution-list">
+
+                {% for item in cost_distribution %}
+
+                    <div class="costs-distribution-item">
+
+                        <div class="costs-distribution-name">
+
+                            <span
+                                class="costs-distribution-dot"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span>
+                                {{ item.label }}
+                            </span>
+
+                        </div>
+
+
+                        <strong class="costs-distribution-value">
+                            {{ item.amount|floatformat:2 }} €
+                        </strong>
+
+                    </div>
+
+                {% empty %}
+
+                    <div class="costs-distribution-empty">
+                        Nema evidentiranih troškova.
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- TOTAL -->
+
+            <div class="costs-distribution-total">
+
+                <span>
+                    Ukupno
+                </span>
+
+                <strong>
+                    {{ total_cost|floatformat:2 }} €
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==============================================
+        CHART DATA
+        ============================================== -->
+
+    {{ monthly_cost_labels|json_script:"costs-chart-labels" }}
+    {{ monthly_cost_values|json_script:"costs-chart-values" }}
+    
+
+    <!-- ==============================================
+         FILTERS
+         ============================================== -->
+
+    <form
+        method="get"
+        class="costs-filters"
+    >
+
+
+        <!-- SEARCH -->
+
+        <div class="costs-search">
+
+            <span
+                class="icon icon-search"
+                aria-hidden="true"
+            ></span>
+
+            <input
+                type="search"
+                name="q"
+                value="{{ search_query }}"
+                placeholder="Pretraži troškove..."
+                aria-label="Pretraži troškove"
+            >
+
+        </div>
+
+
+        <!-- CATEGORY -->
+
+        <div class="costs-filter-select">
+
+            <span class="costs-filter-prefix">
+                Kategorija:
+            </span>
+
+            <select
+                name="category"
+                onchange="this.form.submit()"
+            >
+                <option value="">
+                    Sve
+                </option>
+
+                <option
+                    value="maintenance"
+                    {% if selected_category == "maintenance" %}selected{% endif %}
+                >
+                    Održavanje
+                </option>
+
+                <option
+                    value="registration"
+                    {% if selected_category == "registration" %}selected{% endif %}
+                >
+                    Registracija i tehnički
+                </option>
+            </select>
+
+        </div>
+
+
+        <!-- VEHICLE -->
+
+        <div class="costs-filter-select">
+
+            <span class="costs-filter-prefix">
+                Vozilo / stroj:
+            </span>
+
+            <select
+                name="vehicle"
+                onchange="this.form.submit()"
+            >
+
+                <option value="">
+                    Svi
+                </option>
+
+                {% for vehicle in vehicles %}
+
+                    <option
+                        value="{{ vehicle.pk }}"
+                        {% if selected_vehicle|stringformat:"s" == vehicle.pk|stringformat:"s" %}selected{% endif %}
+                    >
+                        {{ vehicle.name }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+    </form>
+
+
+    <!-- ==============================================
+         TABLE
+         ============================================== -->
+
+    <div class="costs-table-card">
+
+        <div class="costs-table-scroll">
+
+            <table class="costs-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Datum</th>
+                        <th>Vozilo / stroj</th>
+                        <th>Kategorija</th>
+                        <th>Opis</th>
+                        <th>Iznos</th>
+                        <th>Akcija</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for item in cost_items %}
+
+                        <tr>
+
+
+                            <!-- DATE -->
+
+                            <td>
+                                {{ item.date|date:"d.m.Y." }}
+                            </td>
+
+
+                            <!-- VEHICLE -->
+
+                            <td>
+
+                                <div class="cost-vehicle-cell">
+
+                                    <a
+                                        href="{% url 'vehicles:detail' item.vehicle.pk %}"
+                                        class="cost-vehicle-name"
+                                    >
+                                        {{ item.vehicle.name }}
+                                    </a>
+
+                                    <span class="cost-vehicle-model">
+                                        {{ item.vehicle.manufacturer }}
+                                        {{ item.vehicle.model }}
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- CATEGORY -->
+
+                            <td>
+
+                                <span
+                                    class="
+                                        cost-category
+                                        {% if item.category_key == 'maintenance' %}
+                                            cost-category-maintenance
+                                        {% else %}
+                                            cost-category-registration
+                                        {% endif %}
+                                    "
+                                >
+                                    {{ item.category }}
+                                </span>
+
+                            </td>
+
+
+                            <!-- DESCRIPTION -->
+
+                            <td>
+
+                                <div class="cost-description-cell">
+
+                                    <span class="cost-description-title">
+                                        {{ item.description }}
+                                    </span>
+
+                                    <span class="cost-description-secondary">
+                                        {{ item.secondary }}
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- AMOUNT -->
+
+                            <td>
+
+                                <strong class="cost-amount">
+                                    {{ item.amount|floatformat:2 }} €
+                                </strong>
+
+                            </td>
+
+
+                            <!-- ACTION -->
+
+                            <td>
+
+                                <a
+                                    href="{{ item.source_url }}"
+                                    class="cost-source-link"
+                                    aria-label="Otvori povezani zapis"
+                                    title="Otvori zapis"
+                                >
+                                    <span
+                                        class="icon icon-external-link"
+                                        aria-hidden="true"
+                                    ></span>
+
+                                    Otvori
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+
+                    {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                class="costs-empty"
+                            >
+
+                                <div class="costs-empty-content">
+
+                                    <p class="costs-empty-title">
+                                        Nema evidentiranih troškova.
+                                    </p>
+
+                                    <p class="costs-empty-text">
+                                        Troškovi održavanja, registracija i tehničkih pregleda automatski će se prikazati ovdje.
+                                    </p>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==============================================
+        TABLE FOOTER
+        ============================================== -->
+
+    <div class="costs-table-footer">
+
+        <!-- RESULT COUNT -->
+
+        <p class="costs-result-count">
+
+            Prikazano
+
+            <strong>
+                {{ page_obj.start_index }}–{{ page_obj.end_index }}
+            </strong>
+
+            od
+
+            <strong>
+                {{ page_obj.paginator.count }}
+            </strong>
+
+            troškova
+
+        </p>
+
+
+        <!-- PAGINATION -->
+
+        {% if page_obj.paginator.num_pages > 1 %}
+
+            <nav
+                class="pagination"
+                aria-label="Navigacija po stranicama"
+            >
+
+                {% if page_obj.has_previous %}
+
+                    <a
+                        href="?page={{ page_obj.previous_page_number }}&q={{ search_query|urlencode }}&category={{ selected_category }}&vehicle={{ selected_vehicle }}"
+                        class="pagination-button"
+                        aria-label="Prethodna stranica"
+                    >
+                        <span
+                            class="icon icon-chevron-left"
+                            aria-hidden="true"
+                        ></span>
+                    </a>
+
+                {% endif %}
+
+
+                <span class="pagination-info">
+                    {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                </span>
+
+
+                {% if page_obj.has_next %}
+
+                    <a
+                        href="?page={{ page_obj.next_page_number }}&q={{ search_query|urlencode }}&category={{ selected_category }}&vehicle={{ selected_vehicle }}"
+                        class="pagination-button"
+                        aria-label="Sljedeća stranica"
+                    >
+                        <span
+                            class="icon icon-chevron-right"
+                            aria-hidden="true"
+                        ></span>
+                    </a>
+
+                {% endif %}
+
+            </nav>
+
+        {% endif %}
+
+    </div>
+
+
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+    {% load static %}
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'js/costs.js' %}"></script>
+{% endblock %}

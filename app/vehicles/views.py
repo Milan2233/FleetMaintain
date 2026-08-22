@@ -9,6 +9,9 @@ from .forms import VehicleForm
 from .models import Vehicle
 from decimal import Decimal
 from django.utils import timezone
+from django.urls import reverse
+from maintenance.models import Maintenance
+from registrations.models import RegistrationInspection
 
 
 # ==================================================
@@ -331,6 +334,7 @@ def vehicle_detail_view(request, pk):
         "maintenance",
         "registration",
         "documents",
+        "costs",
     }
 
     if active_tab not in allowed_tabs:
@@ -519,7 +523,337 @@ def vehicle_detail_view(request, pk):
             .order_by(
                 "-created_at",
             )
-        )                  
+        )  
+
+    # ==============================================
+    # VEHICLE COSTS
+    # ==============================================
+
+    vehicle_cost_items = None
+
+    vehicle_total_cost = Decimal("0.00")
+    vehicle_maintenance_cost = Decimal("0.00")
+    vehicle_registration_cost = Decimal("0.00")
+
+    vehicle_last_cost = None
+
+    vehicle_most_expensive_cost = None
+
+    vehicle_cost_chart_labels = []
+    vehicle_cost_chart_values = []
+
+    vehicle_cost_distribution = []
+
+
+    if active_tab == "costs":
+
+        vehicle_cost_items = []
+
+
+        # ==========================================
+        # MAINTENANCE COSTS
+        # ==========================================
+
+        maintenance_costs = (
+            vehicle.maintenances
+            .filter(
+                cost__isnull=False,
+            )
+        )
+
+
+        vehicle_maintenance_cost = (
+            maintenance_costs
+            .aggregate(
+                total=Sum("cost")
+            )["total"]
+            or Decimal("0.00")
+        )
+
+
+        for maintenance in maintenance_costs:
+
+            cost_date = (
+                maintenance.completed_date
+                or maintenance.scheduled_date
+                or maintenance.created_at.date()
+            )
+
+            vehicle_cost_items.append(
+                {
+                    "date": cost_date,
+
+                    "category": "Održavanje",
+
+                    "description": maintenance.title,
+
+                    "secondary": (
+                        maintenance.get_maintenance_type_display()
+                    ),
+
+                    "amount": maintenance.cost,
+
+                    "source_url": reverse(
+                        "maintenance:detail",
+                        args=[maintenance.pk],
+                    ),
+                }
+            )
+
+
+        # ==========================================
+        # REGISTRATION / INSPECTION COSTS
+        # ==========================================
+
+        registration_costs = (
+            vehicle.registration_inspections
+            .filter(
+                cost__isnull=False,
+            )
+        )
+
+
+        vehicle_registration_cost = (
+            registration_costs
+            .aggregate(
+                total=Sum("cost")
+            )["total"]
+            or Decimal("0.00")
+        )
+
+
+        for registration in registration_costs:
+
+            vehicle_cost_items.append(
+                {
+                    "date": registration.date,
+
+                    "category": (
+                        registration.get_record_type_display()
+                    ),
+
+                    "description": (
+                        registration.get_record_type_display()
+                    ),
+
+                    "secondary": (
+                        registration.provider
+                        or "Registracija i tehnički pregled"
+                    ),
+
+                    "amount": registration.cost,
+
+                    "source_url": reverse(
+                        "registrations:update",
+                        args=[registration.pk],
+                    ),
+                }
+            )
+
+
+        # ==========================================
+        # TOTAL COST
+        # ==========================================
+
+        vehicle_total_cost = (
+            vehicle_maintenance_cost
+            + vehicle_registration_cost
+        )
+
+
+        # ==========================================
+        # ORDERING
+        # ==========================================
+
+        vehicle_cost_items.sort(
+            key=lambda item: item["date"],
+            reverse=True,
+        )
+
+
+        # ==========================================
+        # LAST COST
+        # ==========================================
+
+        if vehicle_cost_items:
+            vehicle_last_cost = vehicle_cost_items[0]   
+
+        # ==========================================
+        # MOST EXPENSIVE COST
+        # ==========================================
+
+        vehicle_most_expensive_cost = None
+
+        if vehicle_cost_items:
+
+            vehicle_most_expensive_cost = max(
+                vehicle_cost_items,
+                key=lambda item: item["amount"],
+            )
+
+
+        # ==========================================
+        # LAST 12 MONTHS CHART
+        # ==========================================
+
+        month_names = [
+            "Sij",
+            "Velj",
+            "Ožu",
+            "Tra",
+            "Svi",
+            "Lip",
+            "Srp",
+            "Kol",
+            "Ruj",
+            "Lis",
+            "Stu",
+            "Pro",
+        ]
+
+
+        today = timezone.localdate()
+
+        months = []
+
+        year = today.year
+        month = today.month
+
+
+        for _ in range(12):
+
+            months.append(
+                (
+                    year,
+                    month,
+                )
+            )
+
+            month -= 1
+
+            if month == 0:
+                month = 12
+                year -= 1
+
+
+        months.reverse()
+
+
+        vehicle_cost_chart_labels = []
+        vehicle_cost_chart_values = []
+
+
+        for year, month in months:
+
+            vehicle_cost_chart_labels.append(
+                f"{month_names[month - 1]} {str(year)[2:]}"
+            )
+
+            month_total = sum(
+                (
+                    item["amount"]
+                    for item in vehicle_cost_items
+                    if (
+                        item["date"].year == year
+                        and item["date"].month == month
+                    )
+                ),
+                Decimal("0.00"),
+            )
+
+            vehicle_cost_chart_values.append(
+                float(month_total)
+            )
+
+
+        # ==========================================
+        # COST DISTRIBUTION
+        # ==========================================
+
+        vehicle_cost_distribution = []
+
+
+        # MAINTENANCE TYPES
+
+        for value, label in Maintenance.MaintenanceType.choices:
+
+            amount = (
+                maintenance_costs
+                .filter(
+                    maintenance_type=value,
+                )
+                .aggregate(
+                    total=Sum("cost")
+                )["total"]
+                or Decimal("0.00")
+            )
+
+            vehicle_cost_distribution.append(
+                {
+                    "label": label,
+                    "amount": amount,
+                }
+            )
+
+
+        # REGISTRATION
+
+        registration_amount = (
+            registration_costs
+            .filter(
+                record_type=(
+                    RegistrationInspection
+                    .RecordType
+                    .REGISTRATION
+                )
+            )
+            .aggregate(
+                total=Sum("cost")
+            )["total"]
+            or Decimal("0.00")
+        )
+
+        vehicle_cost_distribution.append(
+            {
+                "label": "Registracija",
+                "amount": registration_amount,
+            }
+        )
+
+
+        # TECHNICAL INSPECTION
+
+        technical_amount = (
+            registration_costs
+            .filter(
+                record_type=(
+                    RegistrationInspection
+                    .RecordType
+                    .TECHNICAL_INSPECTION
+                )
+            )
+            .aggregate(
+                total=Sum("cost")
+            )["total"]
+            or Decimal("0.00")
+        )
+
+        vehicle_cost_distribution.append(
+            {
+                "label": "Tehnički pregled",
+                "amount": technical_amount,
+            }
+        )
+
+
+        # ==========================================
+        # SORT DISTRIBUTION
+        # ==========================================
+
+        vehicle_cost_distribution.sort(
+            key=lambda item: item["amount"],
+            reverse=True,
+        )                                 
 
     # ==============================================
     # CONTEXT
@@ -555,8 +889,22 @@ def vehicle_detail_view(request, pk):
         "next_obligation_overdue": next_obligation_overdue,
 
         "total_registration_cost": total_registration_cost,
-        
+
         "vehicle_documents": vehicle_documents,
+
+        "vehicle_cost_items": vehicle_cost_items,
+
+        "vehicle_total_cost": vehicle_total_cost,
+        "vehicle_maintenance_cost": vehicle_maintenance_cost,
+        "vehicle_registration_cost": vehicle_registration_cost,
+
+        "vehicle_last_cost": vehicle_last_cost,
+        "vehicle_most_expensive_cost": vehicle_most_expensive_cost,
+
+        "vehicle_cost_chart_labels": vehicle_cost_chart_labels,
+        "vehicle_cost_chart_values": vehicle_cost_chart_values,
+
+        "vehicle_cost_distribution": vehicle_cost_distribution,
     }
 
     return render(

@@ -2599,7 +2599,7 @@ body {
 .vehicles-table th {
     color: var(--blue-900);
 
-    font-size: 19px;
+    font-size: 16px;
     font-weight: 600;
 }
 
@@ -2930,7 +2930,7 @@ body {
     color: var(--blue-300);
 }
 
-@media (max-width: 1100px){
+@media (max-width: 1024px){
     /* ==============================================
     VEHICLES TABLE
     Horizontal scroll
@@ -2957,21 +2957,47 @@ body {
     ============================================== */
 
     .vehicles-filters {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
 
         gap: var(--space-4);
+
+        width: 100%;
     }
 
     .vehicles-search {
-        flex: 1 1 320px;
+        grid-column: 1 / -1;
+
+        width: 100%;
+        min-width: 0;
     }
 
     .vehicles-filter-select {
-        flex: 1 1 180px;
+        width: 100%;
+        min-width: 0;
+    }  
+}
 
-        max-width: 220px;
-    }    
+@media (max-width: 767px) {
+
+    .vehicles-filters {
+        display: grid;
+        grid-template-columns: 1fr;
+
+        gap: var(--space-3);
+
+        width: 100%;
+    }
+
+    .vehicles-search,
+    .vehicles-filter-select {
+        grid-column: auto;
+
+        width: 100%;
+        min-width: 0;
+    }
 }
 
 /* ==============================================
@@ -8088,5 +8114,1298 @@ a.vehicle-detail-tab:hover {
         min-height: 100px;
 
         padding: var(--space-4);
+    }
+}
+
+/* ==================================================
+   15. COSTS PAGE
+   ================================================== */
+
+.costs-page {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-5);
+
+    width: 100%;
+}
+
+
+/* ==================================================
+   COST STATISTICS
+   ================================================== */
+
+.costs-stats {
+    display: grid;
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: var(--space-4);
+
+    width: 100%;
+}
+
+
+/* ==================================================
+   COST STAT CARD
+   ================================================== */
+
+.cost-stat-card {
+    display: flex;
+    align-items: center;
+
+    gap: var(--space-4);
+
+    min-width: 0;
+    min-height: 130px;
+
+    padding: var(--space-5);
+
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-md);
+
+    background: var(--blue-50);
+
+    box-sizing: border-box;
+}
+
+
+/* ==================================================
+   COST STAT ICON
+   ================================================== */
+
+.cost-stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    color: var(--blue-500);
+}
+
+.cost-stat-icon .icon {
+    width: 32px;
+    height: 32px;
+}
+
+
+/* ==================================================
+   COST STAT CONTENT
+   ================================================== */
+
+.cost-stat-content {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-2);
+
+    min-width: 0;
+}
+
+.cost-stat-label {
+    color: var(--blue-500);
+
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.cost-stat-value {
+    color: var(--blue-900);
+
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+
+    white-space: nowrap;
+}
+
+.cost-stat-description {
+    color: var(--blue-500);
+
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+/* ==================================================
+   COST ANALYTICS
+   ================================================== */
+
+.costs-analytics {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 2fr)
+        minmax(300px, 1fr);
+
+    gap: var(--space-4);
+
+    width: 100%;
+}
+
+
+/* ==================================================
+   CHART CARD
+   ================================================== */
+
+.costs-chart-card,
+.costs-distribution-card {
+    min-width: 0;
+
+    padding: var(--space-5);
+
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-md);
+
+    background: var(--blue-50);
+
+    box-sizing: border-box;
+}
+
+
+/* ==================================================
+   CHART HEADER
+   ================================================== */
+
+.costs-chart-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: var(--space-4);
+
+    margin-bottom: var(--space-4);
+}
+
+.costs-chart-title,
+.costs-distribution-title {
+    margin: 0;
+
+    color: var(--blue-900);
+
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.costs-chart-description,
+.costs-distribution-description {
+    margin:
+        var(--space-1)
+        0
+        0;
+
+    color: var(--blue-500);
+
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+
+/* ==================================================
+   CHART
+   ================================================== */
+
+.costs-chart-wrapper {
+    position: relative;
+
+    width: 100%;
+    height: 280px;
+}
+
+.costs-chart-wrapper canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.costs-chart-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.costs-chart-header {
+    margin-bottom: 0;
+}
+
+.costs-chart-wrapper {
+    position: relative;
+
+    width: 100%;
+    height: 280px;
+
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+/* ==================================================
+   DISTRIBUTION CARD
+   ================================================== */
+
+.costs-distribution-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.costs-distribution-header {
+    margin-bottom: var(--space-5);
+}
+
+
+/* ==================================================
+   DISTRIBUTION LIST
+   ================================================== */
+
+.costs-distribution-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-4);
+
+    width: 100%;
+
+    margin-bottom: var(--space-3);
+}
+
+.costs-distribution-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: var(--space-4);
+
+    width: 100%;
+}
+
+.costs-distribution-name {
+    display: flex;
+    align-items: center;
+
+    gap: var(--space-3);
+
+    min-width: 0;
+
+    color: var(--blue-900);
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.costs-distribution-value {
+    flex: 0 0 auto;
+
+    color: var(--blue-900);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* ==================================================
+   DISTRIBUTION DOT
+   ================================================== */
+
+.costs-distribution-dot {
+    flex: 0 0 auto;
+
+    width: 10px;
+    height: 10px;
+
+    border-radius: 50%;
+}
+
+
+/* ==================================================
+   DISTRIBUTION DOT
+   ================================================== */
+
+.costs-distribution-dot {
+    flex: 0 0 auto;
+
+    width: 10px;
+    height: 10px;
+
+    border-radius: 50%;
+
+    background: var(--blue-900);
+}
+
+
+/* ==================================================
+   DISTRIBUTION TOTAL
+   ================================================== */
+
+.costs-distribution-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: var(--space-4);
+
+    margin-top: auto;
+    padding-top: var(--space-5);
+
+    border-top: 1px solid var(--blue-200);
+
+    color: var(--blue-900);
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.costs-distribution-total strong {
+    font-size: 14px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+/* ==================================================
+   COSTS TABLE FOOTER
+   ================================================== */
+
+.costs-table-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: var(--space-6);
+
+    width: 100%;
+
+    padding:
+        0
+        var(--space-6);
+}
+
+
+/* RESULT COUNT */
+
+.costs-result-count {
+    margin: 0;
+
+    color: var(--blue-500);
+
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.costs-result-count strong {
+    color: var(--blue-500);
+
+    font-weight: 600;
+}
+
+
+/* ==================================================
+   TABLET
+   ================================================== */
+
+@media (max-width: 1024px) {
+
+    .costs-analytics {
+        grid-template-columns: 1fr;
+    }
+
+    .costs-chart-wrapper {
+        height: 260px;
+    }
+
+    .costs-distribution-card {
+        min-height: 250px;
+    }
+}
+
+
+/* ==================================================
+   MOBILE
+   ================================================== */
+
+@media (max-width: 767px) {
+
+    .costs-chart-card,
+    .costs-distribution-card {
+        padding: var(--space-4);
+    }
+
+    .costs-chart-wrapper {
+        height: 240px;
+    }
+
+    .costs-distribution-header {
+        margin-bottom: var(--space-4);
+    }
+
+    .costs-distribution-list {
+        gap: var(--space-3);
+    }
+
+    .costs-distribution-total {
+        padding-top: var(--space-4);
+    }
+
+        .costs-table-footer {
+        flex-direction: column;
+        align-items: flex-start;
+
+        gap: var(--space-3);
+
+        padding:
+            0
+            var(--space-4);
+    }
+}
+
+
+/* ==================================================
+   COST FILTERS
+   ================================================== */
+
+.costs-filters {
+    display: grid;
+
+    grid-template-columns:
+        minmax(320px, 3fr)
+        minmax(220px, 1.25fr)
+        minmax(220px, 1.25fr);
+
+    align-items: center;
+
+    gap: var(--space-4);
+
+    width: 100%;
+}
+
+
+/* ==================================================
+   SEARCH
+   ================================================== */
+
+.costs-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.costs-search .icon {
+    position: absolute;
+
+    top: 50%;
+    left: var(--space-3);
+
+    width: 18px;
+    height: 18px;
+
+    color: var(--blue-500);
+
+    transform: translateY(-50%);
+
+    pointer-events: none;
+}
+
+.costs-search input {
+    width: 100%;
+    height: 42px;
+
+    padding:
+        0
+        var(--space-3)
+        0
+        42px;
+
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-sm);
+
+    background: var(--color-white);
+
+    color: var(--blue-900);
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+
+    outline: none;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+}
+
+.costs-search input::placeholder {
+    color: var(--blue-400);
+
+    opacity: 1;
+}
+
+.costs-search input:focus {
+    border-color: var(--blue-500);
+
+    box-shadow:
+        0 0 0 2px rgba(107, 108, 144, 0.12);
+}
+
+
+/* ==================================================
+   FILTER SELECT
+   ================================================== */
+
+.costs-filter-select {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    height: 44px;
+
+    padding-left: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-white);
+
+    box-sizing: border-box;
+}
+
+.costs-filter-prefix {
+    flex: 0 0 auto;
+
+    color: var(--blue-900);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.costs-filter-select select {
+    min-width: 0;
+    height: 100%;
+
+    flex: 1;
+
+    padding:
+        0
+        36px
+        0
+        5px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--blue-900);
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+
+    outline: none;
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    cursor: pointer;
+}
+
+.costs-filter-select::after {
+    content: "";
+
+    position: absolute;
+
+    top: 50%;
+    right: var(--space-3);
+
+    width: 16px;
+    height: 16px;
+
+    background-color: var(--blue-900);
+
+    -webkit-mask-image:
+        url("../images/icons/chevron-down.svg");
+    mask-image:
+        url("../images/icons/chevron-down.svg");
+
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    -webkit-mask-position: center;
+    mask-position: center;
+
+    -webkit-mask-size: contain;
+    mask-size: contain;
+
+    transform: translateY(-50%);
+
+    pointer-events: none;
+}
+
+
+/* ==================================================
+   COSTS TABLE CARD
+   ================================================== */
+
+.costs-table-card {
+    width: 100%;
+
+    overflow: hidden;
+
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-md);
+
+    background: var(--blue-50);
+
+    box-sizing: border-box;
+}
+
+.costs-table-scroll {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+
+/* ==================================================
+   COSTS TABLE
+   ================================================== */
+
+.costs-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    color: var(--blue-500);
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.costs-table th,
+.costs-table td {
+    padding: 18px 20px;
+
+    text-align: left;
+    vertical-align: middle;
+
+    border-bottom: 1px solid var(--blue-200);
+}
+
+.costs-table thead th {
+    color: var(--blue-900);
+
+    font-size: 16px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.costs-table tbody tr {
+    transition:
+        background-color var(--transition-fast);
+}
+
+.costs-table tbody tr:hover {
+    background: var(--blue-100);
+}
+
+.costs-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+
+/* ==================================================
+   VEHICLE CELL
+   ================================================== */
+
+.cost-vehicle-cell {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+.cost-vehicle-name {
+    color: var(--blue-900);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    text-decoration: none;
+}
+
+.cost-vehicle-name:hover {
+    text-decoration: underline;
+}
+
+.cost-vehicle-model {
+    color: var(--blue-500);
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+/* ==================================================
+   CATEGORY
+   ================================================== */
+
+.cost-category {
+
+    font-size: 14px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+
+
+/* ==================================================
+   DESCRIPTION
+   ================================================== */
+
+.cost-description-cell {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+.cost-description-title {
+    color: var(--blue-900);
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.cost-description-secondary {
+    color: var(--blue-500);
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+/* ==================================================
+   AMOUNT
+   ================================================== */
+
+.cost-amount {
+    color: var(--blue-500);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* ==================================================
+   SOURCE LINK
+   ================================================== */
+
+.cost-source-link {
+    display: inline-flex;
+    align-items: center;
+
+    gap: var(--space-2);
+
+    color: var(--blue-500);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    white-space: nowrap;
+
+    transition:
+        color var(--transition-fast);
+}
+
+.cost-source-link .icon {
+    width: 20px;
+    height: 20px;
+}
+
+.cost-source-link:hover {
+    color: var(--blue-900);
+}
+
+
+/* ==================================================
+   EMPTY STATE
+   ================================================== */
+
+.costs-empty {
+    padding: var(--space-6) !important;
+    height: 180px;
+    text-align: center !important;
+}
+
+.costs-empty-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: var(--space-2);
+}
+
+.costs-empty-title {
+    margin: 0;
+
+    color: var(--blue-900);
+
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.costs-empty-text {
+    margin: 0;
+
+    color: var(--blue-500);
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+
+@media (max-width: 1024px) {
+
+    .costs-stats {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .costs-filters {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .costs-search {
+        grid-column: 1 / -1;
+    }
+
+    .costs-table {
+        min-width: 1050px;
+    }
+}
+
+
+@media (max-width: 767px) {
+
+    .costs-page {
+        gap: var(--space-4);
+    }
+
+
+    /* STATS */
+
+    .costs-stats {
+        grid-template-columns: 1fr;
+
+        gap: var(--space-3);
+    }
+
+    .cost-stat-card {
+        min-height: 110px;
+
+        padding: var(--space-4);
+    }
+
+    .cost-stat-icon .icon {
+        width: 28px;
+        height: 28px;
+    }
+
+    .cost-stat-value {
+        font-size: 17px;
+    }
+
+
+    /* FILTERS */
+
+    .costs-filters {
+        grid-template-columns: 1fr;
+
+        gap: var(--space-3);
+    }
+
+    .costs-search {
+        grid-column: auto;
+    }
+
+
+    /* TABLE */
+
+    .costs-table th,
+    .costs-table td {
+        padding: 16px;
+    }
+}
+
+/* ==================================================
+   16. VEHICLE COSTS TAB
+   ================================================== */
+
+.vehicle-costs-tab {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-4);
+
+    width: 100%;
+
+    padding-top: var(--space-4);
+}
+
+
+/* ==================================================
+   VEHICLE COST STATISTICS
+   ================================================== */
+
+.vehicle-costs-stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: var(--space-4);
+
+    width: 100%;
+}
+
+
+/* ==================================================
+   STAT CARD
+   ================================================== */
+
+.vehicle-cost-stat-card {
+    display: flex;
+    align-items: center;
+
+    gap: var(--space-4);
+
+    min-width: 0;
+    min-height: 130px;
+
+    padding: var(--space-5);
+
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-md);
+
+    background: var(--blue-50);
+
+    box-sizing: border-box;
+}
+
+
+/* ==================================================
+   STAT ICON
+   ================================================== */
+
+.vehicle-cost-stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    color: var(--blue-500);
+}
+
+.vehicle-cost-stat-icon .icon {
+    width: 32px;
+    height: 32px;
+}
+
+
+/* ==================================================
+   STAT CONTENT
+   ================================================== */
+
+.vehicle-cost-stat-content {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-2);
+
+    min-width: 0;
+}
+
+.vehicle-cost-stat-label {
+    color: var(--blue-500);
+
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.vehicle-cost-stat-value {
+    color: var(--blue-900);
+
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.2;
+
+    white-space: nowrap;
+}
+
+.vehicle-cost-stat-description {
+    color: var(--blue-500);
+
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+
+/* ==================================================
+   TABLE CARD
+   ================================================== */
+
+.vehicle-costs-table-card {
+    width: 100%;
+    margin-top: var(--space-4);
+    overflow: hidden;
+
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-md);
+
+    background: var(--blue-50);
+
+    box-sizing: border-box;
+}
+
+.vehicle-costs-table-scroll {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+
+/* ==================================================
+   TABLE
+   ================================================== */
+
+.vehicle-costs-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    color: var(--blue-900);
+
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.vehicle-costs-table th,
+.vehicle-costs-table td {
+    padding:
+        18px
+        20px;
+
+    text-align: left;
+    vertical-align: middle;
+
+    border-bottom: 1px solid var(--blue-200);
+}
+
+.vehicle-costs-table thead th {
+    color: var(--blue-900);
+
+    font-size: 16px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.vehicle-costs-table tbody tr {
+    transition:
+        background-color var(--transition-fast);
+}
+
+.vehicle-costs-table tbody tr:hover {
+    background: var(--blue-100);
+}
+
+.vehicle-costs-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+
+/* ==================================================
+   DESCRIPTION
+   ================================================== */
+
+.vehicle-cost-description {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+
+    min-width: 0;
+}
+
+.vehicle-cost-description-title {
+    color: var(--blue-900);
+
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.vehicle-cost-description-secondary {
+    color: var(--blue-500);
+
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+
+/* ==================================================
+   AMOUNT
+   ================================================== */
+
+.vehicle-cost-amount {
+    color: var(--blue-500);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* ==================================================
+   SOURCE LINK
+   ================================================== */
+
+.vehicle-cost-source-link {
+    display: inline-flex;
+    align-items: center;
+
+    gap: var(--space-2);
+
+    color: var(--blue-500);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    text-decoration: none;
+
+    white-space: nowrap;
+
+    transition:
+        color var(--transition-fast);
+}
+
+.vehicle-cost-source-link .icon {
+    width: 20px;
+    height: 20px;
+}
+
+.vehicle-cost-source-link:hover {
+    color: var(--blue-900);
+}
+
+
+/* ==================================================
+   EMPTY STATE
+   ================================================== */
+
+.vehicle-costs-empty {
+    padding: var(--space-6) !important;
+    height: 180px;
+
+    text-align: center !important;
+}
+
+.vehicle-costs-empty-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: var(--space-2);
+}
+
+.vehicle-costs-empty-title {
+    margin: 0;
+
+    color: var(--blue-900);
+
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.vehicle-costs-empty-text {
+    margin: 0;
+
+    color: var(--blue-500);
+
+    font-size: 14px;
+    font-weight: 500;
+}
+
+
+/* ==================================================
+   TABLET
+   ================================================== */
+
+@media (max-width: 1024px) {
+
+    .vehicle-costs-stats {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .vehicle-costs-table {
+        min-width: 850px;
+    }
+}
+
+
+/* ==================================================
+   MOBILE
+   ================================================== */
+
+@media (max-width: 767px) {
+
+    .vehicle-costs-tab {
+        gap: var(--space-3);
+
+        padding-top: var(--space-3);
+    }
+
+    .vehicle-costs-stats {
+        grid-template-columns: 1fr;
+
+        gap: var(--space-3);
+    }
+
+    .vehicle-cost-stat-card {
+        min-height: 110px;
+
+        padding: var(--space-4);
+    }
+
+    .vehicle-cost-stat-icon .icon {
+        width: 28px;
+        height: 28px;
+    }
+
+    .vehicle-cost-stat-value {
+        font-size: 17px;
+    }
+
+    .vehicle-costs-table th,
+    .vehicle-costs-table td {
+        padding: 16px;
     }
 }

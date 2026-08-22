@@ -271,12 +271,12 @@ Pregled podataka o vozilu ili radnom stroju
                     Dokumenti
                 </a>
 
-                <span
-                    class="vehicle-detail-tab is-disabled"
-                    aria-disabled="true"
+                <a
+                    href="{% url 'vehicles:detail' vehicle.pk %}?tab=costs"
+                    class="vehicle-detail-tab {% if active_tab == 'costs' %}is-active{% endif %}"
                 >
                     Troškovi
-                </span>
+                </a>
 
             </nav>
 
@@ -1729,6 +1729,409 @@ Pregled podataka o vozilu ili radnom stroju
 
                 </div>
 
+            {% endif %}
+            
+            <!-- ==============================================
+                COSTS TAB
+                ============================================== -->
+
+            {% if active_tab == "costs" %}
+
+                <div class="vehicle-costs-tab">
+
+
+                    <!-- ==============================================
+                        STATISTICS
+                        ============================================== -->
+
+                    <div class="vehicle-costs-stats">
+
+
+                        <!-- TOTAL COST -->
+
+                        <div class="vehicle-cost-stat-card">
+
+                            <div class="vehicle-cost-stat-icon">
+                                <span
+                                    class="icon icon-euro"
+                                    aria-hidden="true"
+                                ></span>
+                            </div>
+
+                            <div class="vehicle-cost-stat-content">
+
+                                <span class="vehicle-cost-stat-label">
+                                    Ukupni trošak
+                                </span>
+
+                                <strong class="vehicle-cost-stat-value">
+                                    {{ vehicle_total_cost|floatformat:2 }} €
+                                </strong>
+
+                                <span class="vehicle-cost-stat-description">
+                                    Svi evidentirani troškovi
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- MAINTENANCE -->
+
+                        <div class="vehicle-cost-stat-card">
+
+                            <div class="vehicle-cost-stat-icon">
+                                <span
+                                    class="icon icon-wrench"
+                                    aria-hidden="true"
+                                ></span>
+                            </div>
+
+                            <div class="vehicle-cost-stat-content">
+
+                                <span class="vehicle-cost-stat-label">
+                                    Održavanja
+                                </span>
+
+                                <strong class="vehicle-cost-stat-value">
+                                    {{ vehicle_maintenance_cost|floatformat:2 }} €
+                                </strong>
+
+                                <span class="vehicle-cost-stat-description">
+                                    Servisi i popravci
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- REGISTRATION / INSPECTION -->
+
+                        <div class="vehicle-cost-stat-card">
+
+                            <div class="vehicle-cost-stat-icon">
+                                <span
+                                    class="icon icon-clipboard-check"
+                                    aria-hidden="true"
+                                ></span>
+                            </div>
+
+                            <div class="vehicle-cost-stat-content">
+
+                                <span class="vehicle-cost-stat-label">
+                                    Registracija i tehnički
+                                </span>
+
+                                <strong class="vehicle-cost-stat-value">
+                                    {{ vehicle_registration_cost|floatformat:2 }} €
+                                </strong>
+
+                                <span class="vehicle-cost-stat-description">
+                                    Registracije i pregledi
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- MOST EXPENSIVE COST -->
+
+                        <div class="vehicle-cost-stat-card">
+
+                            <div class="vehicle-cost-stat-icon">
+                                <span
+                                    class="icon icon-euro"
+                                    aria-hidden="true"
+                                ></span>
+                            </div>
+
+                            <div class="vehicle-cost-stat-content">
+
+                                <span class="vehicle-cost-stat-label">
+                                    Najskuplji trošak
+                                </span>
+
+                                <strong class="vehicle-cost-stat-value">
+
+                                    {% if vehicle_most_expensive_cost %}
+                                        {{ vehicle_most_expensive_cost.amount|floatformat:2 }} €
+                                    {% else %}
+                                        —
+                                    {% endif %}
+
+                                </strong>
+
+                                <span class="vehicle-cost-stat-description">
+
+                                    {% if vehicle_most_expensive_cost %}
+                                        {{ vehicle_most_expensive_cost.description }}
+                                    {% else %}
+                                        Nema evidentiranih troškova
+                                    {% endif %}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- ==============================================
+                        COST ANALYTICS
+                        ============================================== -->
+
+                    <div class="costs-analytics">
+
+
+                        <!-- ==========================================
+                            COST OVERVIEW
+                            ========================================== -->
+
+                        <div class="costs-chart-card">
+
+                            <div class="costs-chart-header">
+
+                                <div>
+
+                                    <h2 class="costs-chart-title">
+                                        Pregled troškova
+                                    </h2>
+
+                                    <p class="costs-chart-description">
+                                        Troškovi u posljednjih 12 mjeseci
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="costs-chart-wrapper">
+
+                                <canvas
+                                    id="vehicleCostsOverviewChart"
+                                    aria-label="Graf troškova vozila u posljednjih 12 mjeseci"
+                                    role="img"
+                                ></canvas>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ==========================================
+                            COST DISTRIBUTION
+                            ========================================== -->
+
+                        <div class="costs-distribution-card">
+
+                            <div class="costs-distribution-header">
+
+                                <h2 class="costs-distribution-title">
+                                    Raspodjela troškova
+                                </h2>
+
+                                <p class="costs-distribution-description">
+                                    Troškovi prema kategoriji
+                                </p>
+
+                            </div>
+
+
+                            <div class="costs-distribution-list">
+
+                                {% for item in vehicle_cost_distribution %}
+
+                                    <div class="costs-distribution-item">
+
+                                        <div class="costs-distribution-name">
+
+                                            <span
+                                                class="costs-distribution-dot"
+                                                aria-hidden="true"
+                                            ></span>
+
+                                            <span>
+                                                {{ item.label }}
+                                            </span>
+
+                                        </div>
+
+
+                                        <strong class="costs-distribution-value">
+                                            {{ item.amount|floatformat:2 }} €
+                                        </strong>
+
+                                    </div>
+
+                                {% endfor %}
+
+                            </div>
+
+
+                            <!-- TOTAL -->
+
+                            <div class="costs-distribution-total">
+
+                                <span>
+                                    Ukupno
+                                </span>
+
+                                <strong>
+                                    {{ vehicle_total_cost|floatformat:2 }} €
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ==============================================
+                        CHART DATA
+                        ============================================== -->
+
+                    {{ vehicle_cost_chart_labels|json_script:"vehicle-costs-chart-labels" }}
+                    {{ vehicle_cost_chart_values|json_script:"vehicle-costs-chart-values" }}                    
+
+
+                    <!-- ==============================================
+                        TABLE
+                        ============================================== -->
+
+                    <div class="vehicle-costs-table-card">
+
+                        <div class="vehicle-costs-table-scroll">
+
+                            <table class="vehicle-costs-table">
+
+                                <thead>
+
+                                    <tr>
+                                        <th>Datum</th>
+                                        <th>Kategorija</th>
+                                        <th>Opis</th>
+                                        <th>Iznos</th>
+                                        <th>Akcija</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    {% for item in vehicle_cost_items %}
+
+                                        <tr>
+
+                                            <!-- DATE -->
+
+                                            <td>
+                                                {{ item.date|date:"d.m.Y." }}
+                                            </td>
+
+
+                                            <!-- CATEGORY -->
+
+                                            <td>
+                                                {{ item.category }}
+                                            </td>
+
+
+                                            <!-- DESCRIPTION -->
+
+                                            <td>
+
+                                                <div class="vehicle-cost-description">
+
+                                                    <span class="vehicle-cost-description-title">
+                                                        {{ item.description }}
+                                                    </span>
+
+                                                    <span class="vehicle-cost-description-secondary">
+                                                        {{ item.secondary }}
+                                                    </span>
+
+                                                </div>
+
+                                            </td>
+
+
+                                            <!-- AMOUNT -->
+
+                                            <td>
+
+                                                <strong class="vehicle-cost-amount">
+                                                    {{ item.amount|floatformat:2 }} €
+                                                </strong>
+
+                                            </td>
+
+
+                                            <!-- ACTION -->
+
+                                            <td>
+
+                                                <a
+                                                    href="{{ item.source_url }}"
+                                                    class="vehicle-cost-source-link"
+                                                    aria-label="Otvori povezani zapis"
+                                                    title="Otvori zapis"
+                                                >
+                                                    <span
+                                                        class="icon icon-external-link"
+                                                        aria-hidden="true"
+                                                    ></span>
+
+                                                    Otvori
+                                                </a>
+
+                                            </td>
+
+                                        </tr>
+
+
+                                    {% empty %}
+
+                                        <tr>
+
+                                            <td
+                                                colspan="5"
+                                                class="vehicle-costs-empty"
+                                            >
+
+                                                <div class="vehicle-costs-empty-content">
+
+                                                    <p class="vehicle-costs-empty-title">
+                                                        Nema evidentiranih troškova.
+                                                    </p>
+
+                                                    <p class="vehicle-costs-empty-text">
+                                                        Troškovi održavanja, registracija i tehničkih pregleda prikazat će se ovdje.
+                                                    </p>
+
+                                                </div>
+
+                                            </td>
+
+                                        </tr>
+
+                                    {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
             {% endif %}            
 
             <!-- ==============================================
@@ -1879,4 +2282,9 @@ Pregled podataka o vozilu ili radnom stroju
 
 {% endblock %}
 
+{% block extra_js %}
+    {% load static %}
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'js/vehicle-costs.js' %}"></script>
+{% endblock %}

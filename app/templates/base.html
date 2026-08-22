@@ -179,8 +179,8 @@
                     <li class="sidebar-menu-item">
 
                         <a
-                            href="#"
-                            class="sidebar-link"
+                            href="{% url 'costs:list' %}"
+                            class="sidebar-link {% if request.resolver_match.namespace == 'costs' %}is-active{% endif %}"
                         >
 
                             <span
