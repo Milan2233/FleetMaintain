@@ -1170,16 +1170,22 @@ body {
    ================================================== */
 
 .kpi-card {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    display: grid;
+
+    grid-template-columns: 36px 1fr;
+    grid-template-rows: auto auto auto;
+
+    column-gap: 22px;
+    row-gap: var(--space-4);
+
+    align-content: center;
 
     min-height: 170px;
     padding: 26px 30px 22px;
 
-    background: #F5F5F7;
-    border: 1px solid #CCCCD9;
-    border-radius: 6px;
+    background: var(--blue-50);
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-md);
 }
 
 
@@ -1188,31 +1194,26 @@ body {
    ================================================== */
 
 .kpi-card-title {
+    grid-column: 2;
+    grid-row: 1;
+
     margin: 0;
 
     font-family: "Montserrat", sans-serif;
     font-size: 19px;
     font-weight: 600;
-    line-height: normal;
-    letter-spacing: 0;
+    line-height: 1.4;
 
-    color: #1A1B53;
+    color: var(--blue-900);
 }
 
 
 /* ==================================================
-   KPI CARD MAIN
-   Number + icon
+   KPI MAIN
    ================================================== */
 
 .kpi-card-main {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    width: 100%;
-
-    margin-top: auto;
+    display: contents;
 }
 
 
@@ -1221,13 +1222,15 @@ body {
    ================================================== */
 
 .kpi-card-value {
-    font-family: "Montserrat", sans-serif;
-    font-size: 29px;
-    font-weight: 700;
-    line-height: normal;
-    letter-spacing: 0;
+    grid-column: 2;
+    grid-row: 2;
 
-    color: #00012D;
+    font-family: "Montserrat", sans-serif;
+    font-size: 25px;
+    font-weight: 600;
+    line-height: 1.3;
+
+    color: var(--blue-900);
 }
 
 
@@ -1236,12 +1239,16 @@ body {
    ================================================== */
 
 .kpi-card-icon {
-    width: 52px;
-    height: 52px;
+    grid-column: 1;
+    grid-row: 1 / 4;
 
-    flex: 0 0 52px;
+    align-self: center;
+    justify-self: center;
 
-    color: #1A1B53;
+    width: 48px;
+    height: 48px;
+
+    color: var(--blue-900);
 }
 
 /* ==================================================
@@ -1268,20 +1275,23 @@ body {
     mask-image: url("../images/icons/triangle-alert.svg");
 }
 
+
 /* ==================================================
    KPI DESCRIPTION
    ================================================== */
 
 .kpi-card-description {
-    margin: 12px 0 0;
+    grid-column: 2;
+    grid-row: 3;
+
+    margin: 0;
 
     font-family: "Montserrat", sans-serif;
     font-size: 14px;
     font-weight: 600;
-    line-height: normal;
-    letter-spacing: 0;
+    line-height: 1.4;
 
-    color: #1A1B53;
+    color: var(--blue-500);
 
     white-space: nowrap;
 }
@@ -1346,36 +1356,69 @@ body {
 }
 
 
-/* Kod kartice nadolazećih održavanja
-   ne prikazujemo crtu između naslova kartice
-   i zaglavlja tablice. */
+/* ==================================================
+   UPCOMING MAINTENANCE CARD
+   ================================================== */
 
-.upcoming-maintenance-card .dashboard-card-header {
-    border-bottom: 0;
+.upcoming-maintenance-card {
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-md);
+
+    background: var(--blue-50);
 }
 
 
 /* ==================================================
-   UPCOMING MAINTENANCE TABLE
+   CARD HEADER
    ================================================== */
 
-.dashboard-table-wrapper {
-    width: 100%;
+.upcoming-maintenance-card .dashboard-card-header {
+    padding: 20px 20px 16px;
+
+    border-bottom: none;
 }
 
-.dashboard-table {
+
+.upcoming-maintenance-card .dashboard-card-title {
+    margin: 0;
+
+    font-family: "Montserrat", sans-serif;
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--blue-950);
+}
+
+
+/* ==================================================
+   TABLE WRAPPER
+   ================================================== */
+
+.upcoming-maintenance-card .dashboard-table-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+
+/* ==================================================
+   TABLE
+   ================================================== */
+
+.upcoming-maintenance-card .dashboard-table {
     width: 100%;
 
     border-collapse: collapse;
-    table-layout: fixed;
-}
 
-.maintenance-table th,
-.maintenance-table td {
-    padding: 0 28px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
 
-    text-align: left;
-    vertical-align: middle;
+    color: var(--blue-950);
 }
 
 
@@ -1383,20 +1426,21 @@ body {
    TABLE HEADER
    ================================================== */
 
-.maintenance-table thead tr {
-    height: 46px;
-}
+.upcoming-maintenance-card .dashboard-table thead th {
+    padding: 14px 20px;
 
-.maintenance-table thead th {
-    border-bottom: 1px solid var(--color-border);
+    text-align: left;
 
-    font-family: "Montserrat", sans-serif;
     font-size: 16px;
     font-weight: 600;
-    line-height: normal;
-    letter-spacing: 0;
 
-    color: var(--blue-800);
+    color: var(--blue-950);
+
+    background: var(--blue-50);
+
+    border-bottom: 1px solid var(--blue-200);
+
+    white-space: nowrap;
 }
 
 
@@ -1404,106 +1448,207 @@ body {
    TABLE BODY
    ================================================== */
 
-.maintenance-table tbody tr {
-    height: 48px;
+.upcoming-maintenance-card .dashboard-table tbody td {
+    padding: 16px 20px;
+
+    vertical-align: middle;
+
+    border-bottom: 1px solid var(--blue-200);
 }
 
-.maintenance-table tbody tr:not(:last-child) {
-    border-bottom: 1px solid var(--color-border);
+
+.upcoming-maintenance-card .dashboard-table tbody tr {
+    transition:
+        background-color var(--transition-fast);
 }
 
-.maintenance-table tbody td {
-    font-family: "Montserrat", sans-serif;
+
+.upcoming-maintenance-card .dashboard-table tbody tr:hover {
+    background: var(--blue-100);
+}
+
+
+/* ==================================================
+   CELL STYLES
+   ================================================== */
+
+.upcoming-maintenance-card .maintenance-vehicle {
+    font-weight: 600;
+
+    color: var(--blue-950);
+}
+
+
+.upcoming-maintenance-card .maintenance-type {
     font-size: 14px;
     font-weight: 600;
-    line-height: normal;
-    letter-spacing: 0;
-}
 
-
-/* ==================================================
-   VEHICLE NAME
-   ================================================== */
-
-.maintenance-vehicle {
-    color: var(--blue-800);
-}
-
-
-/* ==================================================
-   MAINTENANCE TYPE
-   ================================================== */
-
-.maintenance-type {
     color: var(--blue-500);
 }
 
 
-/* ==================================================
-   MAINTENANCE DATE
-   ================================================== */
+.upcoming-maintenance-card .maintenance-date {
+    font-weight: 600;
 
-.maintenance-date {
     color: var(--blue-500);
 
-    text-align: right !important;
+    text-align: right;
+
+    white-space: nowrap;
+}
+
+
+/* Header Datum also right aligned */
+
+.upcoming-maintenance-card .dashboard-table thead th:last-child {
+    text-align: right;
 }
 
 
 /* ==================================================
-   TABLE COLUMN WIDTHS
+   EMPTY STATE
    ================================================== */
 
-.maintenance-table th:nth-child(1),
-.maintenance-table td:nth-child(1) {
-    width: 40%;
-}
+.upcoming-maintenance-card .dashboard-table-empty {
+    padding: 28px 20px !important;
 
-.maintenance-table th:nth-child(2),
-.maintenance-table td:nth-child(2) {
-    width: 35%;
-}
-
-.maintenance-table th:nth-child(3),
-.maintenance-table td:nth-child(3) {
-    width: 25%;
-}
-
-.maintenance-table th:nth-child(3) {
-    text-align: left;
-}
-
-
-/* ==================================================
-   SHOW ALL
-   ================================================== */
-
-.maintenance-table tfoot tr {
-    height: 50px;
-}
-
-.maintenance-table tfoot td {
     text-align: center;
+
+    font-size: 12px;
+    font-weight: 500;
+
+    color: var(--blue-500);
 }
 
-.dashboard-card-link {
-    display: inline-block;
+
+/* ==================================================
+   TABLE FOOTER
+   ================================================== */
+
+.upcoming-maintenance-card .dashboard-table tfoot td {
+    padding: 14px 20px;
+
+    border-top: 0;
+}
+
+
+.dashboard-table-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: var(--space-4);
+
+    width: 100%;
+
+    margin-top: auto;
+
+    padding: 14px 20px;
+
+}
+
+/* ==================================================
+   DASHBOARD PAGINATION
+   ================================================== */
+
+.dashboard-pagination {
+    display: inline-flex;
+    align-items: center;
+
+    margin-left: auto;
+}
+
+
+.dashboard-pagination-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 40px;
+    height: 40px;
+
+    margin-left: -1px;
+
+    background: #fff;
+
+    border: 1px solid var(--blue-200);
 
     font-family: "Montserrat", sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 1.3;
-    letter-spacing: 0;
+    font-size: 13px;
+    font-weight: 600;
 
-    color: var(--link-color);
+    color: var(--blue-500);
 
-    text-decoration: underline;
+    text-decoration: none;
 
-    transition: color var(--transition-fast);
+    transition:
+        background-color var(--transition-fast),
+        color var(--transition-fast),
+        border-color var(--transition-fast);
 }
 
-.dashboard-card-link:hover {
-    color: var(--link-hover-color);
+
+.dashboard-pagination-item:first-child {
+    margin-left: 0;
+}
+
+
+.dashboard-pagination-item:hover:not(.is-disabled):not(.is-active) {
+    position: relative;
+    z-index: 1;
+
+    background: var(--blue-100);
+
+    color: var(--blue-900);
+
+    border-color: var(--blue-400);
+}
+
+
+.dashboard-pagination-item.is-active {
+    position: relative;
+    z-index: 2;
+
+    color: var(--blue-900);
+
+    background: #fff;
+
+    border-color: var(--blue-300);
+}
+
+
+.dashboard-pagination-arrow {
+    font-size: 24px;
+    font-weight: 400;
+}
+
+
+.dashboard-pagination-item.is-disabled {
+    cursor: default;
+
+    color: var(--blue-300);
+}
+
+
+/* ==================================================
+   RESULT COUNT
+   ================================================== */
+
+.dashboard-result-count {
+    margin: 0;
+
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+
+    color: var(--blue-500);
+}
+
+
+.dashboard-result-count strong {
+    font-weight: 600;
+
+    color: var(--blue-500);
 }
 
 .vehicle-status-content {

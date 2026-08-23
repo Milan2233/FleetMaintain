@@ -48,55 +48,93 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (vehicleStatusCanvas) {
 
-        new Chart(vehicleStatusCanvas, {
+        // ==================================================
+        // VEHICLE STATUS CHART
+        // ==================================================
 
-            type: "doughnut",
+        const vehicleStatusCanvas = document.getElementById(
+            "vehicleStatusChart"
+        );
 
-            data: {
-                labels: [
-                    "Ispravna",
-                    "U servisu",
-                    "Neispravna",
-                ],
+        const vehicleStatusDataElement = document.getElementById(
+            "vehicle-status-values"
+        );
 
-                datasets: [
-                    {
-                        data: [15, 3, 2],
 
-                        backgroundColor: [
-                            colorSuccess,
-                            colorService,
-                            colorDanger,
+        if (
+            vehicleStatusCanvas &&
+            vehicleStatusDataElement &&
+            typeof Chart !== "undefined"
+        ) {
+
+            const vehicleStatusValues = JSON.parse(
+                vehicleStatusDataElement.textContent
+            );
+
+
+            new Chart(
+                vehicleStatusCanvas,
+                {
+                    type: "doughnut",
+
+                    data: {
+
+                        labels: [
+                            "Ispravna",
+                            "U servisu",
+                            "Neispravna",
                         ],
 
-                        borderWidth: 0,
-                        hoverOffset: 2,
+                        datasets: [
+                            {
+                                data: vehicleStatusValues,
+
+                                backgroundColor: [
+                                    "#02A702",
+                                    "#CAD400",
+                                    "#AE3D00",
+                                ],
+
+                                borderWidth: 0,
+
+                                hoverOffset: 4,
+                            },
+                        ],
                     },
-                ],
-            },
 
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
 
-                cutout: "52%",
+                    options: {
 
-                plugins: {
-                    legend: {
-                        display: false,
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        cutout: "52%",
+
+                        plugins: {
+
+                            legend: {
+                                display: false,
+                            },
+
+                            tooltip: {
+
+                                callbacks: {
+
+                                    label: (context) => {
+
+                                        const value =
+                                            context.parsed ?? 0;
+
+                                        return `${context.label}: ${value}`;
+                                    },
+                                },
+                            },
+                        },
                     },
-
-                    tooltip: {
-                        enabled: true,
-                    },
-                },
-
-                animation: {
-                    duration: 500,
-                },
-            },
-
-        });
+                }
+            );
+        }
 
     }
 
@@ -111,127 +149,196 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (maintenanceCostsCanvas) {
 
-        new Chart(maintenanceCostsCanvas, {
+        // ==================================================
+        // DASHBOARD COSTS CHART
+        // ==================================================
 
-            type: "bar",
+        const maintenanceCostsCanvas = document.getElementById(
+            "maintenanceCostsChart"
+        );
 
-            data: {
-                labels: [
-                    "Sij",
-                    "Velj",
-                    "Ožu",
-                    "Tra",
-                    "Svi",
-                    "Lip",
-                    "Srp",
-                    "Kol",
-                    "Ruj",
-                    "Lis",
-                    "Stu",
-                    "Pro",
-                ],
+        const costLabelsElement = document.getElementById(
+            "dashboard-cost-chart-labels"
+        );
 
-                datasets: [
-                    {
-                        label: "Trošak održavanja",
+        const costValuesElement = document.getElementById(
+            "dashboard-cost-chart-values"
+        );
 
-                        data: [
-                            1200,
-                            1800,
-                            900,
-                            2200,
-                            1500,
-                            1100,
-                            1700,
-                            1350,
-                            1950,
-                            1250,
-                            2100,
-                            1600,
+
+        if (
+            maintenanceCostsCanvas &&
+            costLabelsElement &&
+            costValuesElement &&
+            typeof Chart !== "undefined"
+        ) {
+
+            const costLabels = JSON.parse(
+                costLabelsElement.textContent
+            );
+
+            const costValues = JSON.parse(
+                costValuesElement.textContent
+            );
+
+
+            const styles = getComputedStyle(
+                document.documentElement
+            );
+
+            const blue900 = styles
+                .getPropertyValue("--blue-900")
+                .trim();
+
+            const blue500 = styles
+                .getPropertyValue("--blue-500")
+                .trim();
+
+            const blue200 = styles
+                .getPropertyValue("--blue-200")
+                .trim();
+
+
+            new Chart(
+                maintenanceCostsCanvas,
+                {
+                    type: "bar",
+
+                    data: {
+                        labels: costLabels,
+
+                        datasets: [
+                            {
+                                data: costValues,
+
+                                backgroundColor: blue900,
+
+                                hoverBackgroundColor: blue500,
+
+                                borderWidth: 0,
+
+                                borderRadius: 4,
+
+                                borderSkipped: false,
+
+                                maxBarThickness: 46,
+                            },
                         ],
-
-                        backgroundColor: blue900,
-
-
-                        borderRadius: 4,
-                        borderSkipped: false,
-
-                        barPercentage: 0.55,
-                        categoryPercentage: 0.7,
-                    },
-                ],
-            },
-
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-
-                plugins: {
-                    legend: {
-                        display: false,
                     },
 
-                    tooltip: {
-                        callbacks: {
-                            label: (context) => {
-                                return `${context.raw} €`;
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+
+                        interaction: {
+                            mode: "index",
+                            intersect: false,
+                        },
+
+
+                        plugins: {
+
+                            legend: {
+                                display: false,
+                            },
+
+
+                            tooltip: {
+
+                                displayColors: false,
+
+                                callbacks: {
+
+                                    label: (context) => {
+
+                                        const value =
+                                            context.parsed.y ?? 0;
+
+                                        return (
+                                            value.toLocaleString(
+                                                "hr-HR",
+                                                {
+                                                    minimumFractionDigits: 2,
+                                                    maximumFractionDigits: 2,
+                                                }
+                                            )
+                                            + " €"
+                                        );
+                                    },
+                                },
+                            },
+                        },
+
+
+                        scales: {
+
+                            x: {
+
+                                border: {
+                                    display: false,
+                                },
+
+                                grid: {
+                                    display: false,
+                                },
+
+                                ticks: {
+
+                                    color: blue500,
+
+                                    font: {
+                                        family: "Montserrat",
+                                        size: 11,
+                                        weight: "500",
+                                    },
+                                },
+                            },
+
+
+                            y: {
+
+                                beginAtZero: true,
+
+                                border: {
+                                    display: false,
+                                },
+
+                                grid: {
+                                    color: blue200,
+                                },
+
+                                ticks: {
+
+                                    color: blue500,
+
+                                    padding: 10,
+
+                                    font: {
+                                        family: "Montserrat",
+                                        size: 11,
+                                        weight: "500",
+                                    },
+
+                                    callback: (value) => {
+
+                                        return (
+                                            value.toLocaleString(
+                                                "hr-HR"
+                                            )
+                                            + " €"
+                                        );
+                                    },
+                                },
                             },
                         },
                     },
-                },
-
-                scales: {
-
-                    x: {
-                        grid: {
-                            display: false,
-                        },
-
-                        border: {
-                            color: blue200,
-                        },
-
-                        ticks: {
-                            color: blue950,
-
-                            font: {
-                                family: "Montserrat",
-                                size: 12,
-                                weight: "500",
-                            },
-                        },
-                    },
-
-                    y: {
-                        beginAtZero: true,
-
-                        grid: {
-                            color: blue200,
-                        },
-
-                        border: {
-                            display: false,
-                        },
-
-                        ticks: {
-                            color: blue500,
-
-                            font: {
-                                family: "Montserrat",
-                                size: 10,
-                                weight: "500",
-                            },
-
-                            callback: (value) => {
-                                return `${value} €`;
-                            },
-                        },
-                    },
-
-                },
-            },
-
-        });
+                }
+            );
+        }
 
     }
 

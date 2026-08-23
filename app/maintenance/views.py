@@ -47,9 +47,18 @@ def maintenance_list_view(request):
     upcoming_maintenances = (
         base_maintenances
         .filter(
-            next_service_date__gte=today,
-            next_service_date__lte=upcoming_limit,
+            Q(
+                status=Maintenance.Status.PLANNED,
+                scheduled_date__gte=today,
+                scheduled_date__lte=upcoming_limit,
+            )
+            |
+            Q(
+                next_service_date__gte=today,
+                next_service_date__lte=upcoming_limit,
+            )
         )
+        .distinct()
         .count()
     )
 

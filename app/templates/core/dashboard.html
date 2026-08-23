@@ -95,7 +95,7 @@
             <div class="kpi-card-main">
 
                 <span class="kpi-card-value">
-                    {{ upcoming_maintenance_count|default:0 }}
+                    {{ upcoming_maintenances|default:0 }}
                 </span>
 
                 <span
@@ -123,7 +123,7 @@
             <div class="kpi-card-main">
 
                 <span class="kpi-card-value">
-                    {{ overdue_maintenance_count|default:0 }}
+                    {{ overdue_maintenances|default:0 }}
                 </span>
 
                 <span
@@ -182,73 +182,143 @@
 
                     <tbody>
 
-                        <tr>
-                            <td class="maintenance-vehicle">
-                                VW Transporter
-                            </td>
+                        {% for maintenance in upcoming_page_obj %}
 
-                            <td class="maintenance-type">
-                                Redovni servis
-                            </td>
+                            <tr>
 
-                            <td class="maintenance-date">
-                                12.05.2026.
-                            </td>
-                        </tr>
+                                <td class="maintenance-vehicle">
+                                    {{ maintenance.vehicle.name }}
+                                </td>
 
+                                <td class="maintenance-type">
+                                    {{ maintenance.get_maintenance_type_display }}
+                                </td>
 
-                        <tr>
-                            <td class="maintenance-vehicle">
-                                Renault Master
-                            </td>
+                                <td class="maintenance-date">
+                                    {{ maintenance.upcoming_date|date:"d.m.Y." }}
+                                </td>
 
-                            <td class="maintenance-type">
-                                Tehnički pregled
-                            </td>
+                            </tr>
 
-                            <td class="maintenance-date">
-                                04.06.2026.
-                            </td>
-                        </tr>
+                        {% empty %}
 
+                            <tr>
 
-                        <tr>
-                            <td class="maintenance-vehicle">
-                                CAT 320
-                            </td>
+                                <td
+                                    colspan="3"
+                                    class="dashboard-table-empty"
+                                >
+                                    Nema nadolazećih održavanja.
+                                </td>
 
-                            <td class="maintenance-type">
-                                Veliki servis
-                            </td>
+                            </tr>
 
-                            <td class="maintenance-date">
-                                08.06.2026.
-                            </td>
-                        </tr>
+                        {% endfor %}
 
                     </tbody>
-
-
-                    <tfoot>
-
-                        <tr>
-                            <td colspan="3">
-
-                                <a
-                                    href="#"
-                                    class="dashboard-card-link"
-                                >
-                                    Prikaži sve
-                                </a>
-
-                            </td>
-                        </tr>
-
-                    </tfoot>
 
                 </table>
 
             </div>
+
+            <div class="dashboard-table-footer">
+
+                <p class="dashboard-result-count">
+
+                    {% if upcoming_page_obj.paginator.count %}
+
+                        Prikazano
+
+                        <strong>
+                            {{ upcoming_page_obj.start_index }}–{{ upcoming_page_obj.end_index }}
+                        </strong>
+
+                        od
+
+                        <strong>
+                            {{ upcoming_page_obj.paginator.count }}
+                        </strong>
+
+                        održavanja
+
+                    {% else %}
+
+                        Nema rezultata
+
+                    {% endif %}
+
+                </p>
+
+
+                {% if upcoming_page_obj.paginator.num_pages > 1 %}
+
+                    <nav
+                        class="dashboard-pagination"
+                        aria-label="Stranice nadolazećih održavanja"
+                    >
+
+                        {% if upcoming_page_obj.has_previous %}
+
+                            <a
+                                href="?upcoming_page={{ upcoming_page_obj.previous_page_number }}"
+                                class="dashboard-pagination-item dashboard-pagination-arrow"
+                            >
+                                ‹
+                            </a>
+
+                        {% else %}
+
+                            <span class="dashboard-pagination-item dashboard-pagination-arrow is-disabled">
+                                ‹
+                            </span>
+
+                        {% endif %}
+
+
+                        {% for page_number in upcoming_page_obj.paginator.page_range %}
+
+                            {% if page_number == upcoming_page_obj.number %}
+
+                                <span class="dashboard-pagination-item is-active">
+                                    {{ page_number }}
+                                </span>
+
+                            {% else %}
+
+                                <a
+                                    href="?upcoming_page={{ page_number }}"
+                                    class="dashboard-pagination-item"
+                                >
+                                    {{ page_number }}
+                                </a>
+
+                            {% endif %}
+
+                        {% endfor %}
+
+
+                        {% if upcoming_page_obj.has_next %}
+
+                            <a
+                                href="?upcoming_page={{ upcoming_page_obj.next_page_number }}"
+                                class="dashboard-pagination-item dashboard-pagination-arrow"
+                            >
+                                ›
+                            </a>
+
+                        {% else %}
+
+                            <span class="dashboard-pagination-item dashboard-pagination-arrow is-disabled">
+                                ›
+                            </span>
+
+                        {% endif %}
+
+                    </nav>
+
+                {% endif %}
+
+            </div>            
 
         </section>
 
@@ -271,6 +341,7 @@
 
                 <div class="vehicle-status-chart">
                     <canvas id="vehicleStatusChart"></canvas>
+                    {{ vehicle_status_values|json_script:"vehicle-status-values" }}
                 </div>
 
                 <div class="vehicle-status-legend">
@@ -280,7 +351,7 @@
                             class="vehicle-status-dot vehicle-status-active"
                         ></span>
 
-                        <span>Ispravna</span>
+                        <span>Ispravna ({{ operational_vehicles|default:0 }})</span>
                     </div>
 
                     <div class="vehicle-status-legend-item">
@@ -288,7 +359,7 @@
                             class="vehicle-status-dot vehicle-status-service"
                         ></span>
 
-                        <span>U servisu</span>
+                        <span>U servisu ({{ vehicles_in_service|default:0 }})</span>
                     </div>
 
                     <div class="vehicle-status-legend-item">
@@ -296,7 +367,7 @@
                             class="vehicle-status-dot vehicle-status-broken"
                         ></span>
 
-                        <span>Neispravna</span>
+                        <span>Neispravna ({{ out_of_order_vehicles|default:0 }})</span>
                     </div>
 
                 </div>
@@ -323,7 +394,7 @@
             <div class="dashboard-card-header">
 
                 <h2 class="dashboard-card-title">
-                    Troškovi održavanja
+                    Pregled troškova
                 </h2>
 
             </div>
@@ -332,6 +403,9 @@
 
                 <div class="maintenance-costs-chart">
                     <canvas id="maintenanceCostsChart"></canvas>
+
+                    {{ cost_chart_labels|json_script:"dashboard-cost-chart-labels" }}
+                    {{ cost_chart_values|json_script:"dashboard-cost-chart-values" }}
                 </div>
 
             </div>
