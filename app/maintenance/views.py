@@ -11,6 +11,9 @@ from datetime import timedelta
 from decimal import Decimal
 from django.utils import timezone
 
+from activities.models import Activity
+from activities.services import log_activity
+
 
 # ==================================================
 # MAINTENANCE LIST
@@ -231,6 +234,17 @@ def maintenance_create_view(request):
 
             maintenance = form.save()
 
+            log_activity(
+                user=request.user,
+                vehicle=maintenance.vehicle,
+                activity_type=Activity.ActivityType.MAINTENANCE_CREATED,
+                title="Dodano održavanje",
+                description=(
+                    f"{maintenance.vehicle.name} — "
+                    f"{maintenance.title}"
+                ),
+            )            
+
             messages.success(
                 request,
                 "Održavanje je uspješno dodano.",
@@ -315,6 +329,7 @@ def maintenance_update_view(request, pk):
         vehicle__user=request.user,
     )
 
+
     if request.method == "POST":
 
         form = MaintenanceForm(
@@ -323,9 +338,27 @@ def maintenance_update_view(request, pk):
             user=request.user,
         )
 
+
         if form.is_valid():
 
-            form.save()
+            has_changed = form.has_changed()
+
+            maintenance = form.save()
+
+
+            if has_changed:
+
+                log_activity(
+                    user=request.user,
+                    vehicle=maintenance.vehicle,
+                    activity_type=Activity.ActivityType.MAINTENANCE_UPDATED,
+                    title="Ažurirano održavanje",
+                    description=(
+                        f"{maintenance.vehicle.name} — "
+                        f"{maintenance.title}"
+                    ),
+                )
+
 
             messages.success(
                 request,
@@ -337,6 +370,7 @@ def maintenance_update_view(request, pk):
                 pk=maintenance.pk,
             )
 
+
     else:
 
         form = MaintenanceForm(
@@ -344,11 +378,13 @@ def maintenance_update_view(request, pk):
             user=request.user,
         )
 
+
     context = {
         "form": form,
         "maintenance": maintenance,
         "is_edit": True,
     }
+
 
     return render(
         request,
@@ -372,8 +408,24 @@ def maintenance_delete_view(request, pk):
     )
 
     maintenance_title = maintenance.title
+    vehicle = maintenance.vehicle
+    vehicle_name = vehicle.name
+
+
+    log_activity(
+        user=request.user,
+        vehicle=vehicle,
+        activity_type=Activity.ActivityType.MAINTENANCE_DELETED,
+        title="Obrisano održavanje",
+        description=(
+            f"{vehicle_name} — "
+            f"{maintenance_title}"
+        ),
+    )
+
 
     maintenance.delete()
+
 
     messages.success(
         request,

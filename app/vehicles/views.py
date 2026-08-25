@@ -13,6 +13,9 @@ from django.urls import reverse
 from maintenance.models import Maintenance
 from registrations.models import RegistrationInspection
 
+from activities.models import Activity
+from activities.services import log_activity
+
 
 # ==================================================
 # VEHICLE LIST
@@ -136,6 +139,14 @@ def vehicle_create_view(request):
             vehicle.user = request.user
 
             vehicle.save()
+
+            log_activity(
+                user=request.user,
+                vehicle=vehicle,
+                activity_type=Activity.ActivityType.VEHICLE_CREATED,
+                title="Dodano novo vozilo / stroj",
+                description=vehicle.name,
+            )            
 
             messages.success(
                 request,
@@ -926,6 +937,9 @@ def vehicle_update_view(request, pk):
         user=request.user,
     )
 
+    old_status = vehicle.status
+
+
     if request.method == "POST":
 
         form = VehicleForm(
@@ -936,7 +950,33 @@ def vehicle_update_view(request, pk):
 
         if form.is_valid():
 
-            form.save()
+            vehicle = form.save()
+
+
+            if old_status != vehicle.status:
+
+                log_activity(
+                    user=request.user,
+                    vehicle=vehicle,
+                    activity_type=Activity.ActivityType.VEHICLE_STATUS_CHANGED,
+                    title="Promijenjen status vozila / stroja",
+                    description=(
+                        f"{vehicle.name}: "
+                        f"{dict(Vehicle.Status.choices).get(old_status)} → "
+                        f"{vehicle.get_status_display()}"
+                    ),
+                )
+
+            elif form.has_changed():
+
+                log_activity(
+                    user=request.user,
+                    vehicle=vehicle,
+                    activity_type=Activity.ActivityType.VEHICLE_UPDATED,
+                    title="Ažurirano vozilo / stroj",
+                    description=vehicle.name,
+                )
+
 
             messages.success(
                 request,
@@ -953,6 +993,7 @@ def vehicle_update_view(request, pk):
         form = VehicleForm(
             instance=vehicle,
         )
+
 
     context = {
         "form": form,
@@ -983,7 +1024,18 @@ def vehicle_delete_view(request, pk):
 
     vehicle_name = vehicle.name
 
+
+    log_activity(
+        user=request.user,
+        vehicle=vehicle,
+        activity_type=Activity.ActivityType.VEHICLE_DELETED,
+        title="Obrisano vozilo / stroj",
+        description=vehicle_name,
+    )
+
+
     vehicle.delete()
+
 
     messages.success(
         request,

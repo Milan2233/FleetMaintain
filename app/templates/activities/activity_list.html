@@ -1,0 +1,676 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}
+    Aktivnosti | FleetMaintain
+{% endblock %}
+
+
+{% block page_title %}
+    Aktivnosti
+{% endblock %}
+
+
+{% block page_subtitle %}
+    Pregled korisničkih radnji, sistemskih događaja i važnih upozorenja
+{% endblock %}
+
+
+{% block content %}
+
+<section class="activities-page">
+
+
+    <!-- ==================================================
+         KPI CARDS
+         ================================================== -->
+
+    <div class="activities-kpi-grid">
+
+
+        <!-- TOTAL ACTIVITIES -->
+
+        <article class="activity-kpi-card">
+
+            <div class="activity-kpi-icon">
+                <span
+                    class="icon icon-info"
+                    aria-hidden="true"
+                ></span>
+            </div>
+
+            <div class="activity-kpi-content">
+
+                <span class="activity-kpi-label">
+                    Ukupno aktivnosti
+                </span>
+
+                <strong class="activity-kpi-value">
+                    {{ total_activities|default:0 }}
+                </strong>
+
+                <span class="activity-kpi-description">
+                    Sve evidentirane aktivnosti
+                </span>
+
+            </div>
+
+        </article>
+
+
+        <!-- TODAY -->
+
+        <article class="activity-kpi-card">
+
+            <div class="activity-kpi-icon">
+                <span
+                    class="icon icon-calendar"
+                    aria-hidden="true"
+                ></span>
+            </div>
+
+            <div class="activity-kpi-content">
+
+                <span class="activity-kpi-label">
+                    Današnje aktivnosti
+                </span>
+
+                <strong class="activity-kpi-value">
+                    {{ today_activities|default:0 }}
+                </strong>
+
+                <span class="activity-kpi-description">
+                    Evidentirano danas
+                </span>
+
+            </div>
+
+        </article>
+
+
+        <!-- WARNINGS -->
+
+        <article class="activity-kpi-card">
+
+            <div class="activity-kpi-icon">
+                <span
+                    class="icon icon-triangle-alert"
+                    aria-hidden="true"
+                ></span>
+            </div>
+
+            <div class="activity-kpi-content">
+
+                <span class="activity-kpi-label">
+                    Upozorenja
+                </span>
+
+                <strong class="activity-kpi-value">
+                    {{ warning_activities|default:0 }}
+                </strong>
+
+                <span class="activity-kpi-description">
+                    Važne aktivnosti i upozorenja
+                </span>
+
+            </div>
+
+        </article>
+
+
+        <!-- UNREAD -->
+
+        <article class="activity-kpi-card">
+
+            <div class="activity-kpi-icon">
+                <span
+                    class="icon icon-mail"
+                    aria-hidden="true"
+                ></span>
+            </div>
+
+            <div class="activity-kpi-content">
+
+                <span class="activity-kpi-label">
+                    Nepročitano
+                </span>
+
+                <strong class="activity-kpi-value">
+                    {{ unread_activities|default:0 }}
+                </strong>
+
+                <span class="activity-kpi-description">
+                    Nepročitane aktivnosti
+                </span>
+
+            </div>
+
+        </article>
+
+
+    </div>
+
+
+    <!-- ==================================================
+         SEARCH / FILTERS
+         ================================================== -->
+
+    <form
+        method="get"
+        class="activities-filters"
+    >
+
+
+        <!-- SEARCH -->
+
+        <div class="activities-search">
+
+            <span
+                class="icon icon-search activities-search-icon"
+                aria-hidden="true"
+            ></span>
+
+            <input
+                type="search"
+                name="search"
+                value="{{ search_query }}"
+                placeholder="Pretraži aktivnosti..."
+                aria-label="Pretraži aktivnosti"
+            >
+
+        </div>
+
+
+        <!-- PERIOD -->
+
+        <div class="activities-filter-select">
+
+            <span class="activities-filter-prefix">
+                Razdoblje:
+            </span>
+
+            <select
+                name="period"
+                aria-label="Razdoblje"
+                onchange="this.form.submit()"
+            >
+
+                <option
+                    value=""
+                    {% if not period_filter %}selected{% endif %}
+                >
+                    Sve
+                </option>
+
+                <option
+                    value="today"
+                    {% if period_filter == "today" %}selected{% endif %}
+                >
+                    Danas
+                </option>
+
+                <option
+                    value="7days"
+                    {% if period_filter == "7days" %}selected{% endif %}
+                >
+                    Zadnjih 7 dana
+                </option>
+
+                <option
+                    value="30days"
+                    {% if period_filter == "30days" %}selected{% endif %}
+                >
+                    Zadnjih 30 dana
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- TYPE -->
+
+        <div class="activities-filter-select">
+
+            <span class="activities-filter-prefix">
+                Vrsta:
+            </span>
+
+            <select
+                name="type"
+                aria-label="Vrsta aktivnosti"
+                onchange="this.form.submit()"
+            >
+
+                <option
+                    value=""
+                    {% if not type_filter %}selected{% endif %}
+                >
+                    Sve
+                </option>
+
+                {% for value, label in activity_type_choices %}
+
+                    <option
+                        value="{{ value }}"
+                        {% if type_filter == value %}selected{% endif %}
+                    >
+                        {{ label }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+    </form>
+
+    {% if unread_activities > 0 %}
+
+        <div class="activities-actions">
+
+            <form
+                method="post"
+                action="{% url 'activities:mark_all_read' %}"
+            >
+
+                {% csrf_token %}
+
+                <input
+                    type="hidden"
+                    name="next"
+                    value="{{ request.get_full_path }}"
+                >
+
+                <button
+                    type="submit"
+                    class="activities-mark-all-button"
+                >
+
+                    <span
+                        class="icon icon-check"
+                        aria-hidden="true"
+                    ></span>
+
+                    Označi sve kao pročitano
+
+                </button>
+
+            </form>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- ==================================================
+         ACTIVITY LIST CARD
+         ================================================== -->
+
+    <div class="activities-list-card">
+
+
+        {% for group in grouped_activities %}
+
+
+            <!-- ==========================================
+                 DATE GROUP
+                 ========================================== -->
+
+            <div class="activities-date-group">
+
+
+                <div class="activities-date-header">
+
+                    <h2>
+                        {{ group.label }}
+                    </h2>
+
+                </div>
+
+
+                <div class="activities-list">
+
+
+                    {% for activity in group.activities %}
+
+                        <div
+                            class="
+                                activity-row
+
+                                {% if not activity.is_read %}
+                                    is-unread
+                                {% endif %}
+
+                                {% if activity.level == 'WARNING' %}
+                                    is-warning
+                                {% endif %}
+                            "
+                        >
+
+
+                            <!-- ==========================
+                                 ICON
+                                 ========================== -->
+
+                            <div class="activity-row-icon">
+
+                                {% if activity.level == "WARNING" %}
+
+                                    <span
+                                        class="icon icon-triangle-alert"
+                                        aria-hidden="true"
+                                    ></span>
+
+                                {% elif "VEHICLE" in activity.activity_type %}
+
+                                    <span
+                                        class="icon icon-truck"
+                                        aria-hidden="true"
+                                    ></span>
+
+                                {% elif "MAINTENANCE" in activity.activity_type %}
+
+                                    <span
+                                        class="icon icon-wrench"
+                                        aria-hidden="true"
+                                    ></span>
+
+                                {% elif "REGISTRATION" in activity.activity_type %}
+
+                                    <span
+                                        class="icon icon-clipboard-check"
+                                        aria-hidden="true"
+                                    ></span>
+
+                                {% elif "DOCUMENT" in activity.activity_type %}
+
+                                    <span
+                                        class="icon icon-file"
+                                        aria-hidden="true"
+                                    ></span>
+
+                                {% else %}
+
+                                    <span
+                                        class="icon icon-info"
+                                        aria-hidden="true"
+                                    ></span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- ==========================
+                                 TITLE
+                                 ========================== -->
+
+                            <div class="activity-row-title">
+
+                                <strong>
+                                    {{ activity.title }}
+                                </strong>
+
+                            </div>
+
+
+                            <!-- ==========================
+                                 DESCRIPTION
+                                 ========================== -->
+
+                            <div class="activity-row-description">
+
+                                <span>
+                                    {% if activity.description %}
+                                        {{ activity.description }}
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </span>
+
+                            </div>
+
+
+                            <!-- ==========================
+                                 STATUS
+                                 ========================== -->
+
+                            <div class="activity-row-status">
+
+                                {% if activity.is_read %}
+
+                                    <span class="activity-read-status is-read">
+                                        Pročitano
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="activity-read-status is-unread">
+                                        Nepročitano
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- ==========================
+                                 TIME
+                                 ========================== -->
+
+                            <div class="activity-row-time">
+
+                                <span>
+                                    {{ activity.created_at|date:"d.m.Y." }}
+                                </span>
+
+                                <small>
+                                    {{ activity.created_at|date:"H:i" }}
+                                </small>
+
+                            </div>
+
+                            <div class="activity-row-action">
+
+                                {% if not activity.is_read %}
+
+                                    <form
+                                        method="post"
+                                        action="{% url 'activities:mark_read' activity.pk %}"
+                                    >
+
+                                        {% csrf_token %}
+
+                                        <input
+                                            type="hidden"
+                                            name="next"
+                                            value="{{ request.get_full_path }}"
+                                        >
+
+                                        <button
+                                            type="submit"
+                                            class="activity-read-button"
+                                            aria-label="Označi kao pročitano"
+                                            title="Označi kao pročitano"
+                                        >
+
+                                            <span
+                                                class="icon icon-check"
+                                                aria-hidden="true"
+                                            ></span>
+
+                                        </button>
+
+                                    </form>
+
+                                {% endif %}
+
+                            </div>                            
+
+
+                        </div>
+
+                    {% endfor %}
+
+
+                </div>
+
+            </div>
+
+
+        {% empty %}
+
+
+            <!-- ==========================================
+                 EMPTY STATE
+                 ========================================== -->
+
+            <div class="activities-empty">
+
+                <span
+                    class="icon icon-info"
+                    aria-hidden="true"
+                ></span>
+
+                <p>
+                    Nema evidentiranih aktivnosti.
+                </p>
+
+            </div>
+
+
+        {% endfor %}       
+
+    </div>
+
+        <!-- ==================================================
+             FOOTER
+             ================================================== -->
+
+        <div class="activities-table-footer">
+
+
+            <p class="activities-result-count">
+
+                {% if page_obj.paginator.count %}
+
+                    Prikazano
+
+                    <strong>
+                        {{ page_obj.start_index }}–{{ page_obj.end_index }}
+                    </strong>
+
+                    od
+
+                    <strong>
+                        {{ page_obj.paginator.count }}
+                    </strong>
+
+                    aktivnosti
+
+                {% else %}
+
+                    Nema rezultata
+
+                {% endif %}
+
+            </p>
+
+
+            <!-- ==============================================
+                 PAGINATION
+                 ============================================== -->
+
+            {% if page_obj.paginator.num_pages > 1 %}
+
+                <nav
+                    class="dashboard-pagination"
+                    aria-label="Stranice aktivnosti"
+                >
+
+
+                    <!-- PREVIOUS -->
+
+                    {% if page_obj.has_previous %}
+
+                        <a
+                            href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query|urlencode }}{% endif %}{% if period_filter %}&period={{ period_filter|urlencode }}{% endif %}{% if type_filter %}&type={{ type_filter|urlencode }}{% endif %}"
+                            class="dashboard-pagination-item dashboard-pagination-arrow"
+                            aria-label="Prethodna stranica"
+                        >
+                            ‹
+                        </a>
+
+                    {% else %}
+
+                        <span
+                            class="dashboard-pagination-item dashboard-pagination-arrow is-disabled"
+                            aria-hidden="true"
+                        >
+                            ‹
+                        </span>
+
+                    {% endif %}
+
+
+                    <!-- PAGE NUMBERS -->
+
+                    {% for page_number in page_obj.paginator.page_range %}
+
+                        {% if page_number == page_obj.number %}
+
+                            <span class="dashboard-pagination-item is-active">
+                                {{ page_number }}
+                            </span>
+
+                        {% else %}
+
+                            <a
+                                href="?page={{ page_number }}{% if search_query %}&search={{ search_query|urlencode }}{% endif %}{% if period_filter %}&period={{ period_filter|urlencode }}{% endif %}{% if type_filter %}&type={{ type_filter|urlencode }}{% endif %}"
+                                class="dashboard-pagination-item"
+                            >
+                                {{ page_number }}
+                            </a>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+
+                    <!-- NEXT -->
+
+                    {% if page_obj.has_next %}
+
+                        <a
+                            href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query|urlencode }}{% endif %}{% if period_filter %}&period={{ period_filter|urlencode }}{% endif %}{% if type_filter %}&type={{ type_filter|urlencode }}{% endif %}"
+                            class="dashboard-pagination-item dashboard-pagination-arrow"
+                            aria-label="Sljedeća stranica"
+                        >
+                            ›
+                        </a>
+
+                    {% else %}
+
+                        <span
+                            class="dashboard-pagination-item dashboard-pagination-arrow is-disabled"
+                            aria-hidden="true"
+                        >
+                            ›
+                        </span>
+
+                    {% endif %}
+
+
+                </nav>
+
+            {% endif %}
+
+
+        </div>    
+
+</section>
+
+{% endblock %}

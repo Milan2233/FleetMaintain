@@ -1,10 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import (
-    get_object_or_404,
-    redirect,
-    render,
-)
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 
@@ -12,6 +8,9 @@ from vehicles.models import Vehicle
 
 from .forms import RegistrationInspectionForm
 from .models import RegistrationInspection
+
+from activities.models import Activity
+from activities.services import log_activity
 
 
 # ==============================================
@@ -60,6 +59,17 @@ def registration_create_view(request):
         if form.is_valid():
 
             registration = form.save()
+
+            log_activity(
+                user=request.user,
+                vehicle=registration.vehicle,
+                activity_type=Activity.ActivityType.REGISTRATION_CREATED,
+                title="Dodana registracija / tehnički pregled",
+                description=(
+                    f"{registration.vehicle.name} — "
+                    f"{registration.get_record_type_display()}"
+                ),
+            )            
 
             messages.success(
                 request,
@@ -122,14 +132,28 @@ def registration_update_view(
 
         if form.is_valid():
 
+            has_changed = form.has_changed()
+
             registration = form.save()
+
+
+            if has_changed:
+
+                log_activity(
+                    user=request.user,
+                    vehicle=registration.vehicle,
+                    activity_type=Activity.ActivityType.REGISTRATION_UPDATED,
+                    title="Ažurirana registracija / tehnički pregled",
+                    description=(
+                        f"{registration.vehicle.name} — "
+                        f"{registration.get_record_type_display()}"
+                    ),
+                )
+
 
             messages.success(
                 request,
-                (
-                    "Podaci o registraciji ili "
-                    "tehničkom pregledu uspješno su ažurirani."
-                ),
+                "Zapis je uspješno ažuriran.",
             )
 
             return redirect(
@@ -176,7 +200,21 @@ def registration_delete_view(
         vehicle__user=request.user,
     )
 
+
     vehicle = registration.vehicle
+    vehicle_name = vehicle.name
+    record_type = registration.get_record_type_display()   
+
+    log_activity(
+        user=request.user,
+        vehicle=vehicle,
+        activity_type=Activity.ActivityType.REGISTRATION_DELETED,
+        title="Obrisana registracija / tehnički pregled",
+        description=(
+            f"{vehicle_name} — "
+            f"{record_type}"
+        ),
+    )
 
     registration.delete()
 

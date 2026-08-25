@@ -225,8 +225,8 @@
                     <li class="sidebar-menu-item">
 
                         <a
-                            href="#"
-                            class="sidebar-link"
+                            href="{% url 'activities:list' %}"
+                            class="sidebar-link {% if request.resolver_match.namespace == 'activities' %}is-active{% endif %}"
                         >
 
                             <span
