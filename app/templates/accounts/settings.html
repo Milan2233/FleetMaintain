@@ -1,0 +1,753 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}
+    Postavke | FleetMaintain
+{% endblock %}
+
+
+{% block page_title %}
+    Postavke
+{% endblock %}
+
+
+{% block page_subtitle %}
+    Upravljanje postavkama sustava, računa i obavijesti
+{% endblock %}
+
+
+{% block content %}
+
+<section class="settings-page">
+
+
+    <!-- ==================================================
+         SETTINGS CARD
+         ================================================== -->
+
+    <div class="settings-card">
+
+
+        <!-- ==================================================
+             SETTINGS NAVIGATION
+             ================================================== -->
+
+        <nav
+            class="settings-nav"
+            aria-label="Postavke"
+        >
+
+
+            <!-- PROFILE -->
+
+            <a
+                href="{% url 'accounts:settings' %}?tab=profile"
+                class="settings-nav-item {% if active_tab == 'profile' %}is-active{% endif %}"
+            >
+
+                <span
+                    class="icon icon-user settings-nav-icon"
+                    aria-hidden="true"
+                ></span>
+
+                <span class="settings-nav-content">
+
+                    <strong>
+                        Moj profil
+                    </strong>
+
+                    <small>
+                        Osnovni podaci i lozinka
+                    </small>
+
+                </span>
+
+            </a>
+
+
+            <!-- NOTIFICATIONS -->
+
+            <a
+                href="{% url 'accounts:settings' %}?tab=notifications"
+                class="settings-nav-item {% if active_tab == 'notifications' %}is-active{% endif %}"
+            >
+
+                <span
+                    class="icon icon-bell settings-nav-icon"
+                    aria-hidden="true"
+                ></span>
+
+                <span class="settings-nav-content">
+
+                    <strong>
+                        Obavijesti
+                    </strong>
+
+                    <small>
+                        Email i upozorenja
+                    </small>
+
+                </span>
+
+            </a>
+
+
+            <!-- ABOUT -->
+
+            <a
+                href="{% url 'accounts:settings' %}?tab=about"
+                class="settings-nav-item {% if active_tab == 'about' %}is-active{% endif %}"
+            >
+
+                <span
+                    class="icon icon-info settings-nav-icon"
+                    aria-hidden="true"
+                ></span>
+
+                <span class="settings-nav-content">
+
+                    <strong>
+                        O aplikaciji
+                    </strong>
+
+                    <small>
+                        Informacije o sustavu
+                    </small>
+
+                </span>
+
+            </a>
+
+
+        </nav>
+
+
+        <!-- ==================================================
+             SETTINGS CONTENT
+             ================================================== -->
+
+        <div class="settings-content">
+
+
+            <!-- ==================================================
+                 PROFILE
+                 ================================================== -->
+
+            {% if active_tab == "profile" %}
+
+                <form
+                    method="post"
+                    class="settings-form"
+                >
+
+                    {% csrf_token %}
+
+                    <input
+                        type="hidden"
+                        name="action"
+                        value="profile"
+                    >
+
+
+                    <!-- ==========================================
+                         PERSONAL DATA
+                         ========================================== -->
+
+                    <div class="settings-section">
+
+                        <div class="settings-section-header">
+
+                            <h2>
+                                Osobni podaci
+                            </h2>
+
+                        </div>
+
+
+                        <div class="settings-profile-grid">
+
+
+                            <!-- FIRST NAME -->
+
+                            <div class="settings-field">
+
+                                <label for="{{ profile_form.first_name.id_for_label }}">
+                                    Ime
+                                </label>
+
+                                {{ profile_form.first_name }}
+
+                                {% for error in profile_form.first_name.errors %}
+                                    <span class="settings-field-error">
+                                        {{ error }}
+                                    </span>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <!-- LAST NAME -->
+
+                            <div class="settings-field">
+
+                                <label for="{{ profile_form.last_name.id_for_label }}">
+                                    Prezime
+                                </label>
+
+                                {{ profile_form.last_name }}
+
+                                {% for error in profile_form.last_name.errors %}
+                                    <span class="settings-field-error">
+                                        {{ error }}
+                                    </span>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <!-- EMAIL -->
+
+                            <div class="settings-field settings-field-email">
+
+                                <label for="{{ profile_form.email.id_for_label }}">
+                                    Email adresa
+                                </label>
+
+                                {{ profile_form.email }}
+
+                                {% for error in profile_form.email.errors %}
+                                    <span class="settings-field-error">
+                                        {{ error }}
+                                    </span>
+                                {% endfor %}
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ==========================================
+                         PASSWORD
+                         ========================================== -->
+
+                    <div class="settings-section settings-password-section">
+
+                        <div class="settings-section-header">
+
+                            <h2>
+                                Promjena lozinke
+                            </h2>
+
+                        </div>
+
+
+                        <div class="settings-password-grid">
+
+
+                            <!-- CURRENT PASSWORD -->
+
+                            <div class="settings-field">
+
+                                <label for="{{ password_form.old_password.id_for_label }}">
+                                    Trenutna lozinka
+                                </label>
+
+                                <div class="settings-password-input">
+
+                                    {{ password_form.old_password }}
+
+                                    <button
+                                        type="button"
+                                        class="password-toggle"
+                                        aria-label="Prikaži lozinku"
+                                        data-password-toggle
+                                    >
+                                        <span
+                                            class="icon icon-eye password-toggle-icon"
+                                            aria-hidden="true"
+                                        ></span>
+                                    </button>
+
+                                </div>
+
+                                {% for error in password_form.old_password.errors %}
+                                    <span class="settings-field-error">
+                                        {{ error }}
+                                    </span>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <!-- NEW PASSWORD -->
+
+                            <div class="settings-field">
+
+                                <label for="{{ password_form.new_password1.id_for_label }}">
+                                    Nova lozinka
+                                </label>
+
+                                <div class="settings-password-input">
+
+                                    {{ password_form.new_password1 }}
+
+                                    <button
+                                        type="button"
+                                        class="password-toggle"
+                                        aria-label="Prikaži lozinku"
+                                        data-password-toggle
+                                    >
+                                        <span
+                                            class="icon icon-eye password-toggle-icon"
+                                            aria-hidden="true"
+                                        ></span>
+                                    </button>
+
+                                </div>
+
+                                {% for error in password_form.new_password1.errors %}
+                                    <span class="settings-field-error">
+                                        {{ error }}
+                                    </span>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <!-- CONFIRM PASSWORD -->
+
+                            <div class="settings-field">
+
+                                <label for="{{ password_form.new_password2.id_for_label }}">
+                                    Potvrdite novu lozinku
+                                </label>
+
+                                <div class="settings-password-input">
+
+                                    {{ password_form.new_password2 }}
+
+                                    <button
+                                        type="button"
+                                        class="password-toggle"
+                                        aria-label="Prikaži lozinku"
+                                        data-password-toggle
+                                    >
+                                        <span
+                                            class="icon icon-eye password-toggle-icon"
+                                            aria-hidden="true"
+                                        ></span>
+                                    </button>
+
+                                </div>
+
+                                {% for error in password_form.new_password2.errors %}
+                                    <span class="settings-field-error">
+                                        {{ error }}
+                                    </span>
+                                {% endfor %}
+
+                            </div>
+
+
+                        </div>
+
+
+                        {% for error in password_form.non_field_errors %}
+                            <span class="settings-field-error">
+                                {{ error }}
+                            </span>
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- ==========================================
+                         ACTIONS
+                         ========================================== -->
+
+                    <div class="settings-actions">
+
+                        <a
+                            href="{% url 'accounts:settings' %}?tab=profile"
+                            class="btn btn-outline"
+                        >
+                            Odustani
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+
+                            <span
+                                class="icon icon-save"
+                                aria-hidden="true"
+                            ></span>
+
+                            Spremi podatke
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+
+            <!-- ==================================================
+                 NOTIFICATIONS
+                 ================================================== -->
+
+            {% elif active_tab == "notifications" %}
+
+                <form
+                    method="post"
+                    class="settings-form"
+                >
+
+                    {% csrf_token %}
+
+                    <input
+                        type="hidden"
+                        name="action"
+                        value="notifications"
+                    >
+
+
+                    <div class="settings-section">
+
+                        <div class="settings-section-header">
+
+                            <h2>
+                                Obavijesti
+                            </h2>
+
+                        </div>
+
+
+                        <!-- ======================================
+                             EMAIL NOTIFICATIONS
+                             ====================================== -->
+
+                        <div class="settings-notification-block">
+
+                            <h3>
+                                Email obavijesti
+                            </h3>
+
+
+                            <label class="settings-toggle-row">
+
+                                <span class="settings-toggle">
+
+                                    {{ notification_form.email_enabled }}
+
+                                    <span class="settings-toggle-slider"></span>
+
+                                </span>
+
+                                <span>
+                                    Primaj automatske obavijesti mailom
+                                </span>
+
+                            </label>
+
+                        </div>
+
+
+                        <!-- ======================================
+                             EMAIL ADDRESS
+                             ====================================== -->
+
+                        <div class="settings-field settings-notification-email">
+
+                            <label for="{{ notification_form.notification_email.id_for_label }}">
+                                Email adresa za obavijesti
+                            </label>
+
+                            {{ notification_form.notification_email }}
+
+                            {% for error in notification_form.notification_email.errors %}
+
+                                <span class="settings-field-error">
+                                    {{ error }}
+                                </span>
+
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- ======================================
+                             REMINDER TIME
+                             ====================================== -->
+
+                        <div class="settings-reminder-section">
+
+                            <h3>
+                                Vrijeme slanja obavijesti
+                            </h3>
+
+                            <p>
+                                Odaberite kada želite primati obavijesti
+                            </p>
+
+
+                            <div class="settings-reminder-options">
+
+
+                                <!-- 30 DAYS -->
+
+                                <label class="settings-checkbox-option">
+
+                                    {{ notification_form.remind_30_days }}
+
+                                    <span class="settings-checkbox-box"></span>
+
+                                    <span>
+                                        30 dana prije
+                                    </span>
+
+                                </label>
+
+
+                                <!-- 7 DAYS -->
+
+                                <label class="settings-checkbox-option">
+
+                                    {{ notification_form.remind_7_days }}
+
+                                    <span class="settings-checkbox-box"></span>
+
+                                    <span>
+                                        7 dana prije
+                                    </span>
+
+                                </label>
+
+
+                                <!-- 1 DAY -->
+
+                                <label class="settings-checkbox-option">
+
+                                    {{ notification_form.remind_1_day }}
+
+                                    <span class="settings-checkbox-box"></span>
+
+                                    <span>
+                                        1 dan prije
+                                    </span>
+
+                                </label>
+
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ======================================
+                             INFO BOX
+                             ====================================== -->
+
+                        <div class="settings-info-box">
+
+                            <span
+                                class="icon icon-info"
+                                aria-hidden="true"
+                            ></span>
+
+                            <div>
+
+                                <strong>
+                                    Obavijesti će se slati automatski na unesenu email adresu
+                                </strong>
+
+                                <span>
+                                    Možete u bilo kojem trenutku promijeniti postavke obavijesti
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ==========================================
+                         ACTIONS
+                         ========================================== -->
+
+                    <div class="settings-actions">
+
+                        <a
+                            href="{% url 'accounts:settings' %}?tab=notifications"
+                            class="btn btn-outline"
+                        >
+                            Odustani
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+
+                            <span
+                                class="icon icon-save"
+                                aria-hidden="true"
+                            ></span>
+
+                            Spremi podatke
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+
+            <!-- ==================================================
+                 ABOUT
+                 ================================================== -->
+
+            {% elif active_tab == "about" %}
+
+                <div class="settings-about">
+
+
+                    <div class="settings-section-header">
+
+                        <h2>
+                            O aplikaciji
+                        </h2>
+
+                    </div>
+
+
+                    <!-- ==========================================
+                         APP INTRO
+                         ========================================== -->
+
+                    <div class="settings-about-intro">
+
+
+                        <div class="settings-about-logo">
+
+                            <img
+                                class="sidebar-logo"
+                                src="{% static 'images/logo-white.png' %}"
+                                alt="FleetMaintain"
+                            >
+
+                        </div>
+
+
+                        <div class="settings-about-content">
+
+                            <div class="settings-about-title-row">
+
+                                <h3>
+                                    FleetMaintain
+                                </h3>
+
+                                <span class="settings-version">
+                                    v1.0.0
+                                </span>
+
+                            </div>
+
+
+                            <strong class="settings-about-subtitle">
+                                Sustav za upravljanje i praćenje održavanja vozila i radnih strojeva
+                            </strong>
+
+
+                            <p>
+                                FleetMaintain je web aplikacija koja omogućuje evidenciju
+                                vozila i strojeva, praćenje održavanja, troškova, osiguranja,
+                                registracija i tehničkih pregleda na jednom mjestu.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ==========================================
+                         APP INFORMATION
+                         ========================================== -->
+
+                    <div class="settings-about-info">
+
+
+                        <div class="settings-about-info-row">
+
+                            <span
+                                class="icon icon-calendar"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span>
+                                Datum izdanja
+                            </span>
+
+                            <strong>
+                                17.06.2026.
+                            </strong>
+
+                        </div>
+
+
+                        <div class="settings-about-info-row">
+
+                            <span
+                                class="icon icon-user"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span>
+                                Razvijeno od
+                            </span>
+
+                            <strong>
+                                Milan Rastović
+                            </strong>
+
+                        </div>
+
+
+                        <div class="settings-about-info-row">
+
+                            <span
+                                class="icon icon-app-window"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span>
+                                Vrsta aplikacije
+                            </span>
+
+                            <strong>
+                                Web aplikacija
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

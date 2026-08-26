@@ -12,7 +12,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         toggle.addEventListener("click", () => {
 
-            const inputWrapper = toggle.closest(".input-wrapper");
+            const inputWrapper = toggle.closest(
+                ".input-wrapper, .settings-password-input"
+            );
 
             if (!inputWrapper) {
                 return;
@@ -22,16 +24,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 'input[type="password"], input[data-password-visible="true"]'
             );
 
-            const icon = toggle.querySelector(".password-toggle-icon");
+            const icon = toggle.querySelector(
+                ".password-toggle-icon"
+            );
 
             if (!passwordInput) {
                 return;
             }
 
-
-            /* --------------------------------------
-               Prikaži lozinku
-               -------------------------------------- */
 
             if (passwordInput.type === "password") {
 
@@ -49,14 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     icon.classList.add("icon-eye-off");
                 }
 
-            }
-
-
-            /* --------------------------------------
-               Sakrij lozinku
-               -------------------------------------- */
-
-            else {
+            } else {
 
                 passwordInput.type = "password";
 
@@ -77,6 +70,24 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
     });
+
+
+    /* ==============================================
+       LOCK CURRENT PASSWORD
+       ============================================== */
+
+    const currentPassword = document.getElementById(
+        "id_old_password"
+    );
+
+    if (currentPassword) {
+
+        setTimeout(() => {
+            currentPassword.readOnly = true;
+        }, 300);
+
+    }
+
 
     /* ==============================================
     RESPONSIVE SIDEBAR

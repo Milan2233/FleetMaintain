@@ -1,10 +1,23 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import (
+    AuthenticationForm,
+    PasswordChangeForm,
+    UserCreationForm,
+)
 
-from .models import CustomUser
+from .models import CustomUser, NotificationSettings
 
+
+User = get_user_model()
+
+
+# ==================================================
+# REGISTRATION FORM
+# ==================================================
 
 class RegistrationForm(UserCreationForm):
+
     full_name = forms.CharField(
         label="Ime i prezime",
         max_length=150,
@@ -46,8 +59,11 @@ class RegistrationForm(UserCreationForm):
         ),
     )
 
+
     class Meta:
+
         model = CustomUser
+
         fields = (
             "full_name",
             "email",
@@ -55,20 +71,40 @@ class RegistrationForm(UserCreationForm):
             "password2",
         )
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
 
-        full_name = self.cleaned_data["full_name"].strip()
-        name_parts = full_name.split(maxsplit=1)
+    def save(self, commit=True):
+
+        user = super().save(
+            commit=False
+        )
+
+        full_name = (
+            self.cleaned_data["full_name"]
+            .strip()
+        )
+
+        name_parts = full_name.split(
+            maxsplit=1
+        )
 
         user.first_name = name_parts[0]
-        user.last_name = name_parts[1] if len(name_parts) > 1 else ""
 
-        # Username korisnik neće unositi niti koristiti za prijavu.
-        # Interno koristimo e-mail kako bismo zadovoljili postojeće
-        # username polje AbstractUser modela.
-        user.username = self.cleaned_data["email"]
-        user.email = self.cleaned_data["email"]
+        user.last_name = (
+            name_parts[1]
+            if len(name_parts) > 1
+            else ""
+        )
+
+        # Username se interno koristi samo zbog
+        # nasljeđivanja AbstractUser modela.
+
+        user.username = (
+            self.cleaned_data["email"]
+        )
+
+        user.email = (
+            self.cleaned_data["email"]
+        )
 
         if commit:
             user.save()
@@ -76,29 +112,9 @@ class RegistrationForm(UserCreationForm):
         return user
 
 
-class EmailAuthenticationForm(AuthenticationForm):
-    username = forms.EmailField(
-        label="E-mail adresa",
-        widget=forms.EmailInput(
-            attrs={
-                "placeholder": "Unesite e-mail adresu",
-                "class": "form-control",
-                "autofocus": True,
-            }
-        ),
-    )
-
-    password = forms.CharField(
-        label="Lozinka",
-        strip=False,
-        widget=forms.PasswordInput(
-            attrs={
-                "placeholder": "Unesite lozinku",
-                "class": "form-control",
-                "autocomplete": "current-password",
-            }
-        ),
-    )
+# ==================================================
+# LOGIN FORM
+# ==================================================
 
 class EmailAuthenticationForm(AuthenticationForm):
 
@@ -107,7 +123,9 @@ class EmailAuthenticationForm(AuthenticationForm):
             "Unesite ispravnu e-mail adresu i lozinku. "
             "Provjerite jeste li podatke unijeli točno."
         ),
-        "inactive": "Ovaj korisnički račun nije aktivan.",
+        "inactive": (
+            "Ovaj korisnički račun nije aktivan."
+        ),
     }
 
     username = forms.EmailField(
@@ -132,3 +150,156 @@ class EmailAuthenticationForm(AuthenticationForm):
             }
         ),
     )
+
+
+# ==================================================
+# PROFILE SETTINGS FORM
+# ==================================================
+
+class ProfileSettingsForm(forms.ModelForm):
+
+    class Meta:
+
+        model = User
+
+        fields = [
+            "first_name",
+            "last_name",
+            "email",
+        ]
+
+        widgets = {
+
+            "first_name": forms.TextInput(
+                attrs={
+                    "placeholder": "Unesite ime",
+                    "autocomplete": "given-name",
+                }
+            ),
+
+            "last_name": forms.TextInput(
+                attrs={
+                    "placeholder": "Unesite prezime",
+                    "autocomplete": "family-name",
+                }
+            ),
+
+            "email": forms.EmailInput(),
+        }
+
+        labels = {
+            "first_name": "Ime",
+            "last_name": "Prezime",
+            "email": "Email adresa",
+        }
+
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(
+            *args,
+            **kwargs
+        )
+
+        # Email korisničkog računa se
+        # ne može mijenjati u postavkama.
+
+        self.fields["email"].disabled = True
+
+
+# ==================================================
+# SETTINGS PASSWORD CHANGE FORM
+# ==================================================
+
+class SettingsPasswordChangeForm(PasswordChangeForm):
+
+    def __init__(self, *args, **kwargs):
+
+        super().__init__(
+            *args,
+            **kwargs
+        )
+
+
+        # CURRENT PASSWORD
+
+        self.fields[
+            "old_password"
+        ].widget.attrs.update(
+            {
+                "autocomplete": "current-password",
+            }
+        )
+
+
+        # NEW PASSWORD
+
+        self.fields[
+            "new_password1"
+        ].widget.attrs.update(
+            {
+                "placeholder": "Unesite novu lozinku",
+                "autocomplete": "new-password",
+            }
+        )
+
+
+        # CONFIRM PASSWORD
+
+        self.fields[
+            "new_password2"
+        ].widget.attrs.update(
+            {
+                "placeholder": "Potvrdite novu lozinku",
+                "autocomplete": "new-password",
+            }
+        )
+
+
+# ==================================================
+# NOTIFICATION SETTINGS FORM
+# ==================================================
+
+class NotificationSettingsForm(forms.ModelForm):
+
+    class Meta:
+
+        model = NotificationSettings
+
+        fields = [
+            "email_enabled",
+            "notification_email",
+            "remind_30_days",
+            "remind_7_days",
+            "remind_1_day",
+        ]
+
+        widgets = {
+
+            "email_enabled": (
+                forms.CheckboxInput()
+            ),
+
+            "notification_email": (
+                forms.EmailInput(
+                    attrs={
+                        "placeholder": (
+                            "Email adresa za obavijesti"
+                        ),
+                        "autocomplete": "email",
+                    }
+                )
+            ),
+
+            "remind_30_days": (
+                forms.CheckboxInput()
+            ),
+
+            "remind_7_days": (
+                forms.CheckboxInput()
+            ),
+
+            "remind_1_day": (
+                forms.CheckboxInput()
+            ),
+        }

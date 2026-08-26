@@ -248,8 +248,8 @@
                     <li class="sidebar-menu-item">
 
                         <a
-                            href="#"
-                            class="sidebar-link"
+                            href="{% url 'accounts:settings' %}"
+                            class="sidebar-link {% if request.resolver_match.namespace == 'accounts' and request.resolver_match.url_name == 'settings' %}is-active{% endif %}"
                         >
 
                             <span
