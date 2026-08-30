@@ -9,6 +9,7 @@ from django.core.paginator import Paginator
 from django.db.models import Case, DateField, F, Q, When, Sum
 from registrations.models import RegistrationInspection
 from decimal import Decimal
+from activities.models import Activity
 
 @login_required
 def dashboard_view(request):
@@ -240,6 +241,22 @@ def dashboard_view(request):
             float(month_total)
         )      
 
+    # ==================================================
+    # RECENT ACTIVITIES
+    # ==================================================
+
+    recent_activities = (
+        Activity.objects
+        .filter(
+            user=request.user,
+        )
+        .select_related(
+            "vehicle",
+        )
+        .order_by(
+            "-created_at",
+        )[:5]
+    )
 
     # ==============================================
     # CONTEXT
@@ -265,6 +282,7 @@ def dashboard_view(request):
 
         "cost_chart_labels": cost_chart_labels,
         "cost_chart_values": cost_chart_values,
+        "recent_activities": recent_activities,
     }
 
 

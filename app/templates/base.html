@@ -202,8 +202,8 @@
                     <li class="sidebar-menu-item">
 
                         <a
-                            href="#"
-                            class="sidebar-link"
+                            href="{% url 'reports:list' %}"
+                            class="sidebar-link {% if request.resolver_match.namespace == 'reports' %}is-active{% endif %}"
                         >
 
                             <span
@@ -417,6 +417,7 @@
 
 
     <!-- Globalni JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="{% static 'js/app.js' %}"></script>
 
     {% block extra_js %}

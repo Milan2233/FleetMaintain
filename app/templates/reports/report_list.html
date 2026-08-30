@@ -1,0 +1,461 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    Izvještaji | FleetMaintain
+{% endblock %}
+
+
+{% block page_title %}
+    Izvještaji
+{% endblock %}
+
+
+{% block page_subtitle %}
+    Analiza podataka i pregled ključnih informacija voznog parka
+{% endblock %}
+
+
+{% block content %}
+
+<section class="reports-page">
+
+
+    <!-- ==================================================
+         FILTERS
+         ================================================== -->
+
+    <form
+        method="get"
+        class="reports-filters"
+    >
+
+
+        <!-- PERIOD -->
+
+        <div class="reports-filter-select">
+
+            <span class="reports-filter-prefix">
+                Razdoblje:
+            </span>
+
+            <select
+                name="period"
+                aria-label="Odaberi razdoblje"
+                onchange="this.form.submit()"
+            >
+
+                <option
+                    value="30_days"
+                    {% if selected_period == "30_days" %}selected{% endif %}
+                >
+                    Zadnjih 30 dana
+                </option>
+
+                <option
+                    value="3_months"
+                    {% if selected_period == "3_months" %}selected{% endif %}
+                >
+                    Zadnja 3 mjeseca
+                </option>
+
+                <option
+                    value="6_months"
+                    {% if selected_period == "6_months" %}selected{% endif %}
+                >
+                    Zadnjih 6 mjeseci
+                </option>
+
+                <option
+                    value="12_months"
+                    {% if selected_period == "12_months" %}selected{% endif %}
+                >
+                    Zadnjih 12 mjeseci
+                </option>
+
+                <option
+                    value="year"
+                    {% if selected_period == "year" %}selected{% endif %}
+                >
+                    Ova godina
+                </option>
+
+                <option
+                    value="all"
+                    {% if selected_period == "all" %}selected{% endif %}
+                >
+                    Sve vrijeme
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- VEHICLE -->
+
+        <div class="reports-filter-select">
+
+            <span class="reports-filter-prefix">
+                Vozilo:
+            </span>
+
+            <select
+                name="vehicle"
+                aria-label="Odaberi vozilo ili stroj"
+                onchange="this.form.submit()"
+            >
+
+                <option value="">
+                    Sva vozila i strojevi
+                </option>
+
+                {% for vehicle in vehicles %}
+
+                    <option
+                        value="{{ vehicle.id }}"
+                        {% if selected_vehicle == vehicle.id|stringformat:"s" %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ vehicle.name }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+    </form>
+
+
+    <!-- ==================================================
+         KPI CARDS
+         ================================================== -->
+
+    <div class="reports-kpi-grid">
+
+
+        <!-- TOTAL COST -->
+
+        <article class="report-kpi-card">
+
+            <div class="report-kpi-icon">
+
+                <span
+                    class="icon icon-euro"
+                    aria-hidden="true"
+                ></span>
+
+            </div>
+
+            <div class="report-kpi-content">
+
+                <span class="report-kpi-label">
+                    Ukupni troškovi
+                </span>
+
+                <strong class="report-kpi-value">
+                    {{ total_cost|floatformat:2 }} €
+                </strong>
+
+                <span class="report-kpi-description">
+                    Ukupno u odabranom razdoblju
+                </span>
+
+            </div>
+
+        </article>
+
+
+        <!-- MAINTENANCE COUNT -->
+
+        <article class="report-kpi-card">
+
+            <div class="report-kpi-icon">
+
+                <span
+                    class="icon icon-wrench"
+                    aria-hidden="true"
+                ></span>
+
+            </div>
+
+            <div class="report-kpi-content">
+
+                <span class="report-kpi-label">
+                    Ukupno održavanja
+                </span>
+
+                <strong class="report-kpi-value">
+                    {{ total_maintenances }}
+                </strong>
+
+                <span class="report-kpi-description">
+                    Evidentirana održavanja
+                </span>
+
+            </div>
+
+        </article>
+
+
+        <!-- MONTHLY AVERAGE -->
+
+        <article class="report-kpi-card">
+
+            <div class="report-kpi-icon">
+
+                <span
+                    class="icon icon-calendar"
+                    aria-hidden="true"
+                ></span>
+
+            </div>
+
+            <div class="report-kpi-content">
+
+                <span class="report-kpi-label">
+                    Prosječni mjesečni trošak
+                </span>
+
+                <strong class="report-kpi-value">
+                    {{ average_monthly_cost|floatformat:2 }} €
+                </strong>
+
+                <span class="report-kpi-description">
+                    Prosjek po mjesecu
+                </span>
+
+            </div>
+
+        </article>
+
+
+        <!-- VEHICLE AVERAGE -->
+
+        <article class="report-kpi-card">
+
+            <div class="report-kpi-icon">
+
+                <span
+                    class="icon icon-truck"
+                    aria-hidden="true"
+                ></span>
+
+            </div>
+
+            <div class="report-kpi-content">
+
+                <span class="report-kpi-label">
+                    Prosječni trošak po vozilu
+                </span>
+
+                <strong class="report-kpi-value">
+                    {{ average_vehicle_cost|floatformat:2 }} €
+                </strong>
+
+                <span class="report-kpi-description">
+                    Prosjek po vozilu ili stroju
+                </span>
+
+            </div>
+
+        </article>
+
+
+    </div>
+
+    <!-- ==================================================
+         PRIMARY CHARTS
+         ================================================== -->
+
+    <div class="reports-primary-grid">
+
+
+        <!-- ==============================================
+             COSTS THROUGH TIME
+             ============================================== -->
+
+        <article class="report-chart-card report-chart-card-large">
+
+            <div class="report-card-header">
+
+                <div>
+
+                    <h2>
+                        Pregled troškova kroz vrijeme
+                    </h2>
+
+                    <p>
+                        Ukupni evidentirani troškovi po mjesecima
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="report-chart-container">
+
+                <canvas
+                    id="reportCostsChart"
+                    aria-label="Pregled troškova kroz vrijeme"
+                ></canvas>
+
+            </div>
+
+        </article>
+
+
+        <!-- ==============================================
+             COST DISTRIBUTION
+             ============================================== -->
+
+        <article class="report-chart-card">
+
+            <div class="report-card-header">
+
+                <div>
+
+                    <h2>
+                        Raspodjela troškova
+                    </h2>
+
+                    <p>
+                        Udio troškova prema vrsti
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="report-distribution-content">
+
+                <div class="report-doughnut-container">
+
+                    <canvas
+                        id="reportDistributionChart"
+                        aria-label="Raspodjela troškova"
+                    ></canvas>
+
+                </div>
+
+
+                <div class="report-chart-legend">
+
+                    <div class="report-legend-item">
+
+                        <span class="report-legend-dot is-maintenance"></span>
+
+                        <span>
+                            Održavanje
+                        </span>
+
+                        <strong>
+                            {{ maintenance_cost|floatformat:2 }} €
+                        </strong>
+
+                    </div>
+
+
+                    <div class="report-legend-item">
+
+                        <span class="report-legend-dot is-registration"></span>
+
+                        <span>
+                            Registracija
+                        </span>
+
+                        <strong>
+                            {{ registration_only_cost|floatformat:2 }} €
+                        </strong>
+
+                    </div>
+
+
+                    <div class="report-legend-item">
+
+                        <span class="report-legend-dot is-technical"></span>
+
+                        <span>
+                            Tehnički pregled
+                        </span>
+
+                        <strong>
+                            {{ technical_inspection_cost|floatformat:2 }} €
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </article>
+
+    </div>
+
+    <!-- ==================================================
+        SECONDARY CHARTS
+        ================================================== -->
+
+    <div class="reports-secondary-grid">
+
+        <!-- ==============================================
+            COSTS BY VEHICLE
+            ============================================== -->
+
+        <article class="report-chart-card">
+
+            <div class="report-card-header">
+
+                <div>
+
+                    <h2>
+                        Troškovi po vozilu / stroju
+                    </h2>
+
+                    <p>
+                        Usporedba ukupnih troškova vozila i strojeva
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="report-chart-container report-vehicle-costs-chart">
+
+                <canvas
+                    id="reportVehicleCostsChart"
+                    aria-label="Troškovi po vozilu ili stroju"
+                ></canvas>
+
+            </div>
+
+        </article>
+
+
+    </div>    
+
+
+</section>
+
+{{ chart_labels|json_script:"report-chart-labels" }}
+
+{{ chart_cost_data|json_script:"report-chart-costs" }}
+
+{{ maintenance_cost|json_script:"report-maintenance-cost" }}
+
+{{ registration_only_cost|json_script:"report-registration-cost" }}
+
+{{ technical_inspection_cost|json_script:"report-technical-cost" }}
+
+{{ vehicle_cost_labels|json_script:"report-vehicle-cost-labels" }}
+
+{{ vehicle_cost_data|json_script:"report-vehicle-costs" }}
+
+{% endblock %}

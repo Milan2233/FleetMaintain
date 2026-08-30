@@ -87,6 +87,7 @@ def activity_list_view(request):
         base_activities
         .filter(
             level=Activity.Level.WARNING,
+            is_read=False,
         )
         .count()
     )

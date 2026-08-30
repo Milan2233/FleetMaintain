@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
@@ -245,8 +245,7 @@ def settings_view(request):
                 )
 
                 return redirect(
-                    "accounts:settings"
-                    + "?tab=notifications"
+                    f"{reverse('accounts:settings')}?tab=notifications"
                 )
 
 

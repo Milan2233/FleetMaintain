@@ -1293,7 +1293,13 @@ body {
 
     color: var(--blue-500);
 
-    white-space: nowrap;
+    white-space: normal;
+
+    overflow: visible;
+    text-overflow: clip;
+
+    overflow-wrap: break-word;
+    word-break: normal;
 }
 
 /* ==================================================
@@ -1652,32 +1658,39 @@ body {
 }
 
 .vehicle-status-content {
-    position: relative;
+    display: grid;
 
-    display: flex;
+    grid-template-columns:
+        minmax(260px, 1fr)
+        auto;
+
     align-items: center;
-    justify-content: center;
+
+    column-gap: 28px;
 
     min-height: 280px;
 
-    padding: var(--space-5);
+    padding:
+        var(--space-5)
+        28px;
 }
 
 .vehicle-status-chart {
+    justify-self: center;
+
     width: 260px;
     height: 260px;
 }
 
 .vehicle-status-legend {
-    position: absolute;
-
-    right: 24px;
-    bottom: 20px;
-
+    position: static;
+    justify-self: center;
     display: flex;
     flex-direction: column;
 
     gap: 8px;
+
+    min-width: 145px;
 }
 
 .vehicle-status-legend-item {
@@ -1817,6 +1830,28 @@ body {
     display: none;
 }
 
+.recent-activity-content {
+    display: flex;
+    align-items: center;
+
+    min-width: 0;
+
+    gap: 4px;
+}
+
+
+.recent-activities-empty {
+    padding: 28px;
+
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+
+    color: var(--blue-500);
+
+    text-align: center;
+}
+
 /* ==================================================
    <= 1500px
    Srednje desktop / laptop rezolucije
@@ -1855,10 +1890,7 @@ body {
        ============================================== */
 
     .vehicle-status-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+        grid-template-columns: 1fr;
 
         gap: var(--space-4);
 
@@ -2150,6 +2182,56 @@ body {
     .vehicle-status-content {
         min-height: 280px;
     }
+
+
+        .vehicle-status-content {
+        display: grid;
+
+        grid-template-columns:
+            minmax(260px, 1fr)
+            auto;
+
+        align-items: center;
+
+        column-gap: 36px;
+
+        min-height: 300px;
+
+        padding:
+            var(--space-5)
+            32px;
+    }
+
+
+    .vehicle-status-chart {
+        justify-self: center;
+
+        width: 260px;
+        height: 260px;
+    }
+
+
+    .vehicle-status-chart canvas {
+        width: 260px !important;
+        height: 260px !important;
+    }
+
+
+    .vehicle-status-legend {
+        position: static;
+
+        justify-self: start;
+        align-self: center;
+
+        display: flex;
+        flex-direction: column;
+
+        width: fit-content;
+        min-width: 145px;
+
+        gap: 8px;
+    }
+
 }
 
 
@@ -2339,7 +2421,41 @@ body {
     .sidebar {
         width: 100%;
         max-width: none;
-    }    
+    }   
+    
+    .vehicle-status-content {
+        grid-template-columns: 1fr;
+
+        row-gap: var(--space-4);
+
+        padding:
+            20px
+            16px;
+    }
+
+
+    .vehicle-status-chart {
+        justify-self: center;
+
+        width: 220px;
+        height: 220px;
+    }
+
+
+    .vehicle-status-chart canvas {
+        width: 220px !important;
+        height: 220px !important;
+    }
+
+
+    .vehicle-status-legend {
+        justify-self: center;
+
+        width: fit-content;
+        min-width: 0;
+
+        align-items: flex-start;
+    }
 }
 
 
@@ -9656,7 +9772,7 @@ a.vehicle-detail-tab:hover {
 
 .activity-kpi-label {
     font-family: "Montserrat", sans-serif;
-    font-size: 13px;
+    font-size: 16px;
     font-weight: 600;
     line-height: 1.4;
 
@@ -9670,8 +9786,8 @@ a.vehicle-detail-tab:hover {
 
 .activity-kpi-value {
     font-family: "Montserrat", sans-serif;
-    font-size: 22px;
-    font-weight: 700;
+    font-size: 18px;
+    font-weight: 600;
     line-height: 1.25;
 
     color: var(--blue-950);
@@ -9683,17 +9799,20 @@ a.vehicle-detail-tab:hover {
    ================================================== */
 
 .activity-kpi-description {
-    overflow: hidden;
+    width: 100%;
 
     font-family: "Montserrat", sans-serif;
     font-size: 12px;
-    font-weight: 500;
+    font-weight: 600;
     line-height: 1.4;
 
     color: var(--blue-500);
 
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+
+    overflow-wrap: break-word;
 }
 
 
@@ -9910,8 +10029,12 @@ a.vehicle-detail-tab:hover {
     flex-direction: column;
 
     width: 100%;
+    max-width: 100%;
 
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    -webkit-overflow-scrolling: touch;
 
     background: #fff;
 
@@ -9926,6 +10049,7 @@ a.vehicle-detail-tab:hover {
 
 .activities-date-group {
     width: 100%;
+    min-width: 960px;
 }
 
 
@@ -10185,9 +10309,14 @@ a.vehicle-detail-tab:hover {
 /* Warning */
 
 .activity-row.is-warning .activity-row-icon {
-    background: rgba(174, 61, 0, 0.08);
+    background: var(--color-danger);
 
     color: var(--danger);
+}
+
+.activity-row.is-warning .activity-row-icon .icon {
+
+    color: var(--color-white);
 }
 
 
@@ -10203,8 +10332,6 @@ a.vehicle-detail-tab:hover {
 .activity-row-title strong {
     display: block;
 
-    overflow: hidden;
-
     font-family: "Montserrat", sans-serif;
     font-size: 14px;
     font-weight: 600;
@@ -10212,8 +10339,11 @@ a.vehicle-detail-tab:hover {
 
     color: var(--blue-900);
 
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+
+    overflow-wrap: break-word;
 }
 
 
@@ -10229,8 +10359,6 @@ a.vehicle-detail-tab:hover {
 .activity-row-description span {
     display: block;
 
-    overflow: hidden;
-
     font-family: "Montserrat", sans-serif;
     font-size: 14px;
     font-weight: 600;
@@ -10238,8 +10366,11 @@ a.vehicle-detail-tab:hover {
 
     color: var(--blue-500);
 
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+
+    overflow-wrap: break-word;
 }
 
 
@@ -10410,7 +10541,7 @@ a.vehicle-detail-tab:hover {
    TABLET
    ================================================== */
 
-@media (max-width: 1100px) {
+@media (max-width: 1024px) {
 
     /* KPI */
 
@@ -10430,33 +10561,6 @@ a.vehicle-detail-tab:hover {
 
     .activities-search {
         grid-column: 1 / -1;
-    }
-
-
-    /* ACTIVITY ROW */
-
-    .activity-row {
-        grid-template-columns:
-            42px
-            minmax(180px, 1fr)
-            minmax(220px, 1.4fr)
-            105px;
-
-        row-gap: 6px;
-    }
-
-
-    .activity-row-status {
-        grid-column: 2;
-        grid-row: 2;
-    }
-
-
-    .activity-row-time {
-        grid-column: 4;
-        grid-row: 1 / 3;
-
-        align-self: center;
     }
 
 }
@@ -10511,78 +10615,6 @@ a.vehicle-detail-tab:hover {
 
     .activities-date-header {
         padding: 0 16px;
-    }
-
-
-    /* ACTIVITY ROW */
-
-    .activity-row {
-        grid-template-columns:
-            38px
-            minmax(0, 1fr)
-            auto;
-
-        grid-template-rows:
-            auto
-            auto
-            auto;
-
-        column-gap: 12px;
-        row-gap: 5px;
-
-        min-height: 0;
-
-        padding: 16px;
-    }
-
-
-    .activity-row-icon {
-        grid-column: 1;
-        grid-row: 1 / 4;
-
-        align-self: start;
-
-        width: 34px;
-        height: 34px;
-    }
-
-
-    .activity-row-icon .icon {
-        width: 18px;
-        height: 18px;
-    }
-
-
-    .activity-row-title {
-        grid-column: 2;
-        grid-row: 1;
-    }
-
-
-    .activity-row-description {
-        grid-column: 2 / 4;
-        grid-row: 2;
-    }
-
-
-    .activity-row-description span {
-        white-space: normal;
-    }
-
-
-    .activity-row-status {
-        grid-column: 2;
-        grid-row: 3;
-
-        margin-top: 4px;
-    }
-
-
-    .activity-row-time {
-        grid-column: 3;
-        grid-row: 1;
-
-        align-items: flex-end;
     }
 
 
@@ -11783,6 +11815,777 @@ a.vehicle-detail-tab:hover {
         align-self: start;
 
         text-align: left;
+    }
+
+}
+
+/* ==================================================
+   19. REPORTS PAGE
+   ================================================== */
+
+.reports-page {
+    display: flex;
+    flex-direction: column;
+
+    gap: var(--space-6);
+
+    width: 100%;
+}
+
+
+/* ==================================================
+   REPORT FILTERS
+   ================================================== */
+
+.reports-filters {
+    display: grid;
+
+    grid-template-columns:
+        minmax(220px, 280px)
+        minmax(260px, 340px);
+
+    gap: var(--space-4);
+
+    width: 100%;
+}
+
+
+/* ==================================================
+   FILTER SELECT
+   ================================================== */
+
+.reports-filter-select {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    height: 44px;
+
+    padding-left: var(--space-4);
+
+    background: var(--color-white);
+
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-sm);
+
+    box-sizing: border-box;
+}
+
+
+/* ==================================================
+   FILTER PREFIX
+   ================================================== */
+
+.reports-filter-prefix {
+    flex: 0 0 auto;
+
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+
+    color: var(--blue-900);
+
+    white-space: nowrap;
+}
+
+
+/* ==================================================
+   FILTER SELECT FIELD
+   ================================================== */
+
+.reports-filter-select select {
+    flex: 1;
+
+    min-width: 0;
+    height: 100%;
+
+    padding:
+        0
+        36px
+        0
+        5px;
+
+    border: 0;
+
+    background: transparent;
+
+    outline: none;
+
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+
+    color: var(--blue-900);
+
+    appearance: none;
+    -webkit-appearance: none;
+
+    cursor: pointer;
+}
+
+
+/* ==================================================
+   FILTER ARROW
+   ================================================== */
+
+.reports-filter-select::after {
+    content: "";
+
+    position: absolute;
+
+    top: 50%;
+    right: var(--space-3);
+
+    width: 16px;
+    height: 16px;
+
+    background-color: var(--blue-900);
+
+    -webkit-mask-image:
+        url("../images/icons/chevron-down.svg");
+
+    mask-image:
+        url("../images/icons/chevron-down.svg");
+
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+
+    -webkit-mask-position: center;
+    mask-position: center;
+
+    -webkit-mask-size: contain;
+    mask-size: contain;
+
+    transform: translateY(-50%);
+
+    pointer-events: none;
+}
+
+
+/* ==================================================
+   KPI GRID
+   ================================================== */
+
+.reports-kpi-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: var(--space-4);
+
+    width: 100%;
+}
+
+
+/* ==================================================
+   KPI CARD
+   ================================================== */
+
+.report-kpi-card {
+    display: flex;
+    align-items: center;
+
+    gap: var(--space-4);
+
+    min-width: 0;
+    min-height: 130px;
+
+    padding: var(--space-4);
+
+    background: var(--blue-50);
+
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-md);
+}
+
+
+/* ==================================================
+   KPI ICON
+   ================================================== */
+
+.report-kpi-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 36px;
+    height: 36px;
+
+    color: var(--blue-500);
+}
+
+
+.report-kpi-icon .icon {
+    width: 36px;
+    height: 36px;
+}
+
+
+/* ==================================================
+   KPI CONTENT
+   ================================================== */
+
+.report-kpi-content {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+
+    min-width: 0;
+}
+
+
+/* ==================================================
+   KPI LABEL
+   ================================================== */
+
+.report-kpi-label {
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+
+    color: var(--blue-500);
+}
+
+
+/* ==================================================
+   KPI VALUE
+   ================================================== */
+
+.report-kpi-value {
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.25;
+
+    color: var(--blue-950);
+}
+
+
+/* ==================================================
+   KPI DESCRIPTION
+   ================================================== */
+
+.report-kpi-description {
+    width: 100%;
+
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+
+    color: var(--blue-500);
+
+    white-space: normal;
+
+    overflow-wrap: break-word;
+}
+
+
+/* ==================================================
+   PRIMARY REPORT GRID
+   ================================================== */
+
+.reports-primary-grid {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 3fr)
+        minmax(0, 2fr);
+
+    gap: 18px;
+
+    width: 100%;
+
+    margin-top: 18px;
+}
+
+
+/* ==================================================
+   REPORT CHART CARD
+   ================================================== */
+
+.report-chart-card {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+
+    background: var(--blue-50);
+
+    border: 1px solid var(--blue-200);
+    border-radius: var(--radius-md);
+
+    overflow: hidden;
+}
+
+
+/* ==================================================
+   REPORT CARD HEADER
+   ================================================== */
+
+.report-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    min-height: 72px;
+
+    padding:
+        20px
+        28px
+        12px;
+}
+
+
+.report-card-header h2 {
+    margin: 0;
+
+    font-family: "Montserrat", sans-serif;
+    font-size: 19px;
+    font-weight: 600;
+    line-height: normal;
+
+    color: var(--blue-800);
+}
+
+
+.report-card-header p {
+    margin:
+        5px
+        0
+        0;
+
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.4;
+
+    color: var(--blue-500);
+}
+
+
+/* ==================================================
+   COST CHART
+   ================================================== */
+
+.report-chart-container {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    min-height: 300px;
+
+    padding:
+        12px
+        28px
+        28px;
+
+    box-sizing: border-box;
+}
+
+
+.report-chart-container canvas {
+    display: block;
+
+    width: 100% !important;
+    height: 260px !important;
+}
+
+
+/* ==================================================
+   DISTRIBUTION CONTENT
+   ================================================== */
+
+.report-distribution-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    column-gap: 28px;
+    row-gap: 20px;
+
+    width: 100%;
+    min-height: 300px;
+
+    padding: 20px 24px 24px;
+
+    box-sizing: border-box;
+}
+
+
+/* ==================================================
+   DOUGHNUT CHART
+   ================================================== */
+
+.report-doughnut-container {
+    width: 260px;
+    height: 260px;
+
+    flex: 0 0 260px;
+}
+
+
+.report-doughnut-container canvas {
+    display: block;
+
+    width: 260px !important;
+    height: 260px !important;
+
+    max-width: 260px;
+    max-height: 260px;
+}
+
+
+/* ==================================================
+   CHART LEGEND
+   ================================================== */
+
+.report-chart-legend {
+    position: static;
+
+    display: flex;
+    flex-direction: column;
+
+    flex: 1 1 190px;
+
+    min-width: 190px;
+    max-width: 260px;
+
+    gap: 8px;
+}
+
+
+/* ==================================================
+   LEGEND ITEM
+   ================================================== */
+
+.report-legend-item {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    width: 100%;
+
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: normal;
+
+    color: var(--blue-800);
+}
+
+
+/* ==================================================
+   LEGEND DOT
+   ================================================== */
+
+.report-legend-dot {
+    width: 15px;
+    height: 15px;
+
+    flex: 0 0 15px;
+
+    border-radius: var(--radius-sm);
+}
+
+
+.report-legend-dot.is-maintenance {
+    background: var(--blue-900);
+}
+
+
+.report-legend-dot.is-registration {
+    background: var(--blue-500);
+}
+
+
+.report-legend-dot.is-technical {
+    background: var(--blue-300);
+}
+
+
+/* ==================================================
+   LEGEND VALUE
+   ================================================== */
+
+.report-legend-item strong {
+    margin-left: auto;
+
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+
+    color: var(--blue-800);
+
+    white-space: nowrap;
+}
+
+
+/* ==================================================
+   SECONDARY REPORT GRID
+   ================================================== */
+
+.reports-secondary-grid {
+    display: grid;
+
+    grid-template-columns: 1fr;
+
+    width: 100%;
+
+    margin-top: 18px;
+}
+
+
+/* ==================================================
+   VEHICLE COST CHART
+   ================================================== */
+
+.report-vehicle-costs-chart {
+    min-height: 320px;
+}
+
+
+.report-vehicle-costs-chart canvas {
+    width: 100% !important;
+    height: 280px !important;
+}
+
+
+/* ==================================================
+   TABLET
+   ================================================== */
+
+@media (max-width: 1024px) {
+
+    /* FILTERS */
+
+    .reports-filters {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .reports-secondary-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    /* KPI */
+
+    .reports-kpi-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+
+    /* PRIMARY CHARTS */
+
+    .reports-primary-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    /* COST CHART */
+
+    .report-chart-container {
+        min-height: 320px;
+    }
+
+
+    .report-chart-container canvas {
+        height: 280px !important;
+    }
+
+
+    /* DISTRIBUTION */
+
+    .report-distribution-content {
+        min-height: 320px;
+    }
+
+}
+
+
+/* ==================================================
+   MOBILE
+   ================================================== */
+
+@media (max-width: 767px) {
+
+    /* PAGE */
+
+    .reports-page {
+        gap: var(--space-4);
+    }
+
+
+    /* ==================================================
+       FILTERS
+       ================================================== */
+
+    .reports-filters {
+        grid-template-columns: 1fr;
+
+        gap: var(--space-3);
+
+        margin-bottom: 0;
+    }
+
+
+    .reports-filter-select {
+        width: 100%;
+    }
+
+
+    /* ==================================================
+       KPI
+       ================================================== */
+
+    .reports-kpi-grid {
+        grid-template-columns: 1fr;
+
+        gap: var(--space-3);
+    }
+
+
+    .report-kpi-card {
+        min-height: 120px;
+
+        padding: 20px;
+    }
+
+
+    /* ==================================================
+       PRIMARY CHARTS
+       ================================================== */
+
+    .reports-primary-grid {
+        grid-template-columns: 1fr;
+
+        gap: var(--space-3);
+
+        margin-top: 0;
+    }
+
+
+    /* ==================================================
+       CARD HEADER
+       ================================================== */
+
+    .report-card-header {
+        min-height: auto;
+
+        padding:
+            20px
+            20px
+            12px;
+    }
+
+
+    .report-card-header h2 {
+        font-size: 17px;
+    }
+
+
+    /* ==================================================
+       COST CHART
+       ================================================== */
+
+    .report-chart-container {
+        min-height: 260px;
+
+        padding:
+            12px
+            16px
+            20px;
+    }
+
+
+    .report-chart-container canvas {
+        height: 230px !important;
+    }
+
+
+    /* ==================================================
+       DISTRIBUTION
+       ================================================== */
+
+    .report-distribution-content {
+        position: relative;
+
+        flex-direction: column;
+
+        gap: var(--space-4);
+
+        min-height: auto;
+
+        padding:
+            16px
+            20px
+            20px;
+    }
+
+
+    /* ==================================================
+       DOUGHNUT
+       ================================================== */
+
+    .report-doughnut-container {
+        width: 220px;
+        height: 220px;
+
+        flex: 0 0 220px;
+    }
+
+
+    .report-doughnut-container canvas {
+        width: 220px !important;
+        height: 220px !important;
+
+        max-width: 220px;
+        max-height: 220px;
+    }
+
+
+    /* ==================================================
+       LEGEND
+       ================================================== */
+
+    .report-chart-legend {
+        display: flex;
+        flex-direction: column;
+
+        gap: 8px;
+
+        width: 100%;
+    }
+
+
+    .report-legend-item {
+        width: 100%;
+    }
+
+
+    .report-legend-item strong {
+        margin-left: auto;
+    }
+
+    .reports-secondary-grid {
+        grid-template-columns: 1fr;
+
+        gap: var(--space-3);
+
+        margin-top: 0;
     }
 
 }

@@ -430,99 +430,40 @@
 
             <div class="recent-activities-list">
 
-                <div class="recent-activity-row">
+                {% for activity in recent_activities %}
 
-                    <div class="recent-activity-content">
-                        <span class="recent-activity-title">
-                            Dodano novo vozilo
+                    <div class="recent-activity-row">
+
+                        <div class="recent-activity-content">
+
+                            <span class="recent-activity-title">
+                                {{ activity.title }}
+                            </span>
+
+                            {% if activity.vehicle %}
+
+                                <span class="recent-activity-vehicle">
+                                    {{ activity.vehicle.name }}
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <span class="recent-activity-date">
+                            {{ activity.created_at|date:"d.m.Y." }}
                         </span>
 
-                        <span class="recent-activity-vehicle">
-                            VW Transporter
-                        </span>
                     </div>
 
-                    <span class="recent-activity-date">
-                        04.06.2026.
-                    </span>
+                {% empty %}
 
-                </div>
-
-
-                <div class="recent-activity-row">
-
-                    <div class="recent-activity-content">
-                        <span class="recent-activity-title">
-                            Evidentiran redovni servis
-                        </span>
-
-                        <span class="recent-activity-vehicle">
-                            Renault Master
-                        </span>
+                    <div class="recent-activities-empty">
+                        Nema evidentiranih aktivnosti.
                     </div>
 
-                    <span class="recent-activity-date">
-                        03.06.2026.
-                    </span>
-
-                </div>
-
-
-                <div class="recent-activity-row">
-
-                    <div class="recent-activity-content">
-                        <span class="recent-activity-title">
-                            Ažurirana kilometraža
-                        </span>
-
-                        <span class="recent-activity-vehicle">
-                            VW Transporter
-                        </span>
-                    </div>
-
-                    <span class="recent-activity-date">
-                        02.06.2026.
-                    </span>
-
-                </div>
-
-
-                <div class="recent-activity-row">
-
-                    <div class="recent-activity-content">
-                        <span class="recent-activity-title">
-                            Dodana servisna dokumentacija
-                        </span>
-
-                        <span class="recent-activity-vehicle">
-                            CAT 320
-                        </span>
-                    </div>
-
-                    <span class="recent-activity-date">
-                        01.06.2026.
-                    </span>
-
-                </div>
-
-
-                <div class="recent-activity-row">
-
-                    <div class="recent-activity-content">
-                        <span class="recent-activity-title">
-                            Promijenjen status vozila
-                        </span>
-
-                        <span class="recent-activity-vehicle">
-                            Renault Master
-                        </span>
-                    </div>
-
-                    <span class="recent-activity-date">
-                        31.05.2026.
-                    </span>
-
-                </div>
+                {% endfor %}
 
             </div>
 

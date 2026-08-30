@@ -31,6 +31,7 @@ urlpatterns = [
     path("dokumenti/", include("documents.urls")),
     path("troskovi/", include("costs.urls")),
     path("aktivnosti/", include("activities.urls")),
+    path("izvjestaji/", include("reports.urls")),
 ]
 
 if settings.DEBUG:
