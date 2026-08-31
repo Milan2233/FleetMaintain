@@ -3027,10 +3027,6 @@ body {
     mask-image: url("../images/icons/search.svg");
 }
 
-.icon-filter {
-    -webkit-mask-image: url("../images/icons/filter.svg");
-    mask-image: url("../images/icons/eye.svg");
-}
 
 .icon-pencil {
     -webkit-mask-image: url("../images/icons/pen.svg");
