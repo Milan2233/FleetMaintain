@@ -1,0 +1,453 @@
+warning: in the working copy of 'app/accounts/views.py', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/app/accounts/forms.py b/app/accounts/forms.py[m
+[1mindex a3e3dd2..02ddc55 100644[m
+[1m--- a/app/accounts/forms.py[m
+[1m+++ b/app/accounts/forms.py[m
+[36m@@ -18,6 +18,13 @@[m [mUser = get_user_model()[m
+ [m
+ class RegistrationForm(UserCreationForm):[m
+ [m
+[32m+[m[32m    error_messages = {[m
+[32m+[m[32m        **UserCreationForm.error_messages,[m
+[32m+[m[32m        "password_mismatch": ([m
+[32m+[m[32m            "Lozinke se ne podudaraju."[m
+[32m+[m[32m        ),[m
+[32m+[m[32m    }[m
+[32m+[m
+     full_name = forms.CharField([m
+         label="Ime i prezime",[m
+         max_length=150,[m
+[36m@@ -213,6 +220,19 @@[m [mclass ProfileSettingsForm(forms.ModelForm):[m
+ [m
+ class SettingsPasswordChangeForm(PasswordChangeForm):[m
+ [m
+[32m+[m[32m    error_messages = {[m
+[32m+[m[32m        **PasswordChangeForm.error_messages,[m
+[32m+[m
+[32m+[m[32m        "password_incorrect": ([m
+[32m+[m[32m            "Trenutna lozinka nije ispravna."[m
+[32m+[m[32m        ),[m
+[32m+[m
+[32m+[m[32m        "password_mismatch": ([m
+[32m+[m[32m            "Nove lozinke se ne podudaraju."[m
+[32m+[m[32m        ),[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m
+     def __init__(self, *args, **kwargs):[m
+ [m
+         super().__init__([m
+[36m@@ -227,10 +247,19 @@[m [mclass SettingsPasswordChangeForm(PasswordChangeForm):[m
+             "old_password"[m
+         ].widget.attrs.update([m
+             {[m
+[32m+[m[32m                "placeholder": "Unesite trenutnu lozinku",[m
+                 "autocomplete": "current-password",[m
+             }[m
+         )[m
+ [m
+[32m+[m[32m        self.fields[[m
+[32m+[m[32m            "old_password"[m
+[32m+[m[32m        ].error_messages[[m
+[32m+[m[32m            "required"[m
+[32m+[m[32m        ] = ([m
+[32m+[m[32m            "Unesite trenutnu lozinku."[m
+[32m+[m[32m        )[m
+[32m+[m
+ [m
+         # NEW PASSWORD[m
+ [m
+[36m@@ -243,6 +272,14 @@[m [mclass SettingsPasswordChangeForm(PasswordChangeForm):[m
+             }[m
+         )[m
+ [m
+[32m+[m[32m        self.fields[[m
+[32m+[m[32m            "new_password1"[m
+[32m+[m[32m        ].error_messages[[m
+[32m+[m[32m            "required"[m
+[32m+[m[32m        ] = ([m
+[32m+[m[32m            "Unesite novu lozinku."[m
+[32m+[m[32m        )[m
+[32m+[m
+ [m
+         # CONFIRM PASSWORD[m
+ [m
+[36m@@ -255,6 +292,13 @@[m [mclass SettingsPasswordChangeForm(PasswordChangeForm):[m
+             }[m
+         )[m
+ [m
+[32m+[m[32m        self.fields[[m
+[32m+[m[32m            "new_password2"[m
+[32m+[m[32m        ].error_messages[[m
+[32m+[m[32m            "required"[m
+[32m+[m[32m        ] = ([m
+[32m+[m[32m            "Potvrdite novu lozinku."[m
+[32m+[m[32m        )[m
+ [m
+ # ==================================================[m
+ # NOTIFICATION SETTINGS FORM[m
+[1mdiff --git a/app/accounts/views.py b/app/accounts/views.py[m
+[1mindex 998377c..12561bf 100644[m
+[1m--- a/app/accounts/views.py[m
+[1m+++ b/app/accounts/views.py[m
+[36m@@ -24,6 +24,7 @@[m [mdef register_view(request):[m
+             messages.success([m
+                 request,[m
+                 "Korisnički račun uspješno je kreiran. Možete se prijaviti.",[m
+[32m+[m[32m                extra_tags="login-message",[m
+             )[m
+ [m
+             return redirect("accounts:login")[m
+[36m@@ -132,10 +133,10 @@[m [mdef settings_view(request):[m
+ [m
+ [m
+         # ==========================================[m
+[31m-        # PROFILE[m
+[32m+[m[32m        # PROFILE DATA[m
+         # ==========================================[m
+ [m
+[31m-        if action == "profile":[m
+[32m+[m[32m        if action == "profile_data":[m
+ [m
+             active_tab = "profile"[m
+ [m
+[36m@@ -144,78 +145,78 @@[m [mdef settings_view(request):[m
+                 instance=request.user,[m
+             )[m
+ [m
+[32m+[m[32m            if profile_form.is_valid():[m
+ [m
+[31m-            # --------------------------------------[m
+[31m-            # PASSWORD DATA[m
+[31m-            # --------------------------------------[m
+[31m-[m
+[31m-            password_fields_filled = any([m
+[31m-                [[m
+[31m-                    request.POST.get("old_password"),[m
+[31m-                    request.POST.get("new_password1"),[m
+[31m-                    request.POST.get("new_password2"),[m
+[31m-                ][m
+[31m-            )[m
+[31m-[m
+[31m-[m
+[31m-            if password_fields_filled:[m
+[32m+[m[32m                profile_form.save()[m
+ [m
+[31m-                password_form = SettingsPasswordChangeForm([m
+[31m-                    user=request.user,[m
+[31m-                    data=request.POST,[m
+[32m+[m[32m                messages.success([m
+[32m+[m[32m                    request,[m
+[32m+[m[32m                    "Osobni podaci uspješno su spremljeni.",[m
+                 )[m
+ [m
+[31m-                password_valid = ([m
+[31m-                    password_form.is_valid()[m
+[32m+[m[32m                return redirect([m
+[32m+[m[32m                    f"{reverse('accounts:settings')}?tab=profile"[m
+                 )[m
+ [m
+[31m-            else:[m
+[31m-[m
+[31m-                password_form = SettingsPasswordChangeForm([m
+[31m-                    user=request.user,[m
+[31m-                )[m
+ [m
+[31m-                password_valid = True[m
+[32m+[m[32m        # ==========================================[m
+[32m+[m[32m        # PASSWORD CHANGE[m
+[32m+[m[32m        # ==========================================[m
+ [m
+[32m+[m[32m        elif action == "password_change":[m
+ [m
+[31m-            # --------------------------------------[m
+[31m-            # VALIDATION[m
+[31m-            # --------------------------------------[m
+[32m+[m[32m            active_tab = "profile"[m
+ [m
+[31m-            profile_valid = ([m
+[31m-                profile_form.is_valid()[m
+[32m+[m[32m            password_form = SettingsPasswordChangeForm([m
+[32m+[m[32m                user=request.user,[m
+[32m+[m[32m                data=request.POST,[m
+             )[m
+ [m
+[32m+[m[32m            if password_form.is_valid():[m
+ [m
+[31m-            if ([m
+[31m-                profile_valid[m
+[31m-                and password_valid[m
+[31m-            ):[m
+[32m+[m[32m                user = password_form.save()[m
+ [m
+[31m-                profile_form.save()[m
+[32m+[m[32m                update_session_auth_hash([m
+[32m+[m[32m                    request,[m
+[32m+[m[32m                    user,[m
+[32m+[m[32m                )[m
+ [m
+[32m+[m[32m                messages.success([m
+[32m+[m[32m                    request,[m
+[32m+[m[32m                    "Lozinka je uspješno promijenjena.",[m
+[32m+[m[32m                )[m
+ [m
+[31m-                # ----------------------------------[m
+[31m-                # PASSWORD CHANGE[m
+[31m-                # ----------------------------------[m
+[32m+[m[32m                return redirect([m
+[32m+[m[32m                    f"{reverse('accounts:settings')}?tab=profile"[m
+[32m+[m[32m                )[m
+ [m
+[31m-                if password_fields_filled:[m
+ [m
+[31m-                    user = password_form.save()[m
+[32m+[m[32m        # ==========================================[m
+[32m+[m[32m        # NOTIFICATIONS[m
+[32m+[m[32m        # ==========================================[m
+ [m
+[31m-                    update_session_auth_hash([m
+[31m-                        request,[m
+[31m-                        user,[m
+[31m-                    )[m
+[32m+[m[32m        elif action == "notifications":[m
+ [m
+[32m+[m[32m            active_tab = "notifications"[m
+[32m+[m
+[32m+[m[32m            notification_form = ([m
+[32m+[m[32m                NotificationSettingsForm([m
+[32m+[m[32m                    request.POST,[m
+[32m+[m[32m                    instance=notification_settings,[m
+[32m+[m[32m                )[m
+[32m+[m[32m            )[m
+[32m+[m
+[32m+[m[32m            if notification_form.is_valid():[m
+[32m+[m
+[32m+[m[32m                notification_form.save()[m
+ [m
+                 messages.success([m
+                     request,[m
+[31m-                    "Podaci profila uspješno su spremljeni.",[m
+[32m+[m[32m                    "Postavke obavijesti uspješno su spremljene.",[m
+                 )[m
+ [m
+                 return redirect([m
+[31m-                    "accounts:settings"[m
+[32m+[m[32m                    f"{reverse('accounts:settings')}?tab=notifications"[m
+                 )[m
+ [m
+ [m
+[1mdiff --git a/app/static/css/style.css b/app/static/css/style.css[m
+[1mindex f3b30e0..1b25778 100644[m
+[1m--- a/app/static/css/style.css[m
+[1m+++ b/app/static/css/style.css[m
+[36m@@ -1612,14 +1612,12 @@[m [mbody {[m
+ [m
+ [m
+ .dashboard-pagination-item.is-active {[m
+[31m-    position: relative;[m
+[31m-    z-index: 2;[m
+[32m+[m[32m    background: var(--blue-950);[m
+[32m+[m[32m    border-color: var(--blue-950);[m
+ [m
+[31m-    color: var(--blue-900);[m
+[31m-[m
+[31m-    background: #fff;[m
+[32m+[m[32m    color: #fff;[m
+ [m
+[31m-    border-color: var(--blue-300);[m
+[32m+[m[32m    cursor: default;[m
+ }[m
+ [m
+ [m
+[36m@@ -1954,6 +1952,8 @@[m [mbody {[m
+         -webkit-mask-image: url("../images/icons/x.svg");[m
+         mask-image: url("../images/icons/x.svg");[m
+     }[m
+[32m+[m
+[32m+[m
+     /* ==============================================[m
+        SIDEBAR OVERLAY[m
+        ============================================== */[m
+[36m@@ -3042,6 +3042,11 @@[m [mbody {[m
+     mask-image: url("../images/icons/trash-2.svg");[m
+ }[m
+ [m
+[32m+[m[32m.icon-file {[m
+[32m+[m[32m    -webkit-mask-image: url("../images/icons/file.svg");[m
+[32m+[m[32m    mask-image: url("../images/icons/file.svg");[m
+[32m+[m[32m}[m
+[32m+[m
+ [m
+ /* ==================================================[m
+    EMPTY VEHICLES[m
+[36m@@ -10927,7 +10932,6 @@[m [ma.vehicle-detail-tab:hover {[m
+    ================================================== */[m
+ [m
+ .settings-password-input #id_old_password {[m
+[31m-    background: var(--blue-100);[m
+ [m
+     border-color: var(--blue-200);[m
+ [m
+[36m@@ -10935,18 +10939,6 @@[m [ma.vehicle-detail-tab:hover {[m
+ }[m
+ [m
+ [m
+[31m-/* Browser autofill */[m
+[31m-[m
+[31m-.settings-password-input #id_old_password:autofill,[m
+[31m-.settings-password-input #id_old_password:-webkit-autofill {[m
+[31m-    -webkit-box-shadow:[m
+[31m-        0 0 0 1000px var(--blue-100) inset;[m
+[31m-[m
+[31m-    box-shadow:[m
+[31m-        0 0 0 1000px var(--blue-100) inset;[m
+[31m-[m
+[31m-    -webkit-text-fill-color: var(--blue-900);[m
+[31m-}[m
+ [m
+ [m
+ /* ==================================================[m
+[36m@@ -11042,6 +11034,7 @@[m [ma.vehicle-detail-tab:hover {[m
+     width: 100%;[m
+ [m
+     padding-top: var(--space-5);[m
+[32m+[m[32m    padding-bottom: var(--space-5);[m
+ [m
+ }[m
+ [m
+[1mdiff --git a/app/static/js/app.js b/app/static/js/app.js[m
+[1mindex cdda112..e2f71ce 100644[m
+[1m--- a/app/static/js/app.js[m
+[1m+++ b/app/static/js/app.js[m
+[36m@@ -72,21 +72,6 @@[m [mdocument.addEventListener("DOMContentLoaded", () => {[m
+     });[m
+ [m
+ [m
+[31m-    /* ==============================================[m
+[31m-       LOCK CURRENT PASSWORD[m
+[31m-       ============================================== */[m
+[31m-[m
+[31m-    const currentPassword = document.getElementById([m
+[31m-        "id_old_password"[m
+[31m-    );[m
+[31m-[m
+[31m-    if (currentPassword) {[m
+[31m-[m
+[31m-        setTimeout(() => {[m
+[31m-            currentPassword.readOnly = true;[m
+[31m-        }, 300);[m
+[31m-[m
+[31m-    }[m
+ [m
+ [m
+     /* ==============================================[m
+[1mdiff --git a/app/templates/accounts/login.html b/app/templates/accounts/login.html[m
+[1mindex e7f4c8a..1c36607 100644[m
+[1m--- a/app/templates/accounts/login.html[m
+[1m+++ b/app/templates/accounts/login.html[m
+[36m@@ -66,8 +66,8 @@[m
+ [m
+ [m
+             <!-- ========================================[m
+[31m-                 DJANGO PORUKE[m
+[31m-                 ======================================== -->[m
+[32m+[m[32m                DJANGO PORUKE[m
+[32m+[m[32m                ======================================== -->[m
+ [m
+             {% if messages %}[m
+ [m
+[36m@@ -75,9 +75,13 @@[m
+ [m
+                     {% for message in messages %}[m
+ [m
+[31m-                        <div class="alert alert-{{ message.tags }}">[m
+[31m-                            {{ message }}[m
+[31m-                        </div>[m
+[32m+[m[32m                        {% if "login-message" in message.tags %}[m
+[32m+[m
+[32m+[m[32m                            <div class="alert alert-{{ message.level_tag }}">[m
+[32m+[m[32m                                {{ message }}[m
+[32m+[m[32m                            </div>[m
+[32m+[m
+[32m+[m[32m                        {% endif %}[m
+ [m
+                     {% endfor %}[m
+ [m
+[1mdiff --git a/app/templates/accounts/register.html b/app/templates/accounts/register.html[m
+[1mindex e381b87..22a7e93 100644[m
+[1m--- a/app/templates/accounts/register.html[m
+[1m+++ b/app/templates/accounts/register.html[m
+[36m@@ -70,8 +70,8 @@[m
+ [m
+ [m
+             <!-- ==================================================[m
+[31m-                 DJANGO PORUKE[m
+[31m-                 ================================================== -->[m
+[32m+[m[32m                DJANGO PORUKE[m
+[32m+[m[32m                ================================================== -->[m
+ [m
+             {% if messages %}[m
+ [m
+[36m@@ -79,9 +79,13 @@[m
+ [m
+                     {% for message in messages %}[m
+ [m
+[31m-                        <div class="alert alert-{{ message.tags }}">[m
+[31m-                            {{ message }}[m
+[31m-                        </div>[m
+[32m+[m[32m                        {% if "register-message" in message.tags %}[m
+[32m+[m
+[32m+[m[32m                            <div class="alert alert-{{ message.level_tag }}">[m
+[32m+[m[32m                                {{ message }}[m
+[32m+[m[32m                            </div>[m
+[32m+[m
+[32m+[m[32m                        {% endif %}[m
+ [m
+                     {% endfor %}[m
+ [m
+[1mdiff --git a/app/templates/accounts/settings.html b/app/templates/accounts/settings.html[m
+[1mindex c7d53ce..4521ed8 100644[m
+[1m--- a/app/templates/accounts/settings.html[m
+[1m+++ b/app/templates/accounts/settings.html[m
+[36m@@ -146,14 +146,10 @@[m
+                     <input[m
+                         type="hidden"[m
+                         name="action"[m
+[31m-                        value="profile"[m
+[32m+[m[32m                        value="profile_data"[m
+                     >[m
+ [m
+ [m
+[31m-                    <!-- ==========================================[m
+[31m-                         PERSONAL DATA[m
+[31m-                         ========================================== -->[m
+[31m-[m
+                     <div class="settings-section">[m
+ [m
+                         <div class="settings-section-header">[m
+[36m@@ -167,7 +163,6 @@[m
+ [m
+                         <div class="settings-profile-grid">[m
+ [m
+[31m-[m
+                             <!-- FIRST NAME -->[m
+ [m
+                             <div class="settings-field">[m
+[36m@@ -224,15 +219,51 @@[m
+ [m
+                             </div>[m
+ [m
+[31m-[m
+                         </div>[m
+ [m
+                     </div>[m
+ [m
+ [m
+[31m-                    <!-- ==========================================[m
+[31m-                         PASSWORD[m
+[31m-                         ========================================== -->[m
+[32m+[m[32m                    <div class="settings-actions">[m
+[32m+[m
+[32m+[m[32m                        <a[m
+[32m+[m[32m                            href="{% url 'accounts:settings' %}?tab=profile"[m
+[32m+

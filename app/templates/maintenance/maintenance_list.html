@@ -603,13 +603,13 @@ Pregled i upravljanje održavanjima vozila i radnih strojeva
 
 
             <!-- ==============================================
-                 PAGINATION
-                 ============================================== -->
+                PAGINATION
+                ============================================== -->
 
             {% if page_obj.paginator.num_pages > 1 %}
 
                 <nav
-                    class="maintenance-pagination"
+                    class="dashboard-pagination"
                     aria-label="Stranice održavanja"
                 >
 
@@ -619,7 +619,7 @@ Pregled i upravljanje održavanjima vozila i radnih strojeva
 
                         <a
                             href="?search={{ search_query|urlencode }}&status={{ status_filter|urlencode }}&type={{ type_filter|urlencode }}&vehicle={{ vehicle_filter|urlencode }}&page={{ page_obj.previous_page_number }}"
-                            class="pagination-button pagination-arrow"
+                            class="dashboard-pagination-item dashboard-pagination-arrow"
                             aria-label="Prethodna stranica"
                         >
                             ‹
@@ -628,7 +628,7 @@ Pregled i upravljanje održavanjima vozila i radnih strojeva
                     {% else %}
 
                         <span
-                            class="pagination-button pagination-arrow is-disabled"
+                            class="dashboard-pagination-item dashboard-pagination-arrow is-disabled"
                             aria-hidden="true"
                         >
                             ‹
@@ -644,7 +644,7 @@ Pregled i upravljanje održavanjima vozila i radnih strojeva
                         {% if page_number == page_obj.number %}
 
                             <span
-                                class="pagination-button is-active"
+                                class="dashboard-pagination-item is-active"
                                 aria-current="page"
                             >
                                 {{ page_number }}
@@ -654,7 +654,7 @@ Pregled i upravljanje održavanjima vozila i radnih strojeva
 
                             <a
                                 href="?search={{ search_query|urlencode }}&status={{ status_filter|urlencode }}&type={{ type_filter|urlencode }}&vehicle={{ vehicle_filter|urlencode }}&page={{ page_number }}"
-                                class="pagination-button"
+                                class="dashboard-pagination-item"
                             >
                                 {{ page_number }}
                             </a>
@@ -670,7 +670,7 @@ Pregled i upravljanje održavanjima vozila i radnih strojeva
 
                         <a
                             href="?search={{ search_query|urlencode }}&status={{ status_filter|urlencode }}&type={{ type_filter|urlencode }}&vehicle={{ vehicle_filter|urlencode }}&page={{ page_obj.next_page_number }}"
-                            class="pagination-button pagination-arrow"
+                            class="dashboard-pagination-item dashboard-pagination-arrow"
                             aria-label="Sljedeća stranica"
                         >
                             ›
@@ -679,7 +679,7 @@ Pregled i upravljanje održavanjima vozila i radnih strojeva
                     {% else %}
 
                         <span
-                            class="pagination-button pagination-arrow is-disabled"
+                            class="dashboard-pagination-item dashboard-pagination-arrow is-disabled"
                             aria-hidden="true"
                         >
                             ›

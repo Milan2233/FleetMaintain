@@ -1612,14 +1612,12 @@ body {
 
 
 .dashboard-pagination-item.is-active {
-    position: relative;
-    z-index: 2;
+    background: var(--blue-950);
+    border-color: var(--blue-950);
 
-    color: var(--blue-900);
+    color: #fff;
 
-    background: #fff;
-
-    border-color: var(--blue-300);
+    cursor: default;
 }
 
 
@@ -1954,6 +1952,8 @@ body {
         -webkit-mask-image: url("../images/icons/x.svg");
         mask-image: url("../images/icons/x.svg");
     }
+
+
     /* ==============================================
        SIDEBAR OVERLAY
        ============================================== */
@@ -3040,6 +3040,11 @@ body {
 .icon-trash {
     -webkit-mask-image: url("../images/icons/trash-2.svg");
     mask-image: url("../images/icons/trash-2.svg");
+}
+
+.icon-file {
+    -webkit-mask-image: url("../images/icons/file.svg");
+    mask-image: url("../images/icons/file.svg");
 }
 
 
@@ -10927,7 +10932,6 @@ a.vehicle-detail-tab:hover {
    ================================================== */
 
 .settings-password-input #id_old_password {
-    background: var(--blue-100);
 
     border-color: var(--blue-200);
 
@@ -10935,18 +10939,6 @@ a.vehicle-detail-tab:hover {
 }
 
 
-/* Browser autofill */
-
-.settings-password-input #id_old_password:autofill,
-.settings-password-input #id_old_password:-webkit-autofill {
-    -webkit-box-shadow:
-        0 0 0 1000px var(--blue-100) inset;
-
-    box-shadow:
-        0 0 0 1000px var(--blue-100) inset;
-
-    -webkit-text-fill-color: var(--blue-900);
-}
 
 
 /* ==================================================
@@ -11042,6 +11034,7 @@ a.vehicle-detail-tab:hover {
     width: 100%;
 
     padding-top: var(--space-5);
+    padding-bottom: var(--space-5);
 
 }
 

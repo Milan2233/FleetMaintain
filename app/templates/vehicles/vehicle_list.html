@@ -393,13 +393,13 @@ Pregled i upravljanje vozilima i radnim strojevima
 
 
             <!-- ==============================================
-                 PAGINATION
-                 ============================================== -->
+                PAGINATION
+                ============================================== -->
 
             {% if page_obj.paginator.num_pages > 1 %}
 
                 <nav
-                    class="vehicles-pagination"
+                    class="dashboard-pagination"
                     aria-label="Stranice vozila"
                 >
 
@@ -409,7 +409,7 @@ Pregled i upravljanje vozilima i radnim strojevima
 
                         <a
                             href="?search={{ search_query|urlencode }}&status={{ status_filter|urlencode }}&type={{ type_filter|urlencode }}&page={{ page_obj.previous_page_number }}"
-                            class="pagination-button pagination-arrow"
+                            class="dashboard-pagination-item dashboard-pagination-arrow"
                             aria-label="Prethodna stranica"
                         >
                             ‹
@@ -418,7 +418,7 @@ Pregled i upravljanje vozilima i radnim strojevima
                     {% else %}
 
                         <span
-                            class="pagination-button pagination-arrow is-disabled"
+                            class="dashboard-pagination-item dashboard-pagination-arrow is-disabled"
                             aria-hidden="true"
                         >
                             ‹
@@ -434,7 +434,7 @@ Pregled i upravljanje vozilima i radnim strojevima
                         {% if page_number == page_obj.number %}
 
                             <span
-                                class="pagination-button is-active"
+                                class="dashboard-pagination-item is-active"
                                 aria-current="page"
                             >
                                 {{ page_number }}
@@ -444,7 +444,7 @@ Pregled i upravljanje vozilima i radnim strojevima
 
                             <a
                                 href="?search={{ search_query|urlencode }}&status={{ status_filter|urlencode }}&type={{ type_filter|urlencode }}&page={{ page_number }}"
-                                class="pagination-button"
+                                class="dashboard-pagination-item"
                             >
                                 {{ page_number }}
                             </a>
@@ -460,7 +460,7 @@ Pregled i upravljanje vozilima i radnim strojevima
 
                         <a
                             href="?search={{ search_query|urlencode }}&status={{ status_filter|urlencode }}&type={{ type_filter|urlencode }}&page={{ page_obj.next_page_number }}"
-                            class="pagination-button pagination-arrow"
+                            class="dashboard-pagination-item dashboard-pagination-arrow"
                             aria-label="Sljedeća stranica"
                         >
                             ›
@@ -469,7 +469,7 @@ Pregled i upravljanje vozilima i radnim strojevima
                     {% else %}
 
                         <span
-                            class="pagination-button pagination-arrow is-disabled"
+                            class="dashboard-pagination-item dashboard-pagination-arrow is-disabled"
                             aria-hidden="true"
                         >
                             ›

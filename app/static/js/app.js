@@ -72,21 +72,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 
-    /* ==============================================
-       LOCK CURRENT PASSWORD
-       ============================================== */
-
-    const currentPassword = document.getElementById(
-        "id_old_password"
-    );
-
-    if (currentPassword) {
-
-        setTimeout(() => {
-            currentPassword.readOnly = true;
-        }, 300);
-
-    }
 
 
     /* ==============================================

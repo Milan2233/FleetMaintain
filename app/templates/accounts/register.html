@@ -70,8 +70,8 @@
 
 
             <!-- ==================================================
-                 DJANGO PORUKE
-                 ================================================== -->
+                DJANGO PORUKE
+                ================================================== -->
 
             {% if messages %}
 
@@ -79,9 +79,13 @@
 
                     {% for message in messages %}
 
-                        <div class="alert alert-{{ message.tags }}">
-                            {{ message }}
-                        </div>
+                        {% if "register-message" in message.tags %}
+
+                            <div class="alert alert-{{ message.level_tag }}">
+                                {{ message }}
+                            </div>
+
+                        {% endif %}
 
                     {% endfor %}
 

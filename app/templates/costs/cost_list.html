@@ -577,46 +577,83 @@
 
         <!-- PAGINATION -->
 
+        <!-- PAGINATION -->
+
         {% if page_obj.paginator.num_pages > 1 %}
 
             <nav
-                class="pagination"
-                aria-label="Navigacija po stranicama"
+                class="dashboard-pagination"
+                aria-label="Stranice troškova"
             >
+
+                <!-- PREVIOUS -->
 
                 {% if page_obj.has_previous %}
 
                     <a
-                        href="?page={{ page_obj.previous_page_number }}&q={{ search_query|urlencode }}&category={{ selected_category }}&vehicle={{ selected_vehicle }}"
-                        class="pagination-button"
+                        href="?page={{ page_obj.previous_page_number }}&q={{ search_query|urlencode }}&category={{ selected_category|urlencode }}&vehicle={{ selected_vehicle|urlencode }}"
+                        class="dashboard-pagination-item dashboard-pagination-arrow"
                         aria-label="Prethodna stranica"
                     >
-                        <span
-                            class="icon icon-chevron-left"
-                            aria-hidden="true"
-                        ></span>
+                        ‹
                     </a>
+
+                {% else %}
+
+                    <span
+                        class="dashboard-pagination-item dashboard-pagination-arrow is-disabled"
+                        aria-hidden="true"
+                    >
+                        ‹
+                    </span>
 
                 {% endif %}
 
 
-                <span class="pagination-info">
-                    {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
-                </span>
+                <!-- PAGE NUMBERS -->
 
+                {% for page_number in page_obj.paginator.page_range %}
+
+                    {% if page_number == page_obj.number %}
+
+                        <span class="dashboard-pagination-item is-active">
+                            {{ page_number }}
+                        </span>
+
+                    {% else %}
+
+                        <a
+                            href="?page={{ page_number }}&q={{ search_query|urlencode }}&category={{ selected_category|urlencode }}&vehicle={{ selected_vehicle|urlencode }}"
+                            class="dashboard-pagination-item"
+                        >
+                            {{ page_number }}
+                        </a>
+
+                    {% endif %}
+
+                {% endfor %}
+
+
+                <!-- NEXT -->
 
                 {% if page_obj.has_next %}
 
                     <a
-                        href="?page={{ page_obj.next_page_number }}&q={{ search_query|urlencode }}&category={{ selected_category }}&vehicle={{ selected_vehicle }}"
-                        class="pagination-button"
+                        href="?page={{ page_obj.next_page_number }}&q={{ search_query|urlencode }}&category={{ selected_category|urlencode }}&vehicle={{ selected_vehicle|urlencode }}"
+                        class="dashboard-pagination-item dashboard-pagination-arrow"
                         aria-label="Sljedeća stranica"
                     >
-                        <span
-                            class="icon icon-chevron-right"
-                            aria-hidden="true"
-                        ></span>
+                        ›
                     </a>
+
+                {% else %}
+
+                    <span
+                        class="dashboard-pagination-item dashboard-pagination-arrow is-disabled"
+                        aria-hidden="true"
+                    >
+                        ›
+                    </span>
 
                 {% endif %}
 

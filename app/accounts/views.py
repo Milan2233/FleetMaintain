@@ -24,6 +24,7 @@ def register_view(request):
             messages.success(
                 request,
                 "Korisnički račun uspješno je kreiran. Možete se prijaviti.",
+                extra_tags="login-message",
             )
 
             return redirect("accounts:login")
@@ -132,10 +133,10 @@ def settings_view(request):
 
 
         # ==========================================
-        # PROFILE
+        # PROFILE DATA
         # ==========================================
 
-        if action == "profile":
+        if action == "profile_data":
 
             active_tab = "profile"
 
@@ -144,78 +145,78 @@ def settings_view(request):
                 instance=request.user,
             )
 
-
-            # --------------------------------------
-            # PASSWORD DATA
-            # --------------------------------------
-
-            password_fields_filled = any(
-                [
-                    request.POST.get("old_password"),
-                    request.POST.get("new_password1"),
-                    request.POST.get("new_password2"),
-                ]
-            )
-
-
-            if password_fields_filled:
-
-                password_form = SettingsPasswordChangeForm(
-                    user=request.user,
-                    data=request.POST,
-                )
-
-                password_valid = (
-                    password_form.is_valid()
-                )
-
-            else:
-
-                password_form = SettingsPasswordChangeForm(
-                    user=request.user,
-                )
-
-                password_valid = True
-
-
-            # --------------------------------------
-            # VALIDATION
-            # --------------------------------------
-
-            profile_valid = (
-                profile_form.is_valid()
-            )
-
-
-            if (
-                profile_valid
-                and password_valid
-            ):
+            if profile_form.is_valid():
 
                 profile_form.save()
 
-
-                # ----------------------------------
-                # PASSWORD CHANGE
-                # ----------------------------------
-
-                if password_fields_filled:
-
-                    user = password_form.save()
-
-                    update_session_auth_hash(
-                        request,
-                        user,
-                    )
-
-
                 messages.success(
                     request,
-                    "Podaci profila uspješno su spremljeni.",
+                    "Osobni podaci uspješno su spremljeni.",
                 )
 
                 return redirect(
-                    "accounts:settings"
+                    f"{reverse('accounts:settings')}?tab=profile"
+                )
+
+
+        # ==========================================
+        # PASSWORD CHANGE
+        # ==========================================
+
+        elif action == "password_change":
+
+            active_tab = "profile"
+
+            password_form = SettingsPasswordChangeForm(
+                user=request.user,
+                data=request.POST,
+            )
+
+            if password_form.is_valid():
+
+                user = password_form.save()
+
+                update_session_auth_hash(
+                    request,
+                    user,
+                )
+
+                messages.success(
+                    request,
+                    "Lozinka je uspješno promijenjena.",
+                )
+
+                return redirect(
+                    f"{reverse('accounts:settings')}?tab=profile"
+                )
+
+
+        # ==========================================
+        # NOTIFICATIONS
+        # ==========================================
+
+        elif action == "notifications":
+
+            active_tab = "notifications"
+
+            notification_form = (
+                NotificationSettingsForm(
+                    request.POST,
+                    instance=notification_settings,
+                )
+            )
+
+            if notification_form.is_valid():
+
+                notification_form.save()
+
+                messages.success(
+                    request,
+                    "Postavke obavijesti uspješno su spremljene.",
+                )
+
+                return redirect(
+                    f"{reverse('accounts:settings')}?tab=notifications"
                 )
 
 

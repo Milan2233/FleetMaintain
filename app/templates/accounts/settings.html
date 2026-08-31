@@ -146,13 +146,9 @@
                     <input
                         type="hidden"
                         name="action"
-                        value="profile"
+                        value="profile_data"
                     >
 
-
-                    <!-- ==========================================
-                         PERSONAL DATA
-                         ========================================== -->
 
                     <div class="settings-section">
 
@@ -166,7 +162,6 @@
 
 
                         <div class="settings-profile-grid">
-
 
                             <!-- FIRST NAME -->
 
@@ -224,15 +219,51 @@
 
                             </div>
 
-
                         </div>
 
                     </div>
 
 
-                    <!-- ==========================================
-                         PASSWORD
-                         ========================================== -->
+                    <div class="settings-actions">
+
+                        <a
+                            href="{% url 'accounts:settings' %}?tab=profile"
+                            class="btn btn-outline"
+                        >
+                            Odustani
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                        >
+
+                            <span
+                                class="icon icon-save"
+                                aria-hidden="true"
+                            ></span>
+
+                            Spremi podatke
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+                <form
+                    method="post"
+                    class="settings-form"
+                >
+
+                    {% csrf_token %}
+
+                    <input
+                        type="hidden"
+                        name="action"
+                        value="password_change"
+                    >
+
 
                     <div class="settings-section settings-password-section">
 
@@ -352,7 +383,6 @@
 
                             </div>
 
-
                         </div>
 
 
@@ -364,10 +394,6 @@
 
                     </div>
 
-
-                    <!-- ==========================================
-                         ACTIONS
-                         ========================================== -->
 
                     <div class="settings-actions">
 
@@ -382,19 +408,12 @@
                             type="submit"
                             class="btn btn-primary"
                         >
-
-                            <span
-                                class="icon icon-save"
-                                aria-hidden="true"
-                            ></span>
-
-                            Spremi podatke
-
+                            Promijeni lozinku
                         </button>
 
                     </div>
 
-                </form>
+                </form>                
 
 
             <!-- ==================================================
@@ -607,6 +626,7 @@
                     </div>
 
                 </form>
+
 
 
             <!-- ==================================================

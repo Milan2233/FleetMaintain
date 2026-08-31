@@ -18,6 +18,13 @@ User = get_user_model()
 
 class RegistrationForm(UserCreationForm):
 
+    error_messages = {
+        **UserCreationForm.error_messages,
+        "password_mismatch": (
+            "Lozinke se ne podudaraju."
+        ),
+    }
+
     full_name = forms.CharField(
         label="Ime i prezime",
         max_length=150,
@@ -213,6 +220,19 @@ class ProfileSettingsForm(forms.ModelForm):
 
 class SettingsPasswordChangeForm(PasswordChangeForm):
 
+    error_messages = {
+        **PasswordChangeForm.error_messages,
+
+        "password_incorrect": (
+            "Trenutna lozinka nije ispravna."
+        ),
+
+        "password_mismatch": (
+            "Nove lozinke se ne podudaraju."
+        ),
+    }
+
+
     def __init__(self, *args, **kwargs):
 
         super().__init__(
@@ -227,8 +247,17 @@ class SettingsPasswordChangeForm(PasswordChangeForm):
             "old_password"
         ].widget.attrs.update(
             {
+                "placeholder": "Unesite trenutnu lozinku",
                 "autocomplete": "current-password",
             }
+        )
+
+        self.fields[
+            "old_password"
+        ].error_messages[
+            "required"
+        ] = (
+            "Unesite trenutnu lozinku."
         )
 
 
@@ -243,6 +272,14 @@ class SettingsPasswordChangeForm(PasswordChangeForm):
             }
         )
 
+        self.fields[
+            "new_password1"
+        ].error_messages[
+            "required"
+        ] = (
+            "Unesite novu lozinku."
+        )
+
 
         # CONFIRM PASSWORD
 
@@ -255,6 +292,13 @@ class SettingsPasswordChangeForm(PasswordChangeForm):
             }
         )
 
+        self.fields[
+            "new_password2"
+        ].error_messages[
+            "required"
+        ] = (
+            "Potvrdite novu lozinku."
+        )
 
 # ==================================================
 # NOTIFICATION SETTINGS FORM
